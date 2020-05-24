@@ -1,0 +1,117 @@
+// RL: This type can hold these sub-types: 
+//      - a top-level procedure 
+//      - a top-level function 
+//      - an object method 
+//      - a lambda object 
+//     
+//     A procedure is a function having a return type NULL (or any type that has a sizeof of zero). 
+//     A method is attached to a type. 
+//     A lambda object has a nested lexical environment for variables binding. 
+//     
+//     Regarding object implementation, a lambda object is an address with an array of environments. 
+//     More than that, two lambda object having the same signature (therefore having the same type), but they can have a different size (nesting level different). 
+//     
+//     A method cannot be a first-order object (does not make sense). 
+//     
+//     Lambda objects do not have a name. More precisely, they all have the same name: "<lambda>". 
+// 
+//     If a lambda object is defined in a mainproc, it is considered as not nested (mainproc-s do not have localvar - all variables are top-level - so it's exactly like a regular top-level function). 
+//   
+enum { pscript_funproc__size = (1 << 7) }; 
+enum { pscript_funproc__arg__size = (1 << 5) }; 
+enum { pscript_funproc__localvar__size = (1 << 7) }; 
+struct pscript_funproc_env_t { 
+  pscript_string_env_t * string_env; 
+  pscript_type_env_t * type_env; 
+  
+  // CALLING CONVENTION 
+  // To be compatible with stack-like machines, 
+  // the calling convention is a postfix one: 
+  //   " 1 2 + " -> " PUSH 1 PUSH 2 ADD " 
+  //  "myproc(1,2,3)" -> " PUSH 1 PUSH 2 PUSH 3 CALL MYPROC " 
+  // 
+  // Deux stacks gérées par la fonction appelante (par l'instruction CALL): 
+  //  - call_stack__ret_address 
+  //  - call_stack__arg_nb (arg_nb sera dans le bytecode et non sur la pile) 
+  //  - call_stack__base_mem_offset 
+  // 
+  // Deux stacks gérées par la fonction appelée (pas par l'instruction CALL): 
+  //  - call_stack__retval_sizeof (en fait pas de cette stack) 
+  //  
+  // A PRIORI 
+  // La fonction appelée alloue de la mémoire pour la valeur de retour (si c'est un type construit). 
+  // La fonction appelée désalloue la mémoire concernant les arguments, les variables locales, et le reste. 
+  // La fonction appelée dépile les arguments et les mets en mémoire. 
+  // La fonction appelée étend l'environnement avec le nom de la valeur de retour, avec le nom des arguments, et avec le nom des variables locales. 
+  // 
+  // PENDANT 
+  // La fonction appelée peut faire ce qu'elle veut avec la pile (même si cela peut paraître bizarre). 
+  // 
+  // A POSTERIORI 
+  // La fonction appelée désalloue la mémoire pour les arguments et les variables locales. 
+  // La fonction appelée désalloue l'environnment pour la valeur de retour, les arguments et les variables locales. 
+  // La fonction appelée met la valeur de retour sur la pile, et désalloue la mémoire si nécessaire. 
+  // La fonction appelée effectue un RET. 
+  // 
+  // 
+  // QUID: 
+  // Les adresses des valret+arg+localvar ne sont pas connus à la compilation. Il faut donc se souvenir de l'adresse de la mémoire lors de l'appel. Et toutes les références doivent y être relatives. Il nous faut donc une instruction MEM_READ/STORE pour les locaux. 
+  // 
+  // 
+  // L'instruction RET gèrera: 
+  //  - call_stack__ret_address 
+  //  - call_stack__arg_nb 
+  //  - call_stack__base_mem_offset (en conservant l'espace alloué à retval size si c'est un type construit (ARRAY ou RECORD)) 
+  // 
+  // 
+  // 
+  // 
+  // 
+  // 
+  // 
+  // 
+  
+  int retval_type[pscript_funproc__size]; 
+  int retval_offset[pscript_funproc__size]; 
+  // This type is dynamic. 
+  // It could depend on args: 
+  //   function make_array(n : integer) : array[1..n] of float; 
+  // 
+  // (In order to declaration the function, the size must be lexically known at declaration time.) 
+  // (Or maybe we need it to allocate it in the caller memory, before allocating the args. We'll see.) 
+  // 
+  
+  //int nested_level[[pscript_funproc__size]; // RL: 0 is top-level. // RL: not needed 
+  
+  int lambda__nesting_funproc_i[pscript_funproc__size]; // RL: -1 is top-level ; -2 is not a lambda object 
+  
+  int method_of[pscript_funproc__size]; 
+  int method_of__offset[pscript_funproc__size]; 
+  
+  int arg_name  [pscript_funproc__size][pscript_funproc__arg__size]; 
+  int arg_byref [pscript_funproc__size][pscript_funproc__arg__size]; 
+  int arg_type  [pscript_funproc__size][pscript_funproc__arg__size]; 
+  int arg_offset[pscript_funproc__size][pscript_funproc__arg__size]; 
+  int arg_nb    [pscript_funproc__size]; 
+  // An arg type is dynamic, meaning it could be not constant. 
+  // In facts, it could depends on previous args, like 
+  //   "function main(argc: integer; argv: [1..argc] of string): integer;" 
+  // Or any arbitrary expression: 
+  //   "function main_absurd(argc: integer; argv: [23..23+argc*2+1+abs(some_var)] of string): integer;" // As the function declaration is necessarily top-level (restriction), then 'some_var' is either a top-level ident or a previous arg in the arg list. 
+  // If that second example is rather weird and useless, the first one is very important. 
+  // 
+  
+  int localvar_name[pscript_funproc__size][pscript_funproc__localvar__size]; 
+  int localvar_type[pscript_funproc__size][pscript_funproc__localvar__size]; // There could be expression codes inside (if type is dynamic - like "tab[n]"). 
+  int localvar_offset[pscript_funproc__size][pscript_funproc__localvar__size]; 
+  int localvar_nb[pscript_funproc__size]; 
+  
+  int funproc_name[pscript_funproc__size]; 
+  int funproc_type[pscript_funproc__size]; // self-type 
+  int funproc_lexical_env[pscript_funproc__size]; // RL: The environment is compile-time. The arguments and local-var are pushed onto the compile-time environment. When the function definition will be done, we need to pop them from the compile-time environment - this variable holds the reference to the environment when the function definition started. 
+  int funproc_src_code[pscript_funproc__size]; 
+  int funproc_bytecode_offset[pscript_funproc__size]; 
+  int funproc_bytecode_size[pscript_funproc__size]; 
+  int funproc_nb; 
+}; 
+

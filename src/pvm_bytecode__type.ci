@@ -1,0 +1,194 @@
+enum {
+  PVM_BYTECODE__NULL, 
+  PVM_BYTECODE__ABORT, 
+  PVM_BYTECODE__HALT, 
+  PVM_BYTECODE__NOP, 
+  PVM_BYTECODE__VMCALL, 
+  PVM_BYTECODE__SYSCALL, 
+  PVM_BYTECODE__PUSH,
+  PVM_BYTECODE__DROP,
+  PVM_BYTECODE__DUP,
+  PVM_BYTECODE__JTRUE, 
+  PVM_BYTECODE__JFALSE, 
+  PVM_BYTECODE__JUMP, 
+  PVM_BYTECODE__CALL, // @ is in the bytecode. 
+  PVM_BYTECODE__CALL_STACK_OBJECT, // object being called is on the stack. 
+  PVM_BYTECODE__CALL_PTR, // @ is on the stack. 
+  PVM_BYTECODE__CALL_FFI, // @ is on the stack. 
+  PVM_BYTECODE__CALL_LIB, // @ is in the bytecode  
+  PVM_BYTECODE__CALL_METHOD, 
+  PVM_BYTECODE__CALL_CLIENT, 
+  PVM_BYTECODE__CALL_CLIENT_METHOD, 
+  PVM_BYTECODE__CALL_LAMBDA, // stack[0]: lambda object or reference to a lambda object 
+  PVM_BYTECODE__RET, 
+  PVM_BYTECODE__CHECK_ARG_NB, // ARG_NB is in the bytecode 
+  PVM_BYTECODE__ENSURE_TYPE, // ARG_NB is in the bytecode 
+  PVM_BYTECODE__LEA_LOCAL, // @ is in the bytecode 
+  PVM_BYTECODE__ARRAY_GET_ELT0, // POSTFIX: array @ stack[0] 
+  PVM_BYTECODE__ARRAY_GET_ELT_I, // POSTFIX: array @ stack[-1], index @ stack[0] 
+  //PVM_BYTECODE__ARRAY_GET_ELT0_PROXY, 
+  //PVM_BYTECODE__ARRAY_GET_ELT0_POINTER, 
+  PVM_BYTECODE__MEM_ALLOCATE, // size is in the bytecode 
+  PVM_BYTECODE__MEM_DEALLOCATE, // size is in the bytecode 
+  PVM_BYTECODE__MEM_LOAD, // @ is in the bytecode 
+  PVM_BYTECODE__MEM_LOAD__STACK, // @ is on the stack 
+  PVM_BYTECODE__MEM_STORE__STACK, // POSTFIX: [-1] is @, [0] is value (the size must be taken into account) 
+  PVM_BYTECODE__MEM_STORE, // @ is in the bytecode, [0] is value (the size must be taken into account) 
+  //PVM_BYTECODE__MEM_STORE2, // [0] is @, [-1] is value (the size must be taken into account) 
+  PVM_BYTECODE__MEM_LOAD_LOCAL, // @ is in the bytecode 
+  PVM_BYTECODE__MEM_STORE_LOCAL, // @ is in the bytecode 
+  PVM_BYTECODE__REP, // Times is in the bytecode - int 
+  PVM_BYTECODE__MEMORY_FRAME__INC_AND_LOAD, // RL: TO BE REMOVED // offset to the call-memory-frame in the bytecode 
+  PVM_BYTECODE__MEMORY_FRAME__ALLOC_AND_INC, // bytecode[0]: size 
+  PVM_BYTECODE__MEMORY_FRAME__LEX_ENV__STATIC_INIT, // no arg 
+  PVM_BYTECODE__MEMORY_FRAME__LEX_ENV__LAMBDA_INIT, // stack[0]: lambda object or ref to a lambda object 
+  PVM_BYTECODE__MEMORY_FRAME__DEC_AND_CONDITIONALLY_DEALLOC, // bytecode[0]: retval_type 
+  PVM_BYTECODE__MAKE_LAMBDA, // bytecode[0]: offset to the lex-env + lambda_type_i + nesting_level + lambda_bytecode_offset 
+  PVM_BYTECODE__BIT_NOT, 
+  PVM_BYTECODE__BIT_AND, 
+  PVM_BYTECODE__BIT_OR, 
+  PVM_BYTECODE__BIT_XOR, 
+  PVM_BYTECODE__BOOL_NOT, 
+  PVM_BYTECODE__BOOL_AND, 
+  PVM_BYTECODE__BOOL_OR, 
+  PVM_BYTECODE__BOOL_XOR, 
+  PVM_BYTECODE__EQUAL_HUH, 
+  PVM_BYTECODE__INF_HUH, 
+  PVM_BYTECODE__INFEQ_HUH, 
+  PVM_BYTECODE__SUP_HUH, 
+  PVM_BYTECODE__SUPEQ_HUH, 
+  // SELECT OPERATIONS: 1 
+  PVM_BYTECODE__IFF, // CHOOSE, SELECT, COND, IFF // [-2]: if-true [-1]: if-false [0]: test  [ // Before, the top of the stack contains the result of the test. After, it should be on top. ] 
+  // VM ARITH OPERATIONS: 8 
+  PVM_BYTECODE__ZERO, 
+  PVM_BYTECODE__NEG, 
+  PVM_BYTECODE__INC1, 
+  PVM_BYTECODE__DEC1, 
+  PVM_BYTECODE__ADD, 
+  PVM_BYTECODE__MULT, 
+  PVM_BYTECODE__SUB, 
+  PVM_BYTECODE__EUCLIDIAN, // [-1]: remainder ; [0]: quotient 
+  PVM_BYTECODE__RDIV, 
+  PVM_BYTECODE__IDIV, 
+  PVM_BYTECODE__IMOD, 
+  PVM_BYTECODE__RECORD_GET_FIELD_VALUE_BY_NAME,  // POSTFIX: [0]: record value (not @) ; bytecode [1]: ident (not offset) -- it returns the field value (not address or offset) 
+  PVM_BYTECODE__RECORD_GET_FIELD_ADDRESS_BY_NAME,  // POSTFIX: [0]: record @ ; bytecode [1]: ident (not offset) -- it returns the field address 
+  PVM_BYTECODE__MENU, // bytecode [1]: menu_i as int8 
+  PVM_BYTECODE__COUNT 
+}; 
+
+static const char * pvm_bytecode__type__cstr__array[] = {
+  "NULL", 
+  "ABORT", 
+  "HALT", 
+  "NOP", 
+  "VMCALL", 
+  "SYSCALL", 
+  "PUSH",
+  "DROP",
+  "DUP",
+  "JTRUE", 
+  "JFALSE", 
+  "JUMP", 
+  "CALL", // @ is in the bytecode. 
+  "CALL_STACK_OBJECT", // object being called is on the stack. 
+  "CALL_PTR", // @ is on the stack. 
+  "CALL_FFI", // @ is on the stack. 
+  "CALL_LIB", // @ is in the bytecode  
+  "CALL_METHOD", 
+  "CALL_CLIENT", 
+  "CALL_CLIENT_METHOD", 
+  "CALL_LAMBDA", // stack[0]: lambda object or reference to a lambda object 
+  "RET", 
+  "CHECK_ARG_NB", // ARG_NB is in the bytecode 
+  "ENSURE_TYPE", // ARG_NB is in the bytecode 
+  "LEA_LOCAL", // @ is in the bytecode 
+  "ARRAY_GET_ELT0", // POSTFIX: array @ stack[0] 
+  "ARRAY_GET_ELT_I", // POSTFIX: array @ stack[-1]", index @ stack[0] 
+  //"ARRAY_GET_ELT0_PROXY", 
+  //"ARRAY_GET_ELT0_POINTER", 
+  "MEM_ALLOCATE", // size is in the bytecode 
+  "MEM_DEALLOCATE", // size is in the bytecode 
+  "MEM_LOAD", // @ is in the bytecode 
+  "MEM_LOAD__STACK", // @ is on the stack 
+  "MEM_STORE__STACK", // POSTFIX: [-1] is @", [0] is value (the size must be taken into account) 
+  "MEM_STORE", // @ is in the bytecode", [0] is value (the size must be taken into account) 
+  //"MEM_STORE2", // [0] is @", [-1] is value (the size must be taken into account) 
+  "MEM_LOAD_LOCAL", // @ is in the bytecode 
+  "MEM_STORE_LOCAL", // @ is in the bytecode 
+  "REP", // Times is in the bytecode - int 
+  "MEMORY_FRAME__INC_AND_LOAD", // RL: TO BE REMOVED // offset to the call-memory-frame in the bytecode 
+  "MEMORY_FRAME__ALLOC_AND_INC", // bytecode[0]: size 
+  "MEMORY_FRAME__LEX_ENV__STATIC_INIT", // no arg 
+  "MEMORY_FRAME__LEX_ENV__LAMBDA_INIT", // stack[0]: lambda object or ref to a lambda object 
+  "MEMORY_FRAME__DEC_AND_CONDITIONALLY_DEALLOC", // bytecode[0]: retval_type 
+  "MAKE_LAMBDA", // bytecode[0]: offset to the lex-env + lambda_type_i + nesting_level + lambda_bytecode_offset 
+  "BIT_NOT", 
+  "BIT_AND", 
+  "BIT_OR", 
+  "BIT_XOR", 
+  "BOOL_NOT", 
+  "BOOL_AND", 
+  "BOOL_OR", 
+  "BOOL_XOR", 
+  "EQUAL_HUH", 
+  "INF_HUH", 
+  "INFEQ_HUH", 
+  "SUP_HUH", 
+  "SUPEQ_HUH", 
+  // SELECT OPERATIONS: 1 
+  "IFF", // CHOOSE", SELECT", COND", IFF // [-2]: if-true [-1]: if-false [0]: test  [ // Before", the top of the stack contains the result of the test. After", it should be on top. ] 
+  // VM ARITH OPERATIONS: 8 
+  "ZERO", 
+  "NEG", 
+  "INC1", 
+  "DEC1", 
+  "ADD", 
+  "MULT", 
+  "SUB", 
+  "EUCLIDIAN", // [-1]: remainder ; [0]: quotient 
+  "RDIV", 
+  "IDIV", 
+  "IMOD", 
+  "RECORD_GET_FIELD_VALUE_BY_NAME",  // POSTFIX: [0]: record value (not @) ; bytecode [1]: ident (not offset) -- it returns the field value (not address or offset) 
+  "RECORD_GET_FIELD_ADDRESS_BY_NAME",  // POSTFIX: [0]: record @ ; bytecode [1]: ident (not offset) -- it returns the field address 
+  "MENU", // bytecode [1]: menu_i as int8 
+  NULL 
+}; 
+ 
+enum { pvm_bytecode__type__cstr__size = ARRAY_SIZE(pvm_bytecode__type__cstr__array) }; 
+
+static void assert_compile_time__d632sad4gdss(void) {
+  ASSERT_COMPILE(pvm_bytecode__type__cstr__size == PVM_BYTECODE__COUNT + 1); 
+  ASSERT_COMPILE(PVM_BYTECODE__COUNT < 256); // Then, not bytecode anymore, but wordcode. 
+}; 
+ 
+static const char * pvm_bytecode__cstr(const int bytecode) {
+  return pvm_bytecode__type__cstr__array[bytecode]; 
+};
+ 
+#define bytecode_type__get_cstr pvm_bytecode__cstr
+
+#if 0 
+static int bytecode_type__check_is_int8_huh__one(const int bytecode) { 
+  return ((INT8_MIN <= bytecode) && (INT8_MAX >= bytecode)); 
+};
+
+static int bytecode_type__check_is_int8_huh__index(void) {
+  for (int i = 0; i < pvm_bytecode__size; i++) { 
+    const int bytecode = pvm_bytecode__value[i];
+    if (!(bytecode_type__check_is_int8_huh__one(bytecode))) { return i; }; 
+  }; 
+  return -1; 
+}; 
+
+static int bytecode_type__check_is_int8_huh__all(void) {  
+  return (-1 == bytecode_type__check_is_int8_huh__index()); 
+};
+#endif 
+
+
+
+
+
+

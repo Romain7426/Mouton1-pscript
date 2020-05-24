@@ -1,0 +1,1 @@
+const a = 1; b = 2; a = 3; var a : integer; type float : real; begin end; begin a := 2; end; procedure c() begin end; function c() begin end method string of integer () begin end;  var u : variant; begin u += 2; end 

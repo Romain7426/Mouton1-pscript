@@ -1,0 +1,2373 @@
+#ifndef PSCRIPT_GLOBAL_H
+#include "./src/lib__01__pre_header.ci" 
+#include "./src/lib__02__header.ci" 
+#include "./src/lib__03.ci"
+#include "./src/lib__04__string_stack.ci"
+#include "./src/lib__05__error_state.ci"
+#include "./src/lib__06__exception.ci"
+#include "./src/pscript_token_type.h"
+#include "./src/pscript_inttype.h"
+#endif 
+
+
+
+// *** TYPES *** 
+
+
+// *** TYPE__CSTR *** 
+
+// -- EXPR_TREE -- 
+
+#define GET_TYPE_CSTR__TOKEN(type) pscript_token__type_get_cstr(type)
+
+static const char * pscript_expr_tree__type__cstr__array[] = { 
+  //"IOPPOSITE", 
+  //"ROPPOSITE", 
+  "FUNCALL", 
+  "LAMBDA", 
+  "COMMA_LIST", 
+  NULL
+}; 
+enum { pscript_expr_tree__type__cstr__array__size = ARRAY_SIZE(pscript_expr_tree__type__cstr__array) }; 
+
+static const char * pscript_expr_tree__type__get_cstr(const int expr_tree) { 
+  if (expr_tree < PSCRIPT_TOKEN_COUNT) { 
+    return pscript_token__type_get_cstr(expr_tree); 
+  }; 
+  return pscript_expr_tree__type__cstr__array[expr_tree - PSCRIPT_EXPR_TREE__TYPE__BASE - 1]; 
+}; 
+
+#define GET_TYPE_CSTR__EXPR_TREE(type) pscript_expr_tree__type__get_cstr(type)
+
+// -- TYPE_TREE -- 
+
+static const char * pscript_type_tree__type__cstr__array[] = { 
+  "SUBRANGE_CONST", 
+  "SUBRANGE_EXPR", 
+  "ARRAY", 
+  "RECORD", 
+  "RECORD_FIELD_NIL", 
+  "RECORD_FIELD_CONS", 
+  "FUNPROC", 
+  "METHODE", 
+  "ARG_LIST__NIL", 
+  "ARG_LIST__CONS", 
+  "ARG_LIST__ONE", 
+  NULL
+}; 
+enum { pscript_type_tree__type__cstr__array__size = ARRAY_SIZE(pscript_type_tree__type__cstr__array) }; 
+
+static const char * pscript_type_tree__type__get_cstr(const int type_tree) { 
+  if (type_tree < PSCRIPT_TOKEN_COUNT) { 
+    return pscript_token__type_get_cstr(type_tree); 
+  }; 
+  return pscript_type_tree__type__cstr__array[type_tree - PSCRIPT_TYPE_TREE__TYPE__BASE - 1]; 
+}; 
+
+#define GET_TYPE_CSTR__TYPE_TREE(type) pscript_type_tree__type__get_cstr(type)
+
+
+// -- INST_LIST -- 
+
+static const char * pscript_inst_list__type__cstr__array[] = { 
+  "LIST__NIL", 
+  "LIST__CONS", 
+  "BEGIN", 
+  "IF_NO_ELSE", 
+  "IF_ELSE", 
+  "WHEN", 
+  "UNLESS", 
+  "WHILE", 
+  "FOR", 
+  "REPEAT", 
+  "EXPR", 
+  NULL
+}; 
+enum { pscript_inst_list__type__cstr__array__size = ARRAY_SIZE(pscript_inst_list__type__cstr__array) }; 
+
+static const char * pscript_inst_list__type__get_cstr(const int decl_local_type) { 
+  return pscript_inst_list__type__cstr__array[decl_local_type - PSCRIPT_INST_LIST__TYPE__BASE - 1]; 
+};
+ 
+#define GET_TYPE_CSTR__INST_LIST(type) pscript_inst_list__type__get_cstr(type)
+ 
+// -- DECL_LOCAL -- 
+
+static const char * pscript_decl_local_list__type__cstr__array[] = { 
+  "VARIABLE", 
+  "LOCALVAR__NIL", 
+  "LOCALVAR__CONS", 
+  "LOCALVAR__ONE", 
+  NULL
+}; 
+enum { pscript_decl_local_list__type__cstr__array__size = ARRAY_SIZE(pscript_decl_local_list__type__cstr__array) }; 
+
+static const char * pscript_decl_local_list__type__get_cstr(const int decl_local_type) { 
+  return pscript_decl_local_list__type__cstr__array[decl_local_type - PSCRIPT_DECL_LOCAL_LIST__TYPE__BASE - 1]; 
+}; 
+
+#define GET_TYPE_CSTR__DECL_LOCAL_LIST(type) pscript_decl_local_list__type__get_cstr(type)
+
+// -- DECL_TOPLEVEL -- 
+
+static const char * pscript_decl_toplevel_list__type__cstr__array[] = { 
+  "CONSTANTE", 
+  "TYPE", 
+  "VARIABLE", 
+  "MAINPROC", 
+  "FUNPROC", 
+  "METHOD", 
+  NULL
+}; 
+enum { pscript_decl_toplevel_list__type__cstr__array__size = ARRAY_SIZE(pscript_decl_toplevel_list__type__cstr__array) }; 
+
+static const char * pscript_decl_toplevel_list__type__get_cstr(const int decl_toplevel_type) { 
+  return pscript_decl_toplevel_list__type__cstr__array[decl_toplevel_type - PSCRIPT_DECL_TOPLEVEL_LIST__TYPE__BASE - 1]; 
+}; 
+
+#define GET_TYPE_CSTR__DECL_TOPLEVEL_LIST(type) pscript_decl_toplevel_list__type__get_cstr(type)
+
+
+// -- ASSERT_COMPILE -- 
+
+static void assert_compile__dakj2jd3ds1pf(void) { 
+  ASSERT_COMPILE(pscript_expr_tree__type__cstr__array__size          == PSCRIPT_EXPR_TREE__TYPE__COUNT          + 1); 
+  ASSERT_COMPILE(pscript_type_tree__type__cstr__array__size          == PSCRIPT_TYPE_TREE__TYPE__COUNT          + 1); 
+  ASSERT_COMPILE(pscript_inst_list__type__cstr__array__size          == PSCRIPT_INST_LIST__TYPE__COUNT          + 1); 
+  ASSERT_COMPILE(pscript_decl_local_list__type__cstr__array__size    == PSCRIPT_DECL_LOCAL_LIST__TYPE__COUNT    + 1); 
+  ASSERT_COMPILE(pscript_decl_toplevel_list__type__cstr__array__size == PSCRIPT_DECL_TOPLEVEL_LIST__TYPE__COUNT + 1); 
+}; 
+
+
+
+
+// **** TOKEN *** 
+// RL: It's a sub-type of the EXPR_TREE type. 
+
+//#define PSCRIPT_PARSER_TOKEN__GET_FIELDS_NB__BY_TYPE(type) 3 
+#define PSCRIPT_PARSER_TOKEN__GET_FIELDS_NB__BY_FIELD(p) (*((const int8_t *) (p + 1)))
+
+#define PSCRIPT_PARSER_TOKEN_FIELDS_NAME(field_i) (	\
+  (field_i) == 0 ? "type" :	\
+  (field_i) == 1 ? "fields_nb" : \
+  (field_i) == 2 ? "token_i" : \
+  (field_i) == 3 ? "descendants[0]" : \
+  (field_i) == 4 ? "descendants[1]" : \
+  (field_i) == 5 ? "descendants[2]" : \
+  (field_i) == 6 ? "descendants[3]" : \
+  (field_i) == 7 ? "descendants[4]" : \
+  (field_i) == 8 ? "descendants[5]" : \
+  (field_i) == 9 ? "descendants[6]" : \
+  NULL )
+
+#define PSCRIPT_PARSER_TOKEN_FIELD_INTTYPE(field_i) (	\
+  (field_i) == 0 ? PSCRIPT_UINT8 : \
+  (field_i) == 1 ? PSCRIPT_INT8  : \
+  (field_i) == 2 ? PSCRIPT_INT16 : \
+  (field_i) == 3 ? PSCRIPT_INT16 : \
+  PSCRIPT_INT16 ) 
+//RL: The default case is for an expr_tree: in an expr_tree, a node could be a token, and have several descendants. 
+
+enum { PSCRIPT_PARSER_TOKEN_FIELD_INTTYPE__FIELD_0 = PSCRIPT_PARSER_TOKEN_FIELD_INTTYPE(0) }; 
+enum { PSCRIPT_PARSER_TOKEN_FIELD_INTTYPE__FIELD_1 = PSCRIPT_PARSER_TOKEN_FIELD_INTTYPE(1) }; 
+enum { PSCRIPT_PARSER_TOKEN_FIELD_INTTYPE__FIELD_2 = PSCRIPT_PARSER_TOKEN_FIELD_INTTYPE(2) }; 
+enum { PSCRIPT_PARSER_TOKEN_FIELD_INTTYPE__FIELD_3 = PSCRIPT_PARSER_TOKEN_FIELD_INTTYPE(3) }; 
+enum { PSCRIPT_PARSER_TOKEN_FIELD_INTTYPE__FIELD_4 = PSCRIPT_PARSER_TOKEN_FIELD_INTTYPE(4) }; 
+enum { PSCRIPT_PARSER_TOKEN_FIELD_INTTYPE__FIELD_5 = PSCRIPT_PARSER_TOKEN_FIELD_INTTYPE(5) }; 
+enum { PSCRIPT_PARSER_TOKEN_FIELD_INTTYPE__FIELD_6 = PSCRIPT_PARSER_TOKEN_FIELD_INTTYPE(6) }; 
+enum { PSCRIPT_PARSER_TOKEN_FIELD_INTTYPE__FIELD_7 = PSCRIPT_PARSER_TOKEN_FIELD_INTTYPE(7) }; 
+enum { PSCRIPT_PARSER_TOKEN_FIELD_INTTYPE__FIELD_8 = PSCRIPT_PARSER_TOKEN_FIELD_INTTYPE(8) }; 
+enum { PSCRIPT_PARSER_TOKEN_FIELD_INTTYPE__FIELD_9 = PSCRIPT_PARSER_TOKEN_FIELD_INTTYPE(9) }; 
+
+enum { PSCRIPT_PARSER_TOKEN_FIELD_SIZEOF__FIELD_0 = PSCRIPT_SIZEOF(PSCRIPT_PARSER_TOKEN_FIELD_INTTYPE__FIELD_0) }; 
+enum { PSCRIPT_PARSER_TOKEN_FIELD_SIZEOF__FIELD_1 = PSCRIPT_SIZEOF(PSCRIPT_PARSER_TOKEN_FIELD_INTTYPE__FIELD_1) }; 
+enum { PSCRIPT_PARSER_TOKEN_FIELD_SIZEOF__FIELD_2 = PSCRIPT_SIZEOF(PSCRIPT_PARSER_TOKEN_FIELD_INTTYPE__FIELD_2) }; 
+enum { PSCRIPT_PARSER_TOKEN_FIELD_SIZEOF__FIELD_3 = PSCRIPT_SIZEOF(PSCRIPT_PARSER_TOKEN_FIELD_INTTYPE__FIELD_3) }; 
+enum { PSCRIPT_PARSER_TOKEN_FIELD_SIZEOF__FIELD_4 = PSCRIPT_SIZEOF(PSCRIPT_PARSER_TOKEN_FIELD_INTTYPE__FIELD_4) }; 
+enum { PSCRIPT_PARSER_TOKEN_FIELD_SIZEOF__FIELD_5 = PSCRIPT_SIZEOF(PSCRIPT_PARSER_TOKEN_FIELD_INTTYPE__FIELD_5) }; 
+enum { PSCRIPT_PARSER_TOKEN_FIELD_SIZEOF__FIELD_6 = PSCRIPT_SIZEOF(PSCRIPT_PARSER_TOKEN_FIELD_INTTYPE__FIELD_6) }; 
+enum { PSCRIPT_PARSER_TOKEN_FIELD_SIZEOF__FIELD_7 = PSCRIPT_SIZEOF(PSCRIPT_PARSER_TOKEN_FIELD_INTTYPE__FIELD_7) }; 
+enum { PSCRIPT_PARSER_TOKEN_FIELD_SIZEOF__FIELD_8 = PSCRIPT_SIZEOF(PSCRIPT_PARSER_TOKEN_FIELD_INTTYPE__FIELD_8) }; 
+enum { PSCRIPT_PARSER_TOKEN_FIELD_SIZEOF__FIELD_9 = PSCRIPT_SIZEOF(PSCRIPT_PARSER_TOKEN_FIELD_INTTYPE__FIELD_9) }; 
+
+enum { PSCRIPT_PARSER_TOKEN_FIELD_SIZEOF__CUMULATED_0 = (0) }; 
+enum { PSCRIPT_PARSER_TOKEN_FIELD_SIZEOF__CUMULATED_1 = (PSCRIPT_PARSER_TOKEN_FIELD_SIZEOF__CUMULATED_0 + PSCRIPT_PARSER_TOKEN_FIELD_SIZEOF__FIELD_0) }; 
+enum { PSCRIPT_PARSER_TOKEN_FIELD_SIZEOF__CUMULATED_2 = (PSCRIPT_PARSER_TOKEN_FIELD_SIZEOF__CUMULATED_1 + PSCRIPT_PARSER_TOKEN_FIELD_SIZEOF__FIELD_1) }; 
+enum { PSCRIPT_PARSER_TOKEN_FIELD_SIZEOF__CUMULATED_3 = (PSCRIPT_PARSER_TOKEN_FIELD_SIZEOF__CUMULATED_2 + PSCRIPT_PARSER_TOKEN_FIELD_SIZEOF__FIELD_2) }; 
+enum { PSCRIPT_PARSER_TOKEN_FIELD_SIZEOF__CUMULATED_4 = (PSCRIPT_PARSER_TOKEN_FIELD_SIZEOF__CUMULATED_3 + PSCRIPT_PARSER_TOKEN_FIELD_SIZEOF__FIELD_3) }; 
+enum { PSCRIPT_PARSER_TOKEN_FIELD_SIZEOF__CUMULATED_5 = (PSCRIPT_PARSER_TOKEN_FIELD_SIZEOF__CUMULATED_4 + PSCRIPT_PARSER_TOKEN_FIELD_SIZEOF__FIELD_4) }; 
+enum { PSCRIPT_PARSER_TOKEN_FIELD_SIZEOF__CUMULATED_6 = (PSCRIPT_PARSER_TOKEN_FIELD_SIZEOF__CUMULATED_5 + PSCRIPT_PARSER_TOKEN_FIELD_SIZEOF__FIELD_5) }; 
+enum { PSCRIPT_PARSER_TOKEN_FIELD_SIZEOF__CUMULATED_7 = (PSCRIPT_PARSER_TOKEN_FIELD_SIZEOF__CUMULATED_6 + PSCRIPT_PARSER_TOKEN_FIELD_SIZEOF__FIELD_6) }; 
+enum { PSCRIPT_PARSER_TOKEN_FIELD_SIZEOF__CUMULATED_8 = (PSCRIPT_PARSER_TOKEN_FIELD_SIZEOF__CUMULATED_7 + PSCRIPT_PARSER_TOKEN_FIELD_SIZEOF__FIELD_7) }; 
+enum { PSCRIPT_PARSER_TOKEN_FIELD_SIZEOF__CUMULATED_9 = (PSCRIPT_PARSER_TOKEN_FIELD_SIZEOF__CUMULATED_8 + PSCRIPT_PARSER_TOKEN_FIELD_SIZEOF__FIELD_8) }; 
+
+enum { PSCRIPT_PARSER_TOKEN_FIELD_OFFSETOF__FIELD_0 = PSCRIPT_PARSER_TOKEN_FIELD_SIZEOF__CUMULATED_0 }; 
+enum { PSCRIPT_PARSER_TOKEN_FIELD_OFFSETOF__FIELD_1 = PSCRIPT_PARSER_TOKEN_FIELD_SIZEOF__CUMULATED_1 }; 
+enum { PSCRIPT_PARSER_TOKEN_FIELD_OFFSETOF__FIELD_2 = PSCRIPT_PARSER_TOKEN_FIELD_SIZEOF__CUMULATED_2 }; 
+enum { PSCRIPT_PARSER_TOKEN_FIELD_OFFSETOF__FIELD_3 = PSCRIPT_PARSER_TOKEN_FIELD_SIZEOF__CUMULATED_3 }; 
+enum { PSCRIPT_PARSER_TOKEN_FIELD_OFFSETOF__FIELD_4 = PSCRIPT_PARSER_TOKEN_FIELD_SIZEOF__CUMULATED_4 }; 
+enum { PSCRIPT_PARSER_TOKEN_FIELD_OFFSETOF__FIELD_5 = PSCRIPT_PARSER_TOKEN_FIELD_SIZEOF__CUMULATED_5 }; 
+enum { PSCRIPT_PARSER_TOKEN_FIELD_OFFSETOF__FIELD_6 = PSCRIPT_PARSER_TOKEN_FIELD_SIZEOF__CUMULATED_6 }; 
+enum { PSCRIPT_PARSER_TOKEN_FIELD_OFFSETOF__FIELD_7 = PSCRIPT_PARSER_TOKEN_FIELD_SIZEOF__CUMULATED_7 }; 
+enum { PSCRIPT_PARSER_TOKEN_FIELD_OFFSETOF__FIELD_8 = PSCRIPT_PARSER_TOKEN_FIELD_SIZEOF__CUMULATED_8 }; 
+enum { PSCRIPT_PARSER_TOKEN_FIELD_OFFSETOF__FIELD_9 = PSCRIPT_PARSER_TOKEN_FIELD_SIZEOF__CUMULATED_9 }; 
+
+static const char * pscript_parser_token_fields_names[] = { 
+  PSCRIPT_PARSER_TOKEN_FIELDS_NAME(0), 
+  PSCRIPT_PARSER_TOKEN_FIELDS_NAME(1), 
+  PSCRIPT_PARSER_TOKEN_FIELDS_NAME(2), 
+  PSCRIPT_PARSER_TOKEN_FIELDS_NAME(3), 
+  PSCRIPT_PARSER_TOKEN_FIELDS_NAME(4), 
+  PSCRIPT_PARSER_TOKEN_FIELDS_NAME(5), 
+  PSCRIPT_PARSER_TOKEN_FIELDS_NAME(6), 
+  PSCRIPT_PARSER_TOKEN_FIELDS_NAME(7), 
+  PSCRIPT_PARSER_TOKEN_FIELDS_NAME(8), 
+  PSCRIPT_PARSER_TOKEN_FIELDS_NAME(9), 
+  NULL 
+}; 
+ 
+static const int8_t pscript_parser_token_field_inttype[] = { 
+  PSCRIPT_PARSER_TOKEN_FIELD_INTTYPE__FIELD_0, 
+  PSCRIPT_PARSER_TOKEN_FIELD_INTTYPE__FIELD_1, 
+  PSCRIPT_PARSER_TOKEN_FIELD_INTTYPE__FIELD_2, 
+  PSCRIPT_PARSER_TOKEN_FIELD_INTTYPE__FIELD_3, 
+  PSCRIPT_PARSER_TOKEN_FIELD_INTTYPE__FIELD_4, 
+  PSCRIPT_PARSER_TOKEN_FIELD_INTTYPE__FIELD_5, 
+  PSCRIPT_PARSER_TOKEN_FIELD_INTTYPE__FIELD_6, 
+  PSCRIPT_PARSER_TOKEN_FIELD_INTTYPE__FIELD_7, 
+  PSCRIPT_PARSER_TOKEN_FIELD_INTTYPE__FIELD_8, 
+  PSCRIPT_PARSER_TOKEN_FIELD_INTTYPE__FIELD_9, 
+}; 
+
+static const int8_t pscript_parser_token_field_sizeof[] = { 
+  PSCRIPT_PARSER_TOKEN_FIELD_SIZEOF__FIELD_0, 
+  PSCRIPT_PARSER_TOKEN_FIELD_SIZEOF__FIELD_1, 
+  PSCRIPT_PARSER_TOKEN_FIELD_SIZEOF__FIELD_2, 
+  PSCRIPT_PARSER_TOKEN_FIELD_SIZEOF__FIELD_3, 
+  PSCRIPT_PARSER_TOKEN_FIELD_SIZEOF__FIELD_4, 
+  PSCRIPT_PARSER_TOKEN_FIELD_SIZEOF__FIELD_5, 
+  PSCRIPT_PARSER_TOKEN_FIELD_SIZEOF__FIELD_6, 
+  PSCRIPT_PARSER_TOKEN_FIELD_SIZEOF__FIELD_7, 
+  PSCRIPT_PARSER_TOKEN_FIELD_SIZEOF__FIELD_8, 
+  PSCRIPT_PARSER_TOKEN_FIELD_SIZEOF__FIELD_9, 
+}; 
+ 
+static const int8_t pscript_parser_token_field_offsetof[] = { 
+  PSCRIPT_PARSER_TOKEN_FIELD_OFFSETOF__FIELD_0, 
+  PSCRIPT_PARSER_TOKEN_FIELD_OFFSETOF__FIELD_1, 
+  PSCRIPT_PARSER_TOKEN_FIELD_OFFSETOF__FIELD_2, 
+  PSCRIPT_PARSER_TOKEN_FIELD_OFFSETOF__FIELD_3, 
+  PSCRIPT_PARSER_TOKEN_FIELD_OFFSETOF__FIELD_4, 
+  PSCRIPT_PARSER_TOKEN_FIELD_OFFSETOF__FIELD_5, 
+  PSCRIPT_PARSER_TOKEN_FIELD_OFFSETOF__FIELD_6, 
+  PSCRIPT_PARSER_TOKEN_FIELD_OFFSETOF__FIELD_7, 
+  PSCRIPT_PARSER_TOKEN_FIELD_OFFSETOF__FIELD_8, 
+  PSCRIPT_PARSER_TOKEN_FIELD_OFFSETOF__FIELD_9, 
+}; 
+
+//enum { pscript_parser_token_chunk_size__compiler_constant = PSCRIPT_PARSER_TOKEN_FIELD_OFFSETOF__FIELD_2 }; 
+
+//#define GET_FIELDS_NB__TOKEN(type,p) PSCRIPT_PARSER_TOKEN__GET_FIELDS_NB__BY_TYPE(type)
+#define GET_FIELDS_NB__TOKEN(type,p) PSCRIPT_PARSER_TOKEN__GET_FIELDS_NB__BY_FIELD(p)
+
+#define GET_FIELD_NAME__TOKEN(type,field_i) (pscript_parser_token_fields_names[field_i]) 
+
+#define GET_FIELD_INTTYPE__TOKEN(type,field_i) (pscript_parser_token_field_inttype[field_i]) 
+
+#define GET_FIELD_OFFSETOF__TOKEN(type,field_i) (pscript_parser_token_field_offsetof[field_i]) 
+
+//#define GET_CHUNK_SIZE__TOKEN(type,provided_values_nb) pscript_parser_token_chunk_size__compiler_constant
+//#define GET_CHUNK_SIZE__TOKEN(type,provided_values_nb) (pscript_parser_token_field_offsetof[2+provided_values_nb])
+#define GET_CHUNK_SIZE__TOKEN(type,provided_values_nb) (2+provided_values_nb*2)
+// RL: A token could be a sub-tree of an expression tree. 
+
+
+
+// ********************************************************************* 
+
+// RL: The following types are all more or less the same. 
+//     The TOKEN type is different as its type does not statically give the number of fields: it's a dynamic information. 
+
+// *** EXPR_TREE *** 
+
+#define PSCRIPT_PARSER_EXPR_TREE__GET_FIELD_NAME__BY_TYPE(type,field_i) ( \
+  (type) == PSCRIPT_EXPR_TREE__TYPE__FUNCALL    ? ((field_i) == 0 ? "type" : (field_i) == 1 ? "fun_subtree"             : (field_i) == 2 ? "arg_list"     : NULL) : \
+  (type) == PSCRIPT_EXPR_TREE__TYPE__LAMBDA     ? ((field_i) == 0 ? "type" : (field_i) == 1 ? "lambda_type_expr_tree"   : (field_i) == 2 ? "localvar_ref" : (field_i) == 3 ? "inst_ref" : NULL) : \
+  (type) == PSCRIPT_EXPR_TREE__TYPE__COMMA_LIST ? ((field_i) == 0 ? "type" : (field_i) == 1 ? "arglist_subtree"         : (field_i) == 2 ? "arg_subtree"  : NULL) : \
+    NULL)
+
+#define PSCRIPT_PARSER_EXPR_TREE__GET_FIELDS_NB__BY_TYPE(type) (	\
+  (type) == PSCRIPT_EXPR_TREE__TYPE__FUNCALL    ? 1 + 2 : \
+  (type) == PSCRIPT_EXPR_TREE__TYPE__LAMBDA     ? 1 + 3 : \
+  (type) == PSCRIPT_EXPR_TREE__TYPE__COMMA_LIST ? 1 + 2 : \
+    -1) 
+
+#define PSCRIPT_PARSER_EXPR_TREE__GET_FIELD_INTTYPE__BY_TYPE(type,field_i) (	\
+  (type) == PSCRIPT_EXPR_TREE__TYPE__FUNCALL    ? ((field_i) == 0 ? PSCRIPT_UINT8 : (field_i) == 1 ? PSCRIPT_INT16 : (field_i) == 2 ? PSCRIPT_INT16 : -1) : \
+  (type) == PSCRIPT_EXPR_TREE__TYPE__LAMBDA     ? ((field_i) == 0 ? PSCRIPT_UINT8 : (field_i) == 1 ? PSCRIPT_INT16 : (field_i) == 2 ? PSCRIPT_INT16 : (field_i) == 3 ? PSCRIPT_INT16 : -1) : \
+  (type) == PSCRIPT_EXPR_TREE__TYPE__COMMA_LIST ? ((field_i) == 0 ? PSCRIPT_UINT8 : (field_i) == 1 ? PSCRIPT_INT16 : (field_i) == 2 ? PSCRIPT_INT16 : -1) : \
+    -1)
+
+
+// *** TYPE_TREE *** 
+
+#define PSCRIPT_PARSER_TYPE_TREE__GET_FIELD_NAME__BY_TYPE(type,field_i) ( \
+  (type) == PSCRIPT_TYPE_TREE__TYPE__SUBRANGE_CONST    ? ((field_i) == 0 ? "type" : (field_i) == 1 ? "left_token"   : (field_i) == 2 ? "right_expr" : NULL) : \
+  (type) == PSCRIPT_TYPE_TREE__TYPE__SUBRANGE_EXPR     ? ((field_i) == 0 ? "type" : (field_i) == 1 ? "left_expr"    : (field_i) == 2 ? "right_expr" : NULL) : \
+  (type) == PSCRIPT_TYPE_TREE__TYPE__ARRAY             ? ((field_i) == 0 ? "type" : (field_i) == 1 ? "min_expr"     : (field_i) == 2 ? "max_expr"   : (field_i) == 3 ? "type_expr" : NULL) : \
+  (type) == PSCRIPT_TYPE_TREE__TYPE__RECORD            ? ((field_i) == 0 ? "type" : (field_i) == 1 ? "fields"       : NULL) : \
+  (type) == PSCRIPT_TYPE_TREE__TYPE__RECORD_FIELD_NIL  ? ((field_i) == 0 ? "type" : NULL) : \
+  (type) == PSCRIPT_TYPE_TREE__TYPE__RECORD_FIELD_CONS ? ((field_i) == 0 ? "type" : (field_i) == 1 ? "ident_token"  : (field_i) == 2 ? "type_expr"  : NULL) : \
+  (type) == PSCRIPT_TYPE_TREE__TYPE__FUNPROC           ? ((field_i) == 0 ? "type" : (field_i) == 1 ? "arg_list"     : (field_i) == 2 ? "retval_type_expr" : NULL) : \
+  (type) == PSCRIPT_TYPE_TREE__TYPE__METHODE           ? ((field_i) == 0 ? "type" : (field_i) == 1 ? "of_type_expr" : (field_i) == 2 ? "arg_list"   : (field_i) == 3 ? "retval_type_expr" : NULL) : \
+  (type) == PSCRIPT_TYPE_TREE__TYPE__ARG_LIST__NIL     ? ((field_i) == 0 ? "type" : (field_i) == 1 ? "args_nb"  : NULL) : \
+  (type) == PSCRIPT_TYPE_TREE__TYPE__ARG_LIST__CONS    ? ((field_i) == 0 ? "type" : (field_i) == 1 ? "ident_token"  : (field_i) == 2 ? "byref_huh"  : (field_i) == 3 ? "type_expr" : (field_i) == 4 ? "tail" : NULL) : \
+  (type) == PSCRIPT_TYPE_TREE__TYPE__ARG_LIST__ONE     ? ((field_i) == 0 ? "type" : (field_i) == 1 ? "ident_token"  : (field_i) == 2 ? "byref_huh"  : (field_i) == 3 ? "type_expr" : NULL) : \
+    NULL)
+
+#define PSCRIPT_PARSER_TYPE_TREE__GET_FIELDS_NB__BY_TYPE(type) (	\
+  (type) == PSCRIPT_TYPE_TREE__TYPE__SUBRANGE_CONST    ? 1 + 2 : \
+  (type) == PSCRIPT_TYPE_TREE__TYPE__SUBRANGE_EXPR     ? 1 + 2 : \
+  (type) == PSCRIPT_TYPE_TREE__TYPE__ARRAY             ? 1 + 3 : \
+  (type) == PSCRIPT_TYPE_TREE__TYPE__RECORD            ? 1 + 1 : \
+  (type) == PSCRIPT_TYPE_TREE__TYPE__RECORD_FIELD_NIL  ? 1 + 0 : \
+  (type) == PSCRIPT_TYPE_TREE__TYPE__RECORD_FIELD_CONS ? 1 + 2 : \
+  (type) == PSCRIPT_TYPE_TREE__TYPE__FUNPROC           ? 1 + 2 : \
+  (type) == PSCRIPT_TYPE_TREE__TYPE__METHODE           ? 1 + 3 : \
+  (type) == PSCRIPT_TYPE_TREE__TYPE__ARG_LIST__NIL     ? 1 + 1 : \
+  (type) == PSCRIPT_TYPE_TREE__TYPE__ARG_LIST__CONS    ? 1 + 4 : \
+  (type) == PSCRIPT_TYPE_TREE__TYPE__ARG_LIST__ONE     ? 1 + 3 : \
+    -1) 
+
+#define PSCRIPT_PARSER_TYPE_TREE__GET_FIELD_INTTYPE__BY_TYPE(type,field_i) (	\
+  (type) == PSCRIPT_TYPE_TREE__TYPE__SUBRANGE_CONST    ? ((field_i) == 0 ? PSCRIPT_UINT8 : (field_i) == 1 ? PSCRIPT_INT16 : (field_i) == 2 ? PSCRIPT_INT16 : -1) : \
+  (type) == PSCRIPT_TYPE_TREE__TYPE__SUBRANGE_EXPR     ? ((field_i) == 0 ? PSCRIPT_UINT8 : (field_i) == 1 ? PSCRIPT_INT16 : (field_i) == 2 ? PSCRIPT_INT16 : -1) : \
+  (type) == PSCRIPT_TYPE_TREE__TYPE__ARRAY             ? ((field_i) == 0 ? PSCRIPT_UINT8 : (field_i) == 1 ? PSCRIPT_INT16 : (field_i) == 2 ? PSCRIPT_INT16 : (field_i) == 3 ? PSCRIPT_INT16 : -1) : \
+  (type) == PSCRIPT_TYPE_TREE__TYPE__RECORD            ? ((field_i) == 0 ? PSCRIPT_UINT8 : (field_i) == 1 ? PSCRIPT_INT16 : -1) : \
+  (type) == PSCRIPT_TYPE_TREE__TYPE__RECORD_FIELD_NIL  ? ((field_i) == 0 ? PSCRIPT_UINT8 : -1) : \
+  (type) == PSCRIPT_TYPE_TREE__TYPE__RECORD_FIELD_CONS ? ((field_i) == 0 ? PSCRIPT_UINT8 : (field_i) == 1 ? PSCRIPT_INT16 : (field_i) == 2 ? PSCRIPT_INT16 : -1) : \
+  (type) == PSCRIPT_TYPE_TREE__TYPE__FUNPROC           ? ((field_i) == 0 ? PSCRIPT_UINT8 : (field_i) == 1 ? PSCRIPT_INT16 : (field_i) == 2 ? PSCRIPT_INT16 : -1) : \
+  (type) == PSCRIPT_TYPE_TREE__TYPE__METHODE           ? ((field_i) == 0 ? PSCRIPT_UINT8 : (field_i) == 1 ? PSCRIPT_INT16 : (field_i) == 2 ? PSCRIPT_INT16 : (field_i) == 3 ? PSCRIPT_INT16 : -1) : \
+  (type) == PSCRIPT_TYPE_TREE__TYPE__ARG_LIST__NIL     ? ((field_i) == 0 ? PSCRIPT_UINT8 : (field_i) == 1 ? PSCRIPT_INT8  : -1) : \
+  (type) == PSCRIPT_TYPE_TREE__TYPE__ARG_LIST__CONS    ? ((field_i) == 0 ? PSCRIPT_UINT8 : (field_i) == 1 ? PSCRIPT_INT16 : (field_i) == 2 ? PSCRIPT_INT8 : (field_i) == 3 ? PSCRIPT_INT16 : (field_i) == 4 ? PSCRIPT_INT16 : -1) : \
+  (type) == PSCRIPT_TYPE_TREE__TYPE__ARG_LIST__ONE     ? ((field_i) == 0 ? PSCRIPT_UINT8 : (field_i) == 1 ? PSCRIPT_INT16 : (field_i) == 2 ? PSCRIPT_INT8 : (field_i) == 3 ? PSCRIPT_INT16 : -1) : \
+    -1)
+
+
+// *** INST_LIST *** 
+
+#define PSCRIPT_PARSER_INST_LIST__GET_FIELD_NAME__BY_TYPE(type,field_i) ( \
+  (type) == PSCRIPT_INST_LIST__TYPE__LIST__NIL  ? ((field_i) == 0 ? "type" : NULL) : \
+  (type) == PSCRIPT_INST_LIST__TYPE__LIST__CONS ? ((field_i) == 0 ? "type" : (field_i) == 1 ? "car"            : (field_i) == 2 ? "cdr"           : NULL) : \
+  (type) == PSCRIPT_INST_LIST__TYPE__IF_NO_ELSE ? ((field_i) == 0 ? "type" : (field_i) == 1 ? "test_expr_tree" : (field_i) == 2 ? "inst_if_true"  : (field_i) == 3 ? "inst_list_head" : NULL) : \
+  (type) == PSCRIPT_INST_LIST__TYPE__IF_ELSE    ? ((field_i) == 0 ? "type" : (field_i) == 1 ? "test_expr_tree" : (field_i) == 2 ? "inst_if_true"  : (field_i) == 3 ? "inst_if_false" : (field_i) == 4 ? "inst_list_head" : NULL) : \
+  (type) == PSCRIPT_INST_LIST__TYPE__WHEN       ? ((field_i) == 0 ? "type" : (field_i) == 1 ? "test_expr_tree" : (field_i) == 2 ? "inst_if_true"  : (field_i) == 3 ? "inst_list_head" : NULL) : \
+  (type) == PSCRIPT_INST_LIST__TYPE__UNLESS     ? ((field_i) == 0 ? "type" : (field_i) == 1 ? "test_expr_tree" : (field_i) == 2 ? "inst_if_false" : (field_i) == 3 ? "inst_list_head" : NULL) : \
+  (type) == PSCRIPT_INST_LIST__TYPE__WHILE      ? ((field_i) == 0 ? "type" : (field_i) == 1 ? "test_expr_tree" : (field_i) == 2 ? "inst_if_true"  : (field_i) == 3 ? "inst_list_head" : NULL) : \
+  (type) == PSCRIPT_INST_LIST__TYPE__FOR        ? ((field_i) == 0 ? "type" : (field_i) == 1 ? "ident_token"    : (field_i) == 2 ? "init_expr"     : (field_i) == 3 ? "downto_huh" : (field_i) == 4 ? "final_expr" : (field_i) == 5 ? "step_expr" : (field_i) == 6 ? "inst_if_true" : (field_i) == 7 ? "inst_list_head" : NULL) : \
+  (type) == PSCRIPT_INST_LIST__TYPE__REPEAT     ? ((field_i) == 0 ? "type" : (field_i) == 1 ? "test_expr_tree" : (field_i) == 2 ? "inst"          : (field_i) == 3 ? "inst_list_head" : NULL) : \
+  (type) == PSCRIPT_INST_LIST__TYPE__EXPR       ? ((field_i) == 0 ? "type" : (field_i) == 1 ? "expr_tree"      : (field_i) == 2 ? "inst_list_head" : NULL) : \
+    NULL)
+ 
+#define PSCRIPT_PARSER_INST_LIST__GET_FIELDS_NB__BY_TYPE(type) (	\
+  (type) == PSCRIPT_INST_LIST__TYPE__LIST__NIL  ? 1 + 0 : \
+  (type) == PSCRIPT_INST_LIST__TYPE__LIST__CONS ? 1 + 2 : \
+  (type) == PSCRIPT_INST_LIST__TYPE__IF_NO_ELSE ? 1 + 2 + 1 : \
+  (type) == PSCRIPT_INST_LIST__TYPE__IF_ELSE    ? 1 + 3 + 1 : \
+  (type) == PSCRIPT_INST_LIST__TYPE__WHEN       ? 1 + 2 + 1 : \
+  (type) == PSCRIPT_INST_LIST__TYPE__UNLESS     ? 1 + 2 + 1 : \
+  (type) == PSCRIPT_INST_LIST__TYPE__WHILE      ? 1 + 2 + 1 : \
+  (type) == PSCRIPT_INST_LIST__TYPE__FOR        ? 1 + 6 + 1 : \
+  (type) == PSCRIPT_INST_LIST__TYPE__REPEAT     ? 1 + 2 + 1 : \
+  (type) == PSCRIPT_INST_LIST__TYPE__EXPR       ? 1 + 1 + 1 : \
+    -1) 
+
+//#define PSCRIPT_PARSER_INST_LIST__GET_FIELD_INTTYPE__BY_TYPE(type,field_i) ((field_i) == 0 ? PSCRIPT_UINT8 : PSCRIPT_INT16) 
+
+#define PSCRIPT_PARSER_INST_LIST__GET_FIELD_INTTYPE__BY_TYPE(type,field_i) ( \
+  (type) == PSCRIPT_INST_LIST__TYPE__LIST__NIL  ? ((field_i) == 0 ? PSCRIPT_UINT8 : -1) : \
+  (type) == PSCRIPT_INST_LIST__TYPE__LIST__CONS ? ((field_i) == 0 ? PSCRIPT_UINT8 : (field_i) == 1 ? PSCRIPT_INT16 : (field_i) == 2 ? PSCRIPT_INT16 : -1) : \
+  (type) == PSCRIPT_INST_LIST__TYPE__IF_NO_ELSE ? ((field_i) == 0 ? PSCRIPT_UINT8 : (field_i) == 1 ? PSCRIPT_INT16 : (field_i) == 2 ? PSCRIPT_INT16 : (field_i) == 3 ? PSCRIPT_INT16 : -1) : \
+  (type) == PSCRIPT_INST_LIST__TYPE__IF_ELSE    ? ((field_i) == 0 ? PSCRIPT_UINT8 : (field_i) == 1 ? PSCRIPT_INT16 : (field_i) == 2 ? PSCRIPT_INT16 : (field_i) == 3 ? PSCRIPT_INT16 : (field_i) == 4 ? PSCRIPT_INT16 : -1) : \
+  (type) == PSCRIPT_INST_LIST__TYPE__WHEN       ? ((field_i) == 0 ? PSCRIPT_UINT8 : (field_i) == 1 ? PSCRIPT_INT16 : (field_i) == 2 ? PSCRIPT_INT16 : (field_i) == 3 ? PSCRIPT_INT16 : -1) : \
+  (type) == PSCRIPT_INST_LIST__TYPE__UNLESS     ? ((field_i) == 0 ? PSCRIPT_UINT8 : (field_i) == 1 ? PSCRIPT_INT16 : (field_i) == 2 ? PSCRIPT_INT16 : (field_i) == 3 ? PSCRIPT_INT16 : -1) : \
+  (type) == PSCRIPT_INST_LIST__TYPE__WHILE      ? ((field_i) == 0 ? PSCRIPT_UINT8 : (field_i) == 1 ? PSCRIPT_INT16 : (field_i) == 2 ? PSCRIPT_INT16 : (field_i) == 3 ? PSCRIPT_INT16 : -1) : \
+  (type) == PSCRIPT_INST_LIST__TYPE__FOR        ? ((field_i) == 0 ? PSCRIPT_UINT8 : (field_i) == 1 ? PSCRIPT_INT16 : (field_i) == 2 ? PSCRIPT_INT16 : (field_i) == 3 ? PSCRIPT_INT8 : (field_i) == 4 ? PSCRIPT_INT16 : (field_i) == 5 ? PSCRIPT_INT16 : (field_i) == 6 ? PSCRIPT_INT16 : (field_i) == 7 ? PSCRIPT_INT16 : -1) : \
+  (type) == PSCRIPT_INST_LIST__TYPE__REPEAT     ? ((field_i) == 0 ? PSCRIPT_UINT8 : (field_i) == 1 ? PSCRIPT_INT16 : (field_i) == 2 ? PSCRIPT_INT16 : (field_i) == 3 ? PSCRIPT_INT16 : -1) : \
+  (type) == PSCRIPT_INST_LIST__TYPE__EXPR       ? ((field_i) == 0 ? PSCRIPT_UINT8 : (field_i) == 1 ? PSCRIPT_INT16 : (field_i) == 2 ? PSCRIPT_INT16 : -1) : \
+    -1)
+ 
+
+// *** DECL_LOCAL_LIST *** 
+
+#define PSCRIPT_PARSER_DECL_LOCAL_LIST__GET_FIELD_NAME__BY_TYPE(type,field_i) ( \
+  (type) == PSCRIPT_DECL_LOCAL_LIST__TYPE__VARIABLE       ? ((field_i) == 0 ? "type" : (field_i) == 1 ? "ident_token" : (field_i) == 2 ? "typing_expr_tree"        : (field_i) == 3 ? "tail"        : NULL) : \
+  (type) == PSCRIPT_DECL_LOCAL_LIST__TYPE__LOCALVAR__NIL  ? ((field_i) == 0 ? "type" : NULL) : \
+  (type) == PSCRIPT_DECL_LOCAL_LIST__TYPE__LOCALVAR__CONS ? ((field_i) == 0 ? "type" : (field_i) == 1 ? "car"         : (field_i) == 2 ? "cdr"                     : NULL) : \
+  (type) == PSCRIPT_DECL_LOCAL_LIST__TYPE__LOCALVAR__ONE  ? ((field_i) == 0 ? "type" : (field_i) == 1 ? "ident_token" : (field_i) == 2 ? "typing_expr_tree"        : NULL) : \
+    NULL)
+
+#define PSCRIPT_PARSER_DECL_LOCAL_LIST__GET_FIELDS_NB__BY_TYPE(type) (	\
+  (type) == PSCRIPT_DECL_LOCAL_LIST__TYPE__VARIABLE       ? 1 + 3 : \
+  (type) == PSCRIPT_DECL_LOCAL_LIST__TYPE__LOCALVAR__NIL  ? 1 + 0 : \
+  (type) == PSCRIPT_DECL_LOCAL_LIST__TYPE__LOCALVAR__CONS ? 1 + 2 : \
+  (type) == PSCRIPT_DECL_LOCAL_LIST__TYPE__LOCALVAR__ONE  ? 1 + 2 : \
+    -1) 
+
+#define PSCRIPT_PARSER_DECL_LOCAL_LIST__GET_FIELD_INTTYPE__BY_TYPE(type,field_i) ( \
+  (type) == PSCRIPT_DECL_LOCAL_LIST__TYPE__VARIABLE       ? ((field_i) == 0 ? PSCRIPT_UINT8 : (field_i) == 1 ? PSCRIPT_INT16 : (field_i) == 2 ? PSCRIPT_INT16 : (field_i) == 3 ? PSCRIPT_INT16 : -1) : \
+  (type) == PSCRIPT_DECL_LOCAL_LIST__TYPE__LOCALVAR__NIL  ? ((field_i) == 0 ? PSCRIPT_UINT8 : -1) : \
+  (type) == PSCRIPT_DECL_LOCAL_LIST__TYPE__LOCALVAR__CONS ? ((field_i) == 0 ? PSCRIPT_UINT8 : (field_i) == 1 ? PSCRIPT_INT16 : (field_i) == 2 ? PSCRIPT_INT16 : -1) : \
+  (type) == PSCRIPT_DECL_LOCAL_LIST__TYPE__LOCALVAR__ONE  ? ((field_i) == 0 ? PSCRIPT_UINT8 : (field_i) == 1 ? PSCRIPT_INT16 : (field_i) == 2 ? PSCRIPT_INT16 : -1) : \
+    -1)
+
+ 
+// *** DECL_TOPLEVEL *** 
+
+#define PSCRIPT_PARSER_DECL_TOPLEVEL_LIST__GET_FIELD_NAME__BY_TYPE(type,field_i) ( \
+  (type) == PSCRIPT_DECL_TOPLEVEL_LIST__TYPE__CONSTANTE ? ((field_i) == 0 ? "type" : (field_i) == 1 ? "ident_token" : (field_i) == 2 ? "expr_tree"        : NULL) : \
+  (type) == PSCRIPT_DECL_TOPLEVEL_LIST__TYPE__TYPE      ? ((field_i) == 0 ? "type" : (field_i) == 1 ? "ident_token" : (field_i) == 2 ? "typing_expr_tree" : NULL) : \
+  (type) == PSCRIPT_DECL_TOPLEVEL_LIST__TYPE__VARIABLE  ? ((field_i) == 0 ? "type" : (field_i) == 1 ? "ident_token" : (field_i) == 2 ? "typing_expr_tree" : NULL) : \
+  (type) == PSCRIPT_DECL_TOPLEVEL_LIST__TYPE__MAINPROC  ? ((field_i) == 0 ? "type" : (field_i) == 1 ? "inst_nb"     : (field_i) == 2 ? "int_ref"          : NULL) : \
+  (type) == PSCRIPT_DECL_TOPLEVEL_LIST__TYPE__FUNPROC   ? ((field_i) == 0 ? "type" : (field_i) == 1 ? "ident_token" : (field_i) == 2 ? "typing_expr_tree" : (field_i) == 3 ? "localvar_nb"      : (field_i) == 4 ? "localvar_ref" : (field_i) == 5 ? "inst_nb"      : (field_i) == 6 ? "inst_ref" : NULL) : \
+  (type) == PSCRIPT_DECL_TOPLEVEL_LIST__TYPE__METHOD    ? ((field_i) == 0 ? "type" : (field_i) == 1 ? "ident_token" : (field_i) == 2 ? "of_type" : (field_i) == 3 ? "typing_expr_tree" : (field_i) == 4 ? "localvar_nb"  : (field_i) == 5 ? "localvar_ref" : (field_i) == 6 ? "inst_nb" : (field_i) == 7 ? "inst_ref" : NULL) : \
+    NULL)
+
+#define PSCRIPT_PARSER_DECL_TOPLEVEL_LIST__GET_FIELDS_NB__BY_TYPE(type) ( \
+  (type) == PSCRIPT_DECL_TOPLEVEL_LIST__TYPE__CONSTANTE ? 1 + 2 : \
+  (type) == PSCRIPT_DECL_TOPLEVEL_LIST__TYPE__TYPE      ? 1 + 2 : \
+  (type) == PSCRIPT_DECL_TOPLEVEL_LIST__TYPE__VARIABLE  ? 1 + 2 : \
+  (type) == PSCRIPT_DECL_TOPLEVEL_LIST__TYPE__MAINPROC  ? 1 + 2 : \
+  (type) == PSCRIPT_DECL_TOPLEVEL_LIST__TYPE__FUNPROC   ? 1 + 6 : \
+  (type) == PSCRIPT_DECL_TOPLEVEL_LIST__TYPE__METHOD    ? 1 + 7 : \
+    -1) 
+
+#define PSCRIPT_PARSER_DECL_TOPLEVEL_LIST__GET_FIELD_INTTYPE__BY_TYPE(type,field_i) ( \
+  (type) == PSCRIPT_DECL_TOPLEVEL_LIST__TYPE__CONSTANTE ? ((field_i) == 0 ? PSCRIPT_UINT8 : (field_i) == 1 ? PSCRIPT_INT16 : (field_i) == 2 ? PSCRIPT_INT16 : -1) : \
+  (type) == PSCRIPT_DECL_TOPLEVEL_LIST__TYPE__TYPE      ? ((field_i) == 0 ? PSCRIPT_UINT8 : (field_i) == 1 ? PSCRIPT_INT16 : (field_i) == 2 ? PSCRIPT_INT16 : -1) : \
+  (type) == PSCRIPT_DECL_TOPLEVEL_LIST__TYPE__VARIABLE  ? ((field_i) == 0 ? PSCRIPT_UINT8 : (field_i) == 1 ? PSCRIPT_INT16 : (field_i) == 2 ? PSCRIPT_INT16 : -1) : \
+  (type) == PSCRIPT_DECL_TOPLEVEL_LIST__TYPE__MAINPROC  ? ((field_i) == 0 ? PSCRIPT_UINT8 : (field_i) == 1 ? PSCRIPT_INT16 : (field_i) == 2 ? PSCRIPT_INT16 : -1) : \
+  (type) == PSCRIPT_DECL_TOPLEVEL_LIST__TYPE__FUNPROC   ? ((field_i) == 0 ? PSCRIPT_UINT8 : (field_i) == 1 ? PSCRIPT_INT16 : (field_i) == 2 ? PSCRIPT_INT16 : (field_i) == 3 ? PSCRIPT_INT8 : (field_i) == 4 ? PSCRIPT_INT16 : (field_i) == 5 ? PSCRIPT_INT16 : (field_i) == 6 ? PSCRIPT_INT16 : -1) : \
+  (type) == PSCRIPT_DECL_TOPLEVEL_LIST__TYPE__METHOD    ? ((field_i) == 0 ? PSCRIPT_UINT8 : (field_i) == 1 ? PSCRIPT_INT16 : (field_i) == 2 ? PSCRIPT_INT16 : (field_i) == 3 ? PSCRIPT_INT16 : (field_i) == 4 ? PSCRIPT_INT8 : (field_i) == 5 ? PSCRIPT_INT16 : (field_i) == 6 ? PSCRIPT_INT16 : (field_i) == 7 ? PSCRIPT_INT16 : -1) : \
+    -1)
+
+
+
+// ********************************************************************* 
+// RL: Now it's constants computations. 
+
+
+// *** EXPR_TREE *** 
+
+enum { PSCRIPT_PARSER_EXPR_TREE__FIELDS_NB__TYPE0_0  = PSCRIPT_PARSER_EXPR_TREE__GET_FIELDS_NB__BY_TYPE(PSCRIPT_EXPR_TREE__TYPE__BASE +  1) }; 
+enum { PSCRIPT_PARSER_EXPR_TREE__FIELDS_NB__TYPE0_1  = PSCRIPT_PARSER_EXPR_TREE__GET_FIELDS_NB__BY_TYPE(PSCRIPT_EXPR_TREE__TYPE__BASE +  2) }; 
+enum { PSCRIPT_PARSER_EXPR_TREE__FIELDS_NB__TYPE0_2  = PSCRIPT_PARSER_EXPR_TREE__GET_FIELDS_NB__BY_TYPE(PSCRIPT_EXPR_TREE__TYPE__BASE +  3) }; 
+enum { PSCRIPT_PARSER_EXPR_TREE__FIELDS_NB__TYPE0_3  = PSCRIPT_PARSER_EXPR_TREE__GET_FIELDS_NB__BY_TYPE(PSCRIPT_EXPR_TREE__TYPE__BASE +  4) }; 
+enum { PSCRIPT_PARSER_EXPR_TREE__FIELDS_NB__TYPE0_4  = PSCRIPT_PARSER_EXPR_TREE__GET_FIELDS_NB__BY_TYPE(PSCRIPT_EXPR_TREE__TYPE__BASE +  5) }; 
+enum { PSCRIPT_PARSER_EXPR_TREE__FIELDS_NB__TYPE0_5  = PSCRIPT_PARSER_EXPR_TREE__GET_FIELDS_NB__BY_TYPE(PSCRIPT_EXPR_TREE__TYPE__BASE +  6) }; 
+enum { PSCRIPT_PARSER_EXPR_TREE__FIELDS_NB__TYPE0_6  = PSCRIPT_PARSER_EXPR_TREE__GET_FIELDS_NB__BY_TYPE(PSCRIPT_EXPR_TREE__TYPE__BASE +  7) }; 
+enum { PSCRIPT_PARSER_EXPR_TREE__FIELDS_NB__TYPE0_7  = PSCRIPT_PARSER_EXPR_TREE__GET_FIELDS_NB__BY_TYPE(PSCRIPT_EXPR_TREE__TYPE__BASE +  8) }; 
+enum { PSCRIPT_PARSER_EXPR_TREE__FIELDS_NB__TYPE0_8  = PSCRIPT_PARSER_EXPR_TREE__GET_FIELDS_NB__BY_TYPE(PSCRIPT_EXPR_TREE__TYPE__BASE +  9) }; 
+enum { PSCRIPT_PARSER_EXPR_TREE__FIELDS_NB__TYPE0_9  = PSCRIPT_PARSER_EXPR_TREE__GET_FIELDS_NB__BY_TYPE(PSCRIPT_EXPR_TREE__TYPE__BASE + 10) }; 
+enum { PSCRIPT_PARSER_EXPR_TREE__FIELDS_NB__TYPE0_10 = PSCRIPT_PARSER_EXPR_TREE__GET_FIELDS_NB__BY_TYPE(PSCRIPT_EXPR_TREE__TYPE__BASE + 11) }; 
+enum { PSCRIPT_PARSER_EXPR_TREE__FIELDS_NB__TYPE0_11 = PSCRIPT_PARSER_EXPR_TREE__GET_FIELDS_NB__BY_TYPE(PSCRIPT_EXPR_TREE__TYPE__BASE + 12) }; 
+enum { PSCRIPT_PARSER_EXPR_TREE__FIELDS_NB__TYPE0_12 = PSCRIPT_PARSER_EXPR_TREE__GET_FIELDS_NB__BY_TYPE(PSCRIPT_EXPR_TREE__TYPE__BASE + 13) }; 
+enum { PSCRIPT_PARSER_EXPR_TREE__FIELDS_NB__TYPE0_13 = PSCRIPT_PARSER_EXPR_TREE__GET_FIELDS_NB__BY_TYPE(PSCRIPT_EXPR_TREE__TYPE__BASE + 14) }; 
+enum { PSCRIPT_PARSER_EXPR_TREE__FIELDS_NB__TYPE0_14 = PSCRIPT_PARSER_EXPR_TREE__GET_FIELDS_NB__BY_TYPE(PSCRIPT_EXPR_TREE__TYPE__BASE + 15) }; 
+enum { PSCRIPT_PARSER_EXPR_TREE__FIELDS_NB__TYPE0_15 = PSCRIPT_PARSER_EXPR_TREE__GET_FIELDS_NB__BY_TYPE(PSCRIPT_EXPR_TREE__TYPE__BASE + 16) }; 
+
+static const int8_t pscript_parser_expr_tree__fields_nb__by_type0[] = { 
+  PSCRIPT_PARSER_EXPR_TREE__FIELDS_NB__TYPE0_0, 
+  PSCRIPT_PARSER_EXPR_TREE__FIELDS_NB__TYPE0_1, 
+  PSCRIPT_PARSER_EXPR_TREE__FIELDS_NB__TYPE0_2, 
+  PSCRIPT_PARSER_EXPR_TREE__FIELDS_NB__TYPE0_3, 
+  PSCRIPT_PARSER_EXPR_TREE__FIELDS_NB__TYPE0_4, 
+  PSCRIPT_PARSER_EXPR_TREE__FIELDS_NB__TYPE0_5, 
+  PSCRIPT_PARSER_EXPR_TREE__FIELDS_NB__TYPE0_6, 
+  PSCRIPT_PARSER_EXPR_TREE__FIELDS_NB__TYPE0_7, 
+  PSCRIPT_PARSER_EXPR_TREE__FIELDS_NB__TYPE0_8, 
+  PSCRIPT_PARSER_EXPR_TREE__FIELDS_NB__TYPE0_9, 
+  PSCRIPT_PARSER_EXPR_TREE__FIELDS_NB__TYPE0_10, 
+  PSCRIPT_PARSER_EXPR_TREE__FIELDS_NB__TYPE0_11, 
+  PSCRIPT_PARSER_EXPR_TREE__FIELDS_NB__TYPE0_12, 
+  PSCRIPT_PARSER_EXPR_TREE__FIELDS_NB__TYPE0_13, 
+  PSCRIPT_PARSER_EXPR_TREE__FIELDS_NB__TYPE0_14, 
+  PSCRIPT_PARSER_EXPR_TREE__FIELDS_NB__TYPE0_15, 
+}; 
+static const int8_t * pscript_parser_expr_tree__fields_nb__by_type__shifted = pscript_parser_expr_tree__fields_nb__by_type0 - PSCRIPT_EXPR_TREE__TYPE__BASE - 1; 
+
+
+
+#define PSCRIPT_PARSER_EXPR_TREE__FIELD_INTTYPE__BY_TYPE0__DEFINE_ENUM(type0)  \
+enum { glue4(PSCRIPT_PARSER_EXPR_TREE__GET_FIELD_INTTYPE__TYPE0_,type0,_FIELD_,0) = PSCRIPT_PARSER_EXPR_TREE__GET_FIELD_INTTYPE__BY_TYPE(PSCRIPT_EXPR_TREE__TYPE__BASE + type0 + 1,0) }; \
+enum { glue4(PSCRIPT_PARSER_EXPR_TREE__GET_FIELD_INTTYPE__TYPE0_,type0,_FIELD_,1) = PSCRIPT_PARSER_EXPR_TREE__GET_FIELD_INTTYPE__BY_TYPE(PSCRIPT_EXPR_TREE__TYPE__BASE + type0 + 1,1) }; \
+enum { glue4(PSCRIPT_PARSER_EXPR_TREE__GET_FIELD_INTTYPE__TYPE0_,type0,_FIELD_,2) = PSCRIPT_PARSER_EXPR_TREE__GET_FIELD_INTTYPE__BY_TYPE(PSCRIPT_EXPR_TREE__TYPE__BASE + type0 + 1,2) }; \
+enum { glue4(PSCRIPT_PARSER_EXPR_TREE__GET_FIELD_INTTYPE__TYPE0_,type0,_FIELD_,3) = PSCRIPT_PARSER_EXPR_TREE__GET_FIELD_INTTYPE__BY_TYPE(PSCRIPT_EXPR_TREE__TYPE__BASE + type0 + 1,3) }; \
+enum { glue4(PSCRIPT_PARSER_EXPR_TREE__GET_FIELD_INTTYPE__TYPE0_,type0,_FIELD_,4) = PSCRIPT_PARSER_EXPR_TREE__GET_FIELD_INTTYPE__BY_TYPE(PSCRIPT_EXPR_TREE__TYPE__BASE + type0 + 1,4) }; \
+enum { glue4(PSCRIPT_PARSER_EXPR_TREE__GET_FIELD_INTTYPE__TYPE0_,type0,_FIELD_,5) = PSCRIPT_PARSER_EXPR_TREE__GET_FIELD_INTTYPE__BY_TYPE(PSCRIPT_EXPR_TREE__TYPE__BASE + type0 + 1,5) }; \
+enum { glue4(PSCRIPT_PARSER_EXPR_TREE__GET_FIELD_INTTYPE__TYPE0_,type0,_FIELD_,6) = PSCRIPT_PARSER_EXPR_TREE__GET_FIELD_INTTYPE__BY_TYPE(PSCRIPT_EXPR_TREE__TYPE__BASE + type0 + 1,6) }; \
+enum { glue4(PSCRIPT_PARSER_EXPR_TREE__GET_FIELD_INTTYPE__TYPE0_,type0,_FIELD_,7) = PSCRIPT_PARSER_EXPR_TREE__GET_FIELD_INTTYPE__BY_TYPE(PSCRIPT_EXPR_TREE__TYPE__BASE + type0 + 1,7) }; \
+enum { glue4(PSCRIPT_PARSER_EXPR_TREE__GET_FIELD_INTTYPE__TYPE0_,type0,_FIELD_,8) = PSCRIPT_PARSER_EXPR_TREE__GET_FIELD_INTTYPE__BY_TYPE(PSCRIPT_EXPR_TREE__TYPE__BASE + type0 + 1,8) }; \
+enum { glue4(PSCRIPT_PARSER_EXPR_TREE__GET_FIELD_INTTYPE__TYPE0_,type0,_FIELD_,9) = PSCRIPT_PARSER_EXPR_TREE__GET_FIELD_INTTYPE__BY_TYPE(PSCRIPT_EXPR_TREE__TYPE__BASE + type0 + 1,9) }; 
+
+PSCRIPT_PARSER_EXPR_TREE__FIELD_INTTYPE__BY_TYPE0__DEFINE_ENUM(0); 
+PSCRIPT_PARSER_EXPR_TREE__FIELD_INTTYPE__BY_TYPE0__DEFINE_ENUM(1); 
+PSCRIPT_PARSER_EXPR_TREE__FIELD_INTTYPE__BY_TYPE0__DEFINE_ENUM(2); 
+PSCRIPT_PARSER_EXPR_TREE__FIELD_INTTYPE__BY_TYPE0__DEFINE_ENUM(3); 
+PSCRIPT_PARSER_EXPR_TREE__FIELD_INTTYPE__BY_TYPE0__DEFINE_ENUM(4); 
+PSCRIPT_PARSER_EXPR_TREE__FIELD_INTTYPE__BY_TYPE0__DEFINE_ENUM(5); 
+PSCRIPT_PARSER_EXPR_TREE__FIELD_INTTYPE__BY_TYPE0__DEFINE_ENUM(6); 
+PSCRIPT_PARSER_EXPR_TREE__FIELD_INTTYPE__BY_TYPE0__DEFINE_ENUM(7); 
+PSCRIPT_PARSER_EXPR_TREE__FIELD_INTTYPE__BY_TYPE0__DEFINE_ENUM(8); 
+PSCRIPT_PARSER_EXPR_TREE__FIELD_INTTYPE__BY_TYPE0__DEFINE_ENUM(9); 
+PSCRIPT_PARSER_EXPR_TREE__FIELD_INTTYPE__BY_TYPE0__DEFINE_ENUM(10); 
+PSCRIPT_PARSER_EXPR_TREE__FIELD_INTTYPE__BY_TYPE0__DEFINE_ENUM(11); 
+PSCRIPT_PARSER_EXPR_TREE__FIELD_INTTYPE__BY_TYPE0__DEFINE_ENUM(12); 
+PSCRIPT_PARSER_EXPR_TREE__FIELD_INTTYPE__BY_TYPE0__DEFINE_ENUM(13); 
+PSCRIPT_PARSER_EXPR_TREE__FIELD_INTTYPE__BY_TYPE0__DEFINE_ENUM(14); 
+PSCRIPT_PARSER_EXPR_TREE__FIELD_INTTYPE__BY_TYPE0__DEFINE_ENUM(15); 
+
+#define PSCRIPT_PARSER_EXPR_TREE__FIELD_INTTYPE__BY_TYPE__ROW(type0) {  \
+  glue4(PSCRIPT_PARSER_EXPR_TREE__GET_FIELD_INTTYPE__TYPE0_,type0,_FIELD_,0), \
+  glue4(PSCRIPT_PARSER_EXPR_TREE__GET_FIELD_INTTYPE__TYPE0_,type0,_FIELD_,1), \
+  glue4(PSCRIPT_PARSER_EXPR_TREE__GET_FIELD_INTTYPE__TYPE0_,type0,_FIELD_,2), \
+  glue4(PSCRIPT_PARSER_EXPR_TREE__GET_FIELD_INTTYPE__TYPE0_,type0,_FIELD_,3), \
+  glue4(PSCRIPT_PARSER_EXPR_TREE__GET_FIELD_INTTYPE__TYPE0_,type0,_FIELD_,4), \
+  glue4(PSCRIPT_PARSER_EXPR_TREE__GET_FIELD_INTTYPE__TYPE0_,type0,_FIELD_,5), \
+  glue4(PSCRIPT_PARSER_EXPR_TREE__GET_FIELD_INTTYPE__TYPE0_,type0,_FIELD_,6), \
+  glue4(PSCRIPT_PARSER_EXPR_TREE__GET_FIELD_INTTYPE__TYPE0_,type0,_FIELD_,7), \
+  glue4(PSCRIPT_PARSER_EXPR_TREE__GET_FIELD_INTTYPE__TYPE0_,type0,_FIELD_,8), \
+  glue4(PSCRIPT_PARSER_EXPR_TREE__GET_FIELD_INTTYPE__TYPE0_,type0,_FIELD_,9), \
+  }  
+
+static const int8_t pscript_parser_expr_tree__field_inttype__by_type0[][10] = { 
+  PSCRIPT_PARSER_EXPR_TREE__FIELD_INTTYPE__BY_TYPE__ROW(0), 
+  PSCRIPT_PARSER_EXPR_TREE__FIELD_INTTYPE__BY_TYPE__ROW(1), 
+  PSCRIPT_PARSER_EXPR_TREE__FIELD_INTTYPE__BY_TYPE__ROW(2), 
+  PSCRIPT_PARSER_EXPR_TREE__FIELD_INTTYPE__BY_TYPE__ROW(3), 
+  PSCRIPT_PARSER_EXPR_TREE__FIELD_INTTYPE__BY_TYPE__ROW(4), 
+  PSCRIPT_PARSER_EXPR_TREE__FIELD_INTTYPE__BY_TYPE__ROW(5), 
+  PSCRIPT_PARSER_EXPR_TREE__FIELD_INTTYPE__BY_TYPE__ROW(6), 
+  PSCRIPT_PARSER_EXPR_TREE__FIELD_INTTYPE__BY_TYPE__ROW(7), 
+  PSCRIPT_PARSER_EXPR_TREE__FIELD_INTTYPE__BY_TYPE__ROW(8), 
+  PSCRIPT_PARSER_EXPR_TREE__FIELD_INTTYPE__BY_TYPE__ROW(9), 
+  PSCRIPT_PARSER_EXPR_TREE__FIELD_INTTYPE__BY_TYPE__ROW(10), 
+  PSCRIPT_PARSER_EXPR_TREE__FIELD_INTTYPE__BY_TYPE__ROW(11), 
+  PSCRIPT_PARSER_EXPR_TREE__FIELD_INTTYPE__BY_TYPE__ROW(12), 
+  PSCRIPT_PARSER_EXPR_TREE__FIELD_INTTYPE__BY_TYPE__ROW(13), 
+  PSCRIPT_PARSER_EXPR_TREE__FIELD_INTTYPE__BY_TYPE__ROW(14), 
+  PSCRIPT_PARSER_EXPR_TREE__FIELD_INTTYPE__BY_TYPE__ROW(15), 
+}; 
+static const int8_t (* pscript_parser_expr_tree__field_inttype__by_type__shifted)[10] = pscript_parser_expr_tree__field_inttype__by_type0 - PSCRIPT_EXPR_TREE__TYPE__BASE - 1;  
+
+#define PSCRIPT_PARSER_EXPR_TREE__FIELD_SIZEOF__BY_TYPE0__DEFINE_ENUM(type0)  \
+enum { glue4(PSCRIPT_PARSER_EXPR_TREE__GET_FIELD_SIZEOF__TYPE0_,type0,_FIELD_,0) = PSCRIPT_SIZEOF(glue4(PSCRIPT_PARSER_EXPR_TREE__GET_FIELD_INTTYPE__TYPE0_,type0,_FIELD_,0)) }; \
+enum { glue4(PSCRIPT_PARSER_EXPR_TREE__GET_FIELD_SIZEOF__TYPE0_,type0,_FIELD_,1) = PSCRIPT_SIZEOF(glue4(PSCRIPT_PARSER_EXPR_TREE__GET_FIELD_INTTYPE__TYPE0_,type0,_FIELD_,1)) }; \
+enum { glue4(PSCRIPT_PARSER_EXPR_TREE__GET_FIELD_SIZEOF__TYPE0_,type0,_FIELD_,2) = PSCRIPT_SIZEOF(glue4(PSCRIPT_PARSER_EXPR_TREE__GET_FIELD_INTTYPE__TYPE0_,type0,_FIELD_,2)) }; \
+enum { glue4(PSCRIPT_PARSER_EXPR_TREE__GET_FIELD_SIZEOF__TYPE0_,type0,_FIELD_,3) = PSCRIPT_SIZEOF(glue4(PSCRIPT_PARSER_EXPR_TREE__GET_FIELD_INTTYPE__TYPE0_,type0,_FIELD_,3)) }; \
+enum { glue4(PSCRIPT_PARSER_EXPR_TREE__GET_FIELD_SIZEOF__TYPE0_,type0,_FIELD_,4) = PSCRIPT_SIZEOF(glue4(PSCRIPT_PARSER_EXPR_TREE__GET_FIELD_INTTYPE__TYPE0_,type0,_FIELD_,4)) }; \
+enum { glue4(PSCRIPT_PARSER_EXPR_TREE__GET_FIELD_SIZEOF__TYPE0_,type0,_FIELD_,5) = PSCRIPT_SIZEOF(glue4(PSCRIPT_PARSER_EXPR_TREE__GET_FIELD_INTTYPE__TYPE0_,type0,_FIELD_,5)) }; \
+enum { glue4(PSCRIPT_PARSER_EXPR_TREE__GET_FIELD_SIZEOF__TYPE0_,type0,_FIELD_,6) = PSCRIPT_SIZEOF(glue4(PSCRIPT_PARSER_EXPR_TREE__GET_FIELD_INTTYPE__TYPE0_,type0,_FIELD_,6)) }; \
+enum { glue4(PSCRIPT_PARSER_EXPR_TREE__GET_FIELD_SIZEOF__TYPE0_,type0,_FIELD_,7) = PSCRIPT_SIZEOF(glue4(PSCRIPT_PARSER_EXPR_TREE__GET_FIELD_INTTYPE__TYPE0_,type0,_FIELD_,7)) }; \
+enum { glue4(PSCRIPT_PARSER_EXPR_TREE__GET_FIELD_SIZEOF__TYPE0_,type0,_FIELD_,8) = PSCRIPT_SIZEOF(glue4(PSCRIPT_PARSER_EXPR_TREE__GET_FIELD_INTTYPE__TYPE0_,type0,_FIELD_,8)) }; \
+enum { glue4(PSCRIPT_PARSER_EXPR_TREE__GET_FIELD_SIZEOF__TYPE0_,type0,_FIELD_,9) = PSCRIPT_SIZEOF(glue4(PSCRIPT_PARSER_EXPR_TREE__GET_FIELD_INTTYPE__TYPE0_,type0,_FIELD_,9)) }; \
+
+PSCRIPT_PARSER_EXPR_TREE__FIELD_SIZEOF__BY_TYPE0__DEFINE_ENUM(0); 
+PSCRIPT_PARSER_EXPR_TREE__FIELD_SIZEOF__BY_TYPE0__DEFINE_ENUM(1); 
+PSCRIPT_PARSER_EXPR_TREE__FIELD_SIZEOF__BY_TYPE0__DEFINE_ENUM(2); 
+PSCRIPT_PARSER_EXPR_TREE__FIELD_SIZEOF__BY_TYPE0__DEFINE_ENUM(3); 
+PSCRIPT_PARSER_EXPR_TREE__FIELD_SIZEOF__BY_TYPE0__DEFINE_ENUM(4); 
+PSCRIPT_PARSER_EXPR_TREE__FIELD_SIZEOF__BY_TYPE0__DEFINE_ENUM(5); 
+PSCRIPT_PARSER_EXPR_TREE__FIELD_SIZEOF__BY_TYPE0__DEFINE_ENUM(6); 
+PSCRIPT_PARSER_EXPR_TREE__FIELD_SIZEOF__BY_TYPE0__DEFINE_ENUM(7); 
+PSCRIPT_PARSER_EXPR_TREE__FIELD_SIZEOF__BY_TYPE0__DEFINE_ENUM(8); 
+PSCRIPT_PARSER_EXPR_TREE__FIELD_SIZEOF__BY_TYPE0__DEFINE_ENUM(9); 
+PSCRIPT_PARSER_EXPR_TREE__FIELD_SIZEOF__BY_TYPE0__DEFINE_ENUM(10); 
+PSCRIPT_PARSER_EXPR_TREE__FIELD_SIZEOF__BY_TYPE0__DEFINE_ENUM(11); 
+PSCRIPT_PARSER_EXPR_TREE__FIELD_SIZEOF__BY_TYPE0__DEFINE_ENUM(12); 
+PSCRIPT_PARSER_EXPR_TREE__FIELD_SIZEOF__BY_TYPE0__DEFINE_ENUM(13); 
+PSCRIPT_PARSER_EXPR_TREE__FIELD_SIZEOF__BY_TYPE0__DEFINE_ENUM(14); 
+PSCRIPT_PARSER_EXPR_TREE__FIELD_SIZEOF__BY_TYPE0__DEFINE_ENUM(15); 
+
+#define PSCRIPT_PARSER_EXPR_TREE__FIELD_SIZEOF__BY_TYPE__ROW(type0) {  \
+  glue4(PSCRIPT_PARSER_EXPR_TREE__GET_FIELD_SIZEOF__TYPE0_,type0,_FIELD_,0), \
+  glue4(PSCRIPT_PARSER_EXPR_TREE__GET_FIELD_SIZEOF__TYPE0_,type0,_FIELD_,1), \
+  glue4(PSCRIPT_PARSER_EXPR_TREE__GET_FIELD_SIZEOF__TYPE0_,type0,_FIELD_,2), \
+  glue4(PSCRIPT_PARSER_EXPR_TREE__GET_FIELD_SIZEOF__TYPE0_,type0,_FIELD_,3), \
+  glue4(PSCRIPT_PARSER_EXPR_TREE__GET_FIELD_SIZEOF__TYPE0_,type0,_FIELD_,4), \
+  glue4(PSCRIPT_PARSER_EXPR_TREE__GET_FIELD_SIZEOF__TYPE0_,type0,_FIELD_,5), \
+  glue4(PSCRIPT_PARSER_EXPR_TREE__GET_FIELD_SIZEOF__TYPE0_,type0,_FIELD_,6), \
+  glue4(PSCRIPT_PARSER_EXPR_TREE__GET_FIELD_SIZEOF__TYPE0_,type0,_FIELD_,7), \
+  glue4(PSCRIPT_PARSER_EXPR_TREE__GET_FIELD_SIZEOF__TYPE0_,type0,_FIELD_,8), \
+  glue4(PSCRIPT_PARSER_EXPR_TREE__GET_FIELD_SIZEOF__TYPE0_,type0,_FIELD_,9), \
+  }  
+
+static const int8_t pscript_parser_expr_tree__field_sizeof__by_type0[][10] = { 
+  PSCRIPT_PARSER_EXPR_TREE__FIELD_SIZEOF__BY_TYPE__ROW(0), 
+  PSCRIPT_PARSER_EXPR_TREE__FIELD_SIZEOF__BY_TYPE__ROW(1), 
+  PSCRIPT_PARSER_EXPR_TREE__FIELD_SIZEOF__BY_TYPE__ROW(2), 
+  PSCRIPT_PARSER_EXPR_TREE__FIELD_SIZEOF__BY_TYPE__ROW(3), 
+  PSCRIPT_PARSER_EXPR_TREE__FIELD_SIZEOF__BY_TYPE__ROW(4), 
+  PSCRIPT_PARSER_EXPR_TREE__FIELD_SIZEOF__BY_TYPE__ROW(5), 
+  PSCRIPT_PARSER_EXPR_TREE__FIELD_SIZEOF__BY_TYPE__ROW(6), 
+  PSCRIPT_PARSER_EXPR_TREE__FIELD_SIZEOF__BY_TYPE__ROW(7), 
+  PSCRIPT_PARSER_EXPR_TREE__FIELD_SIZEOF__BY_TYPE__ROW(8), 
+  PSCRIPT_PARSER_EXPR_TREE__FIELD_SIZEOF__BY_TYPE__ROW(9), 
+  PSCRIPT_PARSER_EXPR_TREE__FIELD_SIZEOF__BY_TYPE__ROW(10), 
+  PSCRIPT_PARSER_EXPR_TREE__FIELD_SIZEOF__BY_TYPE__ROW(11), 
+  PSCRIPT_PARSER_EXPR_TREE__FIELD_SIZEOF__BY_TYPE__ROW(12), 
+  PSCRIPT_PARSER_EXPR_TREE__FIELD_SIZEOF__BY_TYPE__ROW(13), 
+  PSCRIPT_PARSER_EXPR_TREE__FIELD_SIZEOF__BY_TYPE__ROW(14), 
+  PSCRIPT_PARSER_EXPR_TREE__FIELD_SIZEOF__BY_TYPE__ROW(15), 
+}; 
+static const int8_t (* pscript_parser_expr_tree__field_sizeof__by_type__shifted)[10] = pscript_parser_expr_tree__field_sizeof__by_type0 - PSCRIPT_EXPR_TREE__TYPE__BASE - 1;  
+
+
+	
+#define PSCRIPT_PARSER_EXPR_TREE__FIELD_SIZEOF_CUMULATED__BY_TYPE0__DEFINE_ENUM(type0)  \
+enum { glue4(PSCRIPT_PARSER_EXPR_TREE__GET_FIELD_SIZEOF_CUMULATED__TYPE0_,type0,_FIELD_,0) = 0 }; \
+enum { glue4(PSCRIPT_PARSER_EXPR_TREE__GET_FIELD_SIZEOF_CUMULATED__TYPE0_,type0,_FIELD_,1) = glue4(PSCRIPT_PARSER_EXPR_TREE__GET_FIELD_SIZEOF_CUMULATED__TYPE0_,type0,_FIELD_,0) + glue4(PSCRIPT_PARSER_EXPR_TREE__GET_FIELD_SIZEOF__TYPE0_,type0,_FIELD_,0) }; \
+enum { glue4(PSCRIPT_PARSER_EXPR_TREE__GET_FIELD_SIZEOF_CUMULATED__TYPE0_,type0,_FIELD_,2) = glue4(PSCRIPT_PARSER_EXPR_TREE__GET_FIELD_SIZEOF_CUMULATED__TYPE0_,type0,_FIELD_,1) + glue4(PSCRIPT_PARSER_EXPR_TREE__GET_FIELD_SIZEOF__TYPE0_,type0,_FIELD_,1) }; \
+enum { glue4(PSCRIPT_PARSER_EXPR_TREE__GET_FIELD_SIZEOF_CUMULATED__TYPE0_,type0,_FIELD_,3) = glue4(PSCRIPT_PARSER_EXPR_TREE__GET_FIELD_SIZEOF_CUMULATED__TYPE0_,type0,_FIELD_,2) + glue4(PSCRIPT_PARSER_EXPR_TREE__GET_FIELD_SIZEOF__TYPE0_,type0,_FIELD_,2) }; \
+enum { glue4(PSCRIPT_PARSER_EXPR_TREE__GET_FIELD_SIZEOF_CUMULATED__TYPE0_,type0,_FIELD_,4) = glue4(PSCRIPT_PARSER_EXPR_TREE__GET_FIELD_SIZEOF_CUMULATED__TYPE0_,type0,_FIELD_,3) + glue4(PSCRIPT_PARSER_EXPR_TREE__GET_FIELD_SIZEOF__TYPE0_,type0,_FIELD_,3) }; \
+enum { glue4(PSCRIPT_PARSER_EXPR_TREE__GET_FIELD_SIZEOF_CUMULATED__TYPE0_,type0,_FIELD_,5) = glue4(PSCRIPT_PARSER_EXPR_TREE__GET_FIELD_SIZEOF_CUMULATED__TYPE0_,type0,_FIELD_,4) + glue4(PSCRIPT_PARSER_EXPR_TREE__GET_FIELD_SIZEOF__TYPE0_,type0,_FIELD_,4) }; \
+enum { glue4(PSCRIPT_PARSER_EXPR_TREE__GET_FIELD_SIZEOF_CUMULATED__TYPE0_,type0,_FIELD_,6) = glue4(PSCRIPT_PARSER_EXPR_TREE__GET_FIELD_SIZEOF_CUMULATED__TYPE0_,type0,_FIELD_,5) + glue4(PSCRIPT_PARSER_EXPR_TREE__GET_FIELD_SIZEOF__TYPE0_,type0,_FIELD_,5) }; \
+enum { glue4(PSCRIPT_PARSER_EXPR_TREE__GET_FIELD_SIZEOF_CUMULATED__TYPE0_,type0,_FIELD_,7) = glue4(PSCRIPT_PARSER_EXPR_TREE__GET_FIELD_SIZEOF_CUMULATED__TYPE0_,type0,_FIELD_,6) + glue4(PSCRIPT_PARSER_EXPR_TREE__GET_FIELD_SIZEOF__TYPE0_,type0,_FIELD_,6) }; \
+enum { glue4(PSCRIPT_PARSER_EXPR_TREE__GET_FIELD_SIZEOF_CUMULATED__TYPE0_,type0,_FIELD_,8) = glue4(PSCRIPT_PARSER_EXPR_TREE__GET_FIELD_SIZEOF_CUMULATED__TYPE0_,type0,_FIELD_,7) + glue4(PSCRIPT_PARSER_EXPR_TREE__GET_FIELD_SIZEOF__TYPE0_,type0,_FIELD_,7) }; \
+enum { glue4(PSCRIPT_PARSER_EXPR_TREE__GET_FIELD_SIZEOF_CUMULATED__TYPE0_,type0,_FIELD_,9) = glue4(PSCRIPT_PARSER_EXPR_TREE__GET_FIELD_SIZEOF_CUMULATED__TYPE0_,type0,_FIELD_,8) + glue4(PSCRIPT_PARSER_EXPR_TREE__GET_FIELD_SIZEOF__TYPE0_,type0,_FIELD_,8) }; \
+
+PSCRIPT_PARSER_EXPR_TREE__FIELD_SIZEOF_CUMULATED__BY_TYPE0__DEFINE_ENUM(0); 
+PSCRIPT_PARSER_EXPR_TREE__FIELD_SIZEOF_CUMULATED__BY_TYPE0__DEFINE_ENUM(1); 
+PSCRIPT_PARSER_EXPR_TREE__FIELD_SIZEOF_CUMULATED__BY_TYPE0__DEFINE_ENUM(2); 
+PSCRIPT_PARSER_EXPR_TREE__FIELD_SIZEOF_CUMULATED__BY_TYPE0__DEFINE_ENUM(3); 
+PSCRIPT_PARSER_EXPR_TREE__FIELD_SIZEOF_CUMULATED__BY_TYPE0__DEFINE_ENUM(4); 
+PSCRIPT_PARSER_EXPR_TREE__FIELD_SIZEOF_CUMULATED__BY_TYPE0__DEFINE_ENUM(5); 
+PSCRIPT_PARSER_EXPR_TREE__FIELD_SIZEOF_CUMULATED__BY_TYPE0__DEFINE_ENUM(6); 
+PSCRIPT_PARSER_EXPR_TREE__FIELD_SIZEOF_CUMULATED__BY_TYPE0__DEFINE_ENUM(7); 
+PSCRIPT_PARSER_EXPR_TREE__FIELD_SIZEOF_CUMULATED__BY_TYPE0__DEFINE_ENUM(8); 
+PSCRIPT_PARSER_EXPR_TREE__FIELD_SIZEOF_CUMULATED__BY_TYPE0__DEFINE_ENUM(9); 
+PSCRIPT_PARSER_EXPR_TREE__FIELD_SIZEOF_CUMULATED__BY_TYPE0__DEFINE_ENUM(10); 
+PSCRIPT_PARSER_EXPR_TREE__FIELD_SIZEOF_CUMULATED__BY_TYPE0__DEFINE_ENUM(11); 
+PSCRIPT_PARSER_EXPR_TREE__FIELD_SIZEOF_CUMULATED__BY_TYPE0__DEFINE_ENUM(12); 
+PSCRIPT_PARSER_EXPR_TREE__FIELD_SIZEOF_CUMULATED__BY_TYPE0__DEFINE_ENUM(13); 
+PSCRIPT_PARSER_EXPR_TREE__FIELD_SIZEOF_CUMULATED__BY_TYPE0__DEFINE_ENUM(14); 
+PSCRIPT_PARSER_EXPR_TREE__FIELD_SIZEOF_CUMULATED__BY_TYPE0__DEFINE_ENUM(15); 
+
+#define PSCRIPT_PARSER_EXPR_TREE__FIELD_SIZEOF_CUMULATED__BY_TYPE__ROW(type0) {  \
+  glue4(PSCRIPT_PARSER_EXPR_TREE__GET_FIELD_SIZEOF_CUMULATED__TYPE0_,type0,_FIELD_,0), \
+  glue4(PSCRIPT_PARSER_EXPR_TREE__GET_FIELD_SIZEOF_CUMULATED__TYPE0_,type0,_FIELD_,1), \
+  glue4(PSCRIPT_PARSER_EXPR_TREE__GET_FIELD_SIZEOF_CUMULATED__TYPE0_,type0,_FIELD_,2), \
+  glue4(PSCRIPT_PARSER_EXPR_TREE__GET_FIELD_SIZEOF_CUMULATED__TYPE0_,type0,_FIELD_,3), \
+  glue4(PSCRIPT_PARSER_EXPR_TREE__GET_FIELD_SIZEOF_CUMULATED__TYPE0_,type0,_FIELD_,4), \
+  glue4(PSCRIPT_PARSER_EXPR_TREE__GET_FIELD_SIZEOF_CUMULATED__TYPE0_,type0,_FIELD_,5), \
+  glue4(PSCRIPT_PARSER_EXPR_TREE__GET_FIELD_SIZEOF_CUMULATED__TYPE0_,type0,_FIELD_,6), \
+  glue4(PSCRIPT_PARSER_EXPR_TREE__GET_FIELD_SIZEOF_CUMULATED__TYPE0_,type0,_FIELD_,7), \
+  glue4(PSCRIPT_PARSER_EXPR_TREE__GET_FIELD_SIZEOF_CUMULATED__TYPE0_,type0,_FIELD_,8), \
+  glue4(PSCRIPT_PARSER_EXPR_TREE__GET_FIELD_SIZEOF_CUMULATED__TYPE0_,type0,_FIELD_,9), \
+  }  
+
+static const int8_t pscript_parser_expr_tree__field_sizeof_cumulated__by_type0[][10] = { 
+  PSCRIPT_PARSER_EXPR_TREE__FIELD_SIZEOF_CUMULATED__BY_TYPE__ROW(0), 
+  PSCRIPT_PARSER_EXPR_TREE__FIELD_SIZEOF_CUMULATED__BY_TYPE__ROW(1), 
+  PSCRIPT_PARSER_EXPR_TREE__FIELD_SIZEOF_CUMULATED__BY_TYPE__ROW(2), 
+  PSCRIPT_PARSER_EXPR_TREE__FIELD_SIZEOF_CUMULATED__BY_TYPE__ROW(3), 
+  PSCRIPT_PARSER_EXPR_TREE__FIELD_SIZEOF_CUMULATED__BY_TYPE__ROW(4), 
+  PSCRIPT_PARSER_EXPR_TREE__FIELD_SIZEOF_CUMULATED__BY_TYPE__ROW(5), 
+  PSCRIPT_PARSER_EXPR_TREE__FIELD_SIZEOF_CUMULATED__BY_TYPE__ROW(6), 
+  PSCRIPT_PARSER_EXPR_TREE__FIELD_SIZEOF_CUMULATED__BY_TYPE__ROW(7), 
+  PSCRIPT_PARSER_EXPR_TREE__FIELD_SIZEOF_CUMULATED__BY_TYPE__ROW(8), 
+  PSCRIPT_PARSER_EXPR_TREE__FIELD_SIZEOF_CUMULATED__BY_TYPE__ROW(9), 
+  PSCRIPT_PARSER_EXPR_TREE__FIELD_SIZEOF_CUMULATED__BY_TYPE__ROW(10), 
+  PSCRIPT_PARSER_EXPR_TREE__FIELD_SIZEOF_CUMULATED__BY_TYPE__ROW(11), 
+  PSCRIPT_PARSER_EXPR_TREE__FIELD_SIZEOF_CUMULATED__BY_TYPE__ROW(12), 
+  PSCRIPT_PARSER_EXPR_TREE__FIELD_SIZEOF_CUMULATED__BY_TYPE__ROW(13), 
+  PSCRIPT_PARSER_EXPR_TREE__FIELD_SIZEOF_CUMULATED__BY_TYPE__ROW(14), 
+  PSCRIPT_PARSER_EXPR_TREE__FIELD_SIZEOF_CUMULATED__BY_TYPE__ROW(15), 
+}; 
+static const int8_t (* pscript_parser_expr_tree__field_sizeof_cumulated__by_type__shifted)[10] = pscript_parser_expr_tree__field_sizeof_cumulated__by_type0 - PSCRIPT_EXPR_TREE__TYPE__BASE - 1;  
+
+#define GET_CHUNK_SIZE__EXPR_TREE__BY_TYPE0(type0) (			\
+  glue(PSCRIPT_PARSER_EXPR_TREE__FIELDS_NB__TYPE0_,type0) == 0 ? glue3(PSCRIPT_PARSER_EXPR_TREE__GET_FIELD_SIZEOF_CUMULATED__TYPE0_,type0,_FIELD_0) : \
+  glue(PSCRIPT_PARSER_EXPR_TREE__FIELDS_NB__TYPE0_,type0) == 1 ? glue3(PSCRIPT_PARSER_EXPR_TREE__GET_FIELD_SIZEOF_CUMULATED__TYPE0_,type0,_FIELD_1) : \
+  glue(PSCRIPT_PARSER_EXPR_TREE__FIELDS_NB__TYPE0_,type0) == 2 ? glue3(PSCRIPT_PARSER_EXPR_TREE__GET_FIELD_SIZEOF_CUMULATED__TYPE0_,type0,_FIELD_2) : \
+  glue(PSCRIPT_PARSER_EXPR_TREE__FIELDS_NB__TYPE0_,type0) == 3 ? glue3(PSCRIPT_PARSER_EXPR_TREE__GET_FIELD_SIZEOF_CUMULATED__TYPE0_,type0,_FIELD_3) : \
+  glue(PSCRIPT_PARSER_EXPR_TREE__FIELDS_NB__TYPE0_,type0) == 4 ? glue3(PSCRIPT_PARSER_EXPR_TREE__GET_FIELD_SIZEOF_CUMULATED__TYPE0_,type0,_FIELD_4) : \
+  glue(PSCRIPT_PARSER_EXPR_TREE__FIELDS_NB__TYPE0_,type0) == 5 ? glue3(PSCRIPT_PARSER_EXPR_TREE__GET_FIELD_SIZEOF_CUMULATED__TYPE0_,type0,_FIELD_5) : \
+  glue(PSCRIPT_PARSER_EXPR_TREE__FIELDS_NB__TYPE0_,type0) == 6 ? glue3(PSCRIPT_PARSER_EXPR_TREE__GET_FIELD_SIZEOF_CUMULATED__TYPE0_,type0,_FIELD_6) : \
+  glue(PSCRIPT_PARSER_EXPR_TREE__FIELDS_NB__TYPE0_,type0) == 7 ? glue3(PSCRIPT_PARSER_EXPR_TREE__GET_FIELD_SIZEOF_CUMULATED__TYPE0_,type0,_FIELD_7) : \
+  glue(PSCRIPT_PARSER_EXPR_TREE__FIELDS_NB__TYPE0_,type0) == 8 ? glue3(PSCRIPT_PARSER_EXPR_TREE__GET_FIELD_SIZEOF_CUMULATED__TYPE0_,type0,_FIELD_8) : \
+ -1) 
+
+enum { PSCRIPT_PARSER_EXPR_TREE__CHUNK_SIZE__TYPE0_0  = GET_CHUNK_SIZE__EXPR_TREE__BY_TYPE0(0) }; 
+enum { PSCRIPT_PARSER_EXPR_TREE__CHUNK_SIZE__TYPE0_1  = GET_CHUNK_SIZE__EXPR_TREE__BY_TYPE0(1) };
+enum { PSCRIPT_PARSER_EXPR_TREE__CHUNK_SIZE__TYPE0_2  = GET_CHUNK_SIZE__EXPR_TREE__BY_TYPE0(2) }; 
+enum { PSCRIPT_PARSER_EXPR_TREE__CHUNK_SIZE__TYPE0_3  = GET_CHUNK_SIZE__EXPR_TREE__BY_TYPE0(3) }; 
+enum { PSCRIPT_PARSER_EXPR_TREE__CHUNK_SIZE__TYPE0_4  = GET_CHUNK_SIZE__EXPR_TREE__BY_TYPE0(4) }; 
+enum { PSCRIPT_PARSER_EXPR_TREE__CHUNK_SIZE__TYPE0_5  = GET_CHUNK_SIZE__EXPR_TREE__BY_TYPE0(5) }; 
+enum { PSCRIPT_PARSER_EXPR_TREE__CHUNK_SIZE__TYPE0_6  = GET_CHUNK_SIZE__EXPR_TREE__BY_TYPE0(6) }; 
+enum { PSCRIPT_PARSER_EXPR_TREE__CHUNK_SIZE__TYPE0_7  = GET_CHUNK_SIZE__EXPR_TREE__BY_TYPE0(7) }; 
+enum { PSCRIPT_PARSER_EXPR_TREE__CHUNK_SIZE__TYPE0_8  = GET_CHUNK_SIZE__EXPR_TREE__BY_TYPE0(8) }; 
+enum { PSCRIPT_PARSER_EXPR_TREE__CHUNK_SIZE__TYPE0_9  = GET_CHUNK_SIZE__EXPR_TREE__BY_TYPE0(9) }; 
+enum { PSCRIPT_PARSER_EXPR_TREE__CHUNK_SIZE__TYPE0_10 = GET_CHUNK_SIZE__EXPR_TREE__BY_TYPE0(10) }; 
+enum { PSCRIPT_PARSER_EXPR_TREE__CHUNK_SIZE__TYPE0_11 = GET_CHUNK_SIZE__EXPR_TREE__BY_TYPE0(11) }; 
+enum { PSCRIPT_PARSER_EXPR_TREE__CHUNK_SIZE__TYPE0_12 = GET_CHUNK_SIZE__EXPR_TREE__BY_TYPE0(12) }; 
+enum { PSCRIPT_PARSER_EXPR_TREE__CHUNK_SIZE__TYPE0_13 = GET_CHUNK_SIZE__EXPR_TREE__BY_TYPE0(13) }; 
+enum { PSCRIPT_PARSER_EXPR_TREE__CHUNK_SIZE__TYPE0_14 = GET_CHUNK_SIZE__EXPR_TREE__BY_TYPE0(14) }; 
+enum { PSCRIPT_PARSER_EXPR_TREE__CHUNK_SIZE__TYPE0_15 = GET_CHUNK_SIZE__EXPR_TREE__BY_TYPE0(15) }; 
+
+static const int8_t pscript_parser_expr_tree__chunk_size__by_type0[] = { 
+  PSCRIPT_PARSER_EXPR_TREE__CHUNK_SIZE__TYPE0_0, 
+  PSCRIPT_PARSER_EXPR_TREE__CHUNK_SIZE__TYPE0_1, 
+  PSCRIPT_PARSER_EXPR_TREE__CHUNK_SIZE__TYPE0_2, 
+  PSCRIPT_PARSER_EXPR_TREE__CHUNK_SIZE__TYPE0_3, 
+  PSCRIPT_PARSER_EXPR_TREE__CHUNK_SIZE__TYPE0_4, 
+  PSCRIPT_PARSER_EXPR_TREE__CHUNK_SIZE__TYPE0_5, 
+  PSCRIPT_PARSER_EXPR_TREE__CHUNK_SIZE__TYPE0_6, 
+  PSCRIPT_PARSER_EXPR_TREE__CHUNK_SIZE__TYPE0_7, 
+  PSCRIPT_PARSER_EXPR_TREE__CHUNK_SIZE__TYPE0_8, 
+  PSCRIPT_PARSER_EXPR_TREE__CHUNK_SIZE__TYPE0_9, 
+  PSCRIPT_PARSER_EXPR_TREE__CHUNK_SIZE__TYPE0_10, 
+  PSCRIPT_PARSER_EXPR_TREE__CHUNK_SIZE__TYPE0_11, 
+  PSCRIPT_PARSER_EXPR_TREE__CHUNK_SIZE__TYPE0_12, 
+  PSCRIPT_PARSER_EXPR_TREE__CHUNK_SIZE__TYPE0_13, 
+  PSCRIPT_PARSER_EXPR_TREE__CHUNK_SIZE__TYPE0_14, 
+  PSCRIPT_PARSER_EXPR_TREE__CHUNK_SIZE__TYPE0_15, 
+}; 
+static const int8_t * pscript_parser_expr_tree__chunk_size__by_type__shifted = pscript_parser_expr_tree__chunk_size__by_type0 - PSCRIPT_EXPR_TREE__TYPE__BASE - 1; 
+
+
+#define GET_FIELD_NAME__EXPR_TREE__BY_TYPE(type) { \
+  PSCRIPT_PARSER_EXPR_TREE__GET_FIELD_NAME__BY_TYPE(type,0), \
+  PSCRIPT_PARSER_EXPR_TREE__GET_FIELD_NAME__BY_TYPE(type,1), \
+  PSCRIPT_PARSER_EXPR_TREE__GET_FIELD_NAME__BY_TYPE(type,2), \
+  PSCRIPT_PARSER_EXPR_TREE__GET_FIELD_NAME__BY_TYPE(type,3), \
+  PSCRIPT_PARSER_EXPR_TREE__GET_FIELD_NAME__BY_TYPE(type,4), \
+  PSCRIPT_PARSER_EXPR_TREE__GET_FIELD_NAME__BY_TYPE(type,5), \
+  PSCRIPT_PARSER_EXPR_TREE__GET_FIELD_NAME__BY_TYPE(type,6), \
+  PSCRIPT_PARSER_EXPR_TREE__GET_FIELD_NAME__BY_TYPE(type,7), \
+  PSCRIPT_PARSER_EXPR_TREE__GET_FIELD_NAME__BY_TYPE(type,8), \
+  PSCRIPT_PARSER_EXPR_TREE__GET_FIELD_NAME__BY_TYPE(type,9), \
+ } 
+
+#define GET_FIELD_NAME__EXPR_TREE__BY_TYPE0(type0) GET_FIELD_NAME__EXPR_TREE__BY_TYPE(PSCRIPT_EXPR_TREE__TYPE__BASE + 1 + type0) 
+
+static const char * pscript_parser_expr_tree__field_name__by_type0[][10] = { 
+  GET_FIELD_NAME__EXPR_TREE__BY_TYPE0(0), 
+  GET_FIELD_NAME__EXPR_TREE__BY_TYPE0(1), 
+  GET_FIELD_NAME__EXPR_TREE__BY_TYPE0(2), 
+  GET_FIELD_NAME__EXPR_TREE__BY_TYPE0(3), 
+  GET_FIELD_NAME__EXPR_TREE__BY_TYPE0(4), 
+  GET_FIELD_NAME__EXPR_TREE__BY_TYPE0(5), 
+  GET_FIELD_NAME__EXPR_TREE__BY_TYPE0(6), 
+  GET_FIELD_NAME__EXPR_TREE__BY_TYPE0(7), 
+  GET_FIELD_NAME__EXPR_TREE__BY_TYPE0(8), 
+  GET_FIELD_NAME__EXPR_TREE__BY_TYPE0(9), 
+  GET_FIELD_NAME__EXPR_TREE__BY_TYPE0(10), 
+  GET_FIELD_NAME__EXPR_TREE__BY_TYPE0(11), 
+  GET_FIELD_NAME__EXPR_TREE__BY_TYPE0(12), 
+  GET_FIELD_NAME__EXPR_TREE__BY_TYPE0(13), 
+  GET_FIELD_NAME__EXPR_TREE__BY_TYPE0(14), 
+  GET_FIELD_NAME__EXPR_TREE__BY_TYPE0(15), 
+}; 
+static const char * (* pscript_parser_expr_tree__field_name__by_type__shifted)[10] = pscript_parser_expr_tree__field_name__by_type0 - PSCRIPT_EXPR_TREE__TYPE__BASE - 1;  
+
+
+#define GET_FIELDS_NB__EXPR_TREE(type) (pscript_parser_expr_tree__fields_nb__by_type__shifted[type]) 
+
+#define GET_FIELD_NAME__EXPR_TREE(type,field_i) (pscript_parser_expr_tree__field_name__by_type__shifted[type][field_i]) 
+
+#define GET_FIELD_INTTYPE__EXPR_TREE(type,field_i) (pscript_parser_expr_tree__field_inttype__by_type__shifted[type][field_i]) 
+
+#define GET_FIELD_SIZEOF__EXPR_TREE(type,field_i) (pscript_parser_expr_tree__field_sizeof__by_type__shifted[type][field_i]) 
+
+#define GET_FIELD_OFFSETOF__EXPR_TREE(type,field_i) (pscript_parser_expr_tree__field_sizeof_cumulated__by_type__shifted[type][field_i]) 
+
+#define GET_CHUNK_SIZE__EXPR_TREE(type,values_nb) (pscript_parser_expr_tree__chunk_size__by_type__shifted[type])
+
+
+
+// *** TYPE_TREE *** 
+
+enum { PSCRIPT_PARSER_TYPE_TREE__FIELDS_NB__TYPE0_0  = PSCRIPT_PARSER_TYPE_TREE__GET_FIELDS_NB__BY_TYPE(PSCRIPT_TYPE_TREE__TYPE__BASE +  1) }; 
+enum { PSCRIPT_PARSER_TYPE_TREE__FIELDS_NB__TYPE0_1  = PSCRIPT_PARSER_TYPE_TREE__GET_FIELDS_NB__BY_TYPE(PSCRIPT_TYPE_TREE__TYPE__BASE +  2) }; 
+enum { PSCRIPT_PARSER_TYPE_TREE__FIELDS_NB__TYPE0_2  = PSCRIPT_PARSER_TYPE_TREE__GET_FIELDS_NB__BY_TYPE(PSCRIPT_TYPE_TREE__TYPE__BASE +  3) }; 
+enum { PSCRIPT_PARSER_TYPE_TREE__FIELDS_NB__TYPE0_3  = PSCRIPT_PARSER_TYPE_TREE__GET_FIELDS_NB__BY_TYPE(PSCRIPT_TYPE_TREE__TYPE__BASE +  4) }; 
+enum { PSCRIPT_PARSER_TYPE_TREE__FIELDS_NB__TYPE0_4  = PSCRIPT_PARSER_TYPE_TREE__GET_FIELDS_NB__BY_TYPE(PSCRIPT_TYPE_TREE__TYPE__BASE +  5) }; 
+enum { PSCRIPT_PARSER_TYPE_TREE__FIELDS_NB__TYPE0_5  = PSCRIPT_PARSER_TYPE_TREE__GET_FIELDS_NB__BY_TYPE(PSCRIPT_TYPE_TREE__TYPE__BASE +  6) }; 
+enum { PSCRIPT_PARSER_TYPE_TREE__FIELDS_NB__TYPE0_6  = PSCRIPT_PARSER_TYPE_TREE__GET_FIELDS_NB__BY_TYPE(PSCRIPT_TYPE_TREE__TYPE__BASE +  7) }; 
+enum { PSCRIPT_PARSER_TYPE_TREE__FIELDS_NB__TYPE0_7  = PSCRIPT_PARSER_TYPE_TREE__GET_FIELDS_NB__BY_TYPE(PSCRIPT_TYPE_TREE__TYPE__BASE +  8) }; 
+enum { PSCRIPT_PARSER_TYPE_TREE__FIELDS_NB__TYPE0_8  = PSCRIPT_PARSER_TYPE_TREE__GET_FIELDS_NB__BY_TYPE(PSCRIPT_TYPE_TREE__TYPE__BASE +  9) }; 
+enum { PSCRIPT_PARSER_TYPE_TREE__FIELDS_NB__TYPE0_9  = PSCRIPT_PARSER_TYPE_TREE__GET_FIELDS_NB__BY_TYPE(PSCRIPT_TYPE_TREE__TYPE__BASE + 10) }; 
+enum { PSCRIPT_PARSER_TYPE_TREE__FIELDS_NB__TYPE0_10 = PSCRIPT_PARSER_TYPE_TREE__GET_FIELDS_NB__BY_TYPE(PSCRIPT_TYPE_TREE__TYPE__BASE + 11) }; 
+enum { PSCRIPT_PARSER_TYPE_TREE__FIELDS_NB__TYPE0_11 = PSCRIPT_PARSER_TYPE_TREE__GET_FIELDS_NB__BY_TYPE(PSCRIPT_TYPE_TREE__TYPE__BASE + 12) }; 
+enum { PSCRIPT_PARSER_TYPE_TREE__FIELDS_NB__TYPE0_12 = PSCRIPT_PARSER_TYPE_TREE__GET_FIELDS_NB__BY_TYPE(PSCRIPT_TYPE_TREE__TYPE__BASE + 13) }; 
+enum { PSCRIPT_PARSER_TYPE_TREE__FIELDS_NB__TYPE0_13 = PSCRIPT_PARSER_TYPE_TREE__GET_FIELDS_NB__BY_TYPE(PSCRIPT_TYPE_TREE__TYPE__BASE + 14) }; 
+enum { PSCRIPT_PARSER_TYPE_TREE__FIELDS_NB__TYPE0_14 = PSCRIPT_PARSER_TYPE_TREE__GET_FIELDS_NB__BY_TYPE(PSCRIPT_TYPE_TREE__TYPE__BASE + 15) }; 
+enum { PSCRIPT_PARSER_TYPE_TREE__FIELDS_NB__TYPE0_15 = PSCRIPT_PARSER_TYPE_TREE__GET_FIELDS_NB__BY_TYPE(PSCRIPT_TYPE_TREE__TYPE__BASE + 16) }; 
+
+static const int8_t pscript_parser_type_tree__fields_nb__by_type0[] = { 
+  PSCRIPT_PARSER_TYPE_TREE__FIELDS_NB__TYPE0_0, 
+  PSCRIPT_PARSER_TYPE_TREE__FIELDS_NB__TYPE0_1, 
+  PSCRIPT_PARSER_TYPE_TREE__FIELDS_NB__TYPE0_2, 
+  PSCRIPT_PARSER_TYPE_TREE__FIELDS_NB__TYPE0_3, 
+  PSCRIPT_PARSER_TYPE_TREE__FIELDS_NB__TYPE0_4, 
+  PSCRIPT_PARSER_TYPE_TREE__FIELDS_NB__TYPE0_5, 
+  PSCRIPT_PARSER_TYPE_TREE__FIELDS_NB__TYPE0_6, 
+  PSCRIPT_PARSER_TYPE_TREE__FIELDS_NB__TYPE0_7, 
+  PSCRIPT_PARSER_TYPE_TREE__FIELDS_NB__TYPE0_8, 
+  PSCRIPT_PARSER_TYPE_TREE__FIELDS_NB__TYPE0_9, 
+  PSCRIPT_PARSER_TYPE_TREE__FIELDS_NB__TYPE0_10, 
+  PSCRIPT_PARSER_TYPE_TREE__FIELDS_NB__TYPE0_11, 
+  PSCRIPT_PARSER_TYPE_TREE__FIELDS_NB__TYPE0_12, 
+  PSCRIPT_PARSER_TYPE_TREE__FIELDS_NB__TYPE0_13, 
+  PSCRIPT_PARSER_TYPE_TREE__FIELDS_NB__TYPE0_14, 
+  PSCRIPT_PARSER_TYPE_TREE__FIELDS_NB__TYPE0_15, 
+}; 
+static const int8_t * pscript_parser_type_tree__fields_nb__by_type__shifted = pscript_parser_type_tree__fields_nb__by_type0 - PSCRIPT_TYPE_TREE__TYPE__BASE - 1; 
+
+
+
+#define PSCRIPT_PARSER_TYPE_TREE__FIELD_INTTYPE__BY_TYPE0__DEFINE_ENUM(type0)  \
+enum { glue4(PSCRIPT_PARSER_TYPE_TREE__GET_FIELD_INTTYPE__TYPE0_,type0,_FIELD_,0) = PSCRIPT_PARSER_TYPE_TREE__GET_FIELD_INTTYPE__BY_TYPE(PSCRIPT_TYPE_TREE__TYPE__BASE + type0 + 1,0) }; \
+enum { glue4(PSCRIPT_PARSER_TYPE_TREE__GET_FIELD_INTTYPE__TYPE0_,type0,_FIELD_,1) = PSCRIPT_PARSER_TYPE_TREE__GET_FIELD_INTTYPE__BY_TYPE(PSCRIPT_TYPE_TREE__TYPE__BASE + type0 + 1,1) }; \
+enum { glue4(PSCRIPT_PARSER_TYPE_TREE__GET_FIELD_INTTYPE__TYPE0_,type0,_FIELD_,2) = PSCRIPT_PARSER_TYPE_TREE__GET_FIELD_INTTYPE__BY_TYPE(PSCRIPT_TYPE_TREE__TYPE__BASE + type0 + 1,2) }; \
+enum { glue4(PSCRIPT_PARSER_TYPE_TREE__GET_FIELD_INTTYPE__TYPE0_,type0,_FIELD_,3) = PSCRIPT_PARSER_TYPE_TREE__GET_FIELD_INTTYPE__BY_TYPE(PSCRIPT_TYPE_TREE__TYPE__BASE + type0 + 1,3) }; \
+enum { glue4(PSCRIPT_PARSER_TYPE_TREE__GET_FIELD_INTTYPE__TYPE0_,type0,_FIELD_,4) = PSCRIPT_PARSER_TYPE_TREE__GET_FIELD_INTTYPE__BY_TYPE(PSCRIPT_TYPE_TREE__TYPE__BASE + type0 + 1,4) }; \
+enum { glue4(PSCRIPT_PARSER_TYPE_TREE__GET_FIELD_INTTYPE__TYPE0_,type0,_FIELD_,5) = PSCRIPT_PARSER_TYPE_TREE__GET_FIELD_INTTYPE__BY_TYPE(PSCRIPT_TYPE_TREE__TYPE__BASE + type0 + 1,5) }; \
+enum { glue4(PSCRIPT_PARSER_TYPE_TREE__GET_FIELD_INTTYPE__TYPE0_,type0,_FIELD_,6) = PSCRIPT_PARSER_TYPE_TREE__GET_FIELD_INTTYPE__BY_TYPE(PSCRIPT_TYPE_TREE__TYPE__BASE + type0 + 1,6) }; \
+enum { glue4(PSCRIPT_PARSER_TYPE_TREE__GET_FIELD_INTTYPE__TYPE0_,type0,_FIELD_,7) = PSCRIPT_PARSER_TYPE_TREE__GET_FIELD_INTTYPE__BY_TYPE(PSCRIPT_TYPE_TREE__TYPE__BASE + type0 + 1,7) }; \
+enum { glue4(PSCRIPT_PARSER_TYPE_TREE__GET_FIELD_INTTYPE__TYPE0_,type0,_FIELD_,8) = PSCRIPT_PARSER_TYPE_TREE__GET_FIELD_INTTYPE__BY_TYPE(PSCRIPT_TYPE_TREE__TYPE__BASE + type0 + 1,8) }; \
+enum { glue4(PSCRIPT_PARSER_TYPE_TREE__GET_FIELD_INTTYPE__TYPE0_,type0,_FIELD_,9) = PSCRIPT_PARSER_TYPE_TREE__GET_FIELD_INTTYPE__BY_TYPE(PSCRIPT_TYPE_TREE__TYPE__BASE + type0 + 1,9) }; 
+
+PSCRIPT_PARSER_TYPE_TREE__FIELD_INTTYPE__BY_TYPE0__DEFINE_ENUM(0); 
+PSCRIPT_PARSER_TYPE_TREE__FIELD_INTTYPE__BY_TYPE0__DEFINE_ENUM(1); 
+PSCRIPT_PARSER_TYPE_TREE__FIELD_INTTYPE__BY_TYPE0__DEFINE_ENUM(2); 
+PSCRIPT_PARSER_TYPE_TREE__FIELD_INTTYPE__BY_TYPE0__DEFINE_ENUM(3); 
+PSCRIPT_PARSER_TYPE_TREE__FIELD_INTTYPE__BY_TYPE0__DEFINE_ENUM(4); 
+PSCRIPT_PARSER_TYPE_TREE__FIELD_INTTYPE__BY_TYPE0__DEFINE_ENUM(5); 
+PSCRIPT_PARSER_TYPE_TREE__FIELD_INTTYPE__BY_TYPE0__DEFINE_ENUM(6); 
+PSCRIPT_PARSER_TYPE_TREE__FIELD_INTTYPE__BY_TYPE0__DEFINE_ENUM(7); 
+PSCRIPT_PARSER_TYPE_TREE__FIELD_INTTYPE__BY_TYPE0__DEFINE_ENUM(8); 
+PSCRIPT_PARSER_TYPE_TREE__FIELD_INTTYPE__BY_TYPE0__DEFINE_ENUM(9); 
+PSCRIPT_PARSER_TYPE_TREE__FIELD_INTTYPE__BY_TYPE0__DEFINE_ENUM(10); 
+PSCRIPT_PARSER_TYPE_TREE__FIELD_INTTYPE__BY_TYPE0__DEFINE_ENUM(11); 
+PSCRIPT_PARSER_TYPE_TREE__FIELD_INTTYPE__BY_TYPE0__DEFINE_ENUM(12); 
+PSCRIPT_PARSER_TYPE_TREE__FIELD_INTTYPE__BY_TYPE0__DEFINE_ENUM(13); 
+PSCRIPT_PARSER_TYPE_TREE__FIELD_INTTYPE__BY_TYPE0__DEFINE_ENUM(14); 
+PSCRIPT_PARSER_TYPE_TREE__FIELD_INTTYPE__BY_TYPE0__DEFINE_ENUM(15); 
+
+#define PSCRIPT_PARSER_TYPE_TREE__FIELD_INTTYPE__BY_TYPE__ROW(type0) {  \
+  glue4(PSCRIPT_PARSER_TYPE_TREE__GET_FIELD_INTTYPE__TYPE0_,type0,_FIELD_,0), \
+  glue4(PSCRIPT_PARSER_TYPE_TREE__GET_FIELD_INTTYPE__TYPE0_,type0,_FIELD_,1), \
+  glue4(PSCRIPT_PARSER_TYPE_TREE__GET_FIELD_INTTYPE__TYPE0_,type0,_FIELD_,2), \
+  glue4(PSCRIPT_PARSER_TYPE_TREE__GET_FIELD_INTTYPE__TYPE0_,type0,_FIELD_,3), \
+  glue4(PSCRIPT_PARSER_TYPE_TREE__GET_FIELD_INTTYPE__TYPE0_,type0,_FIELD_,4), \
+  glue4(PSCRIPT_PARSER_TYPE_TREE__GET_FIELD_INTTYPE__TYPE0_,type0,_FIELD_,5), \
+  glue4(PSCRIPT_PARSER_TYPE_TREE__GET_FIELD_INTTYPE__TYPE0_,type0,_FIELD_,6), \
+  glue4(PSCRIPT_PARSER_TYPE_TREE__GET_FIELD_INTTYPE__TYPE0_,type0,_FIELD_,7), \
+  glue4(PSCRIPT_PARSER_TYPE_TREE__GET_FIELD_INTTYPE__TYPE0_,type0,_FIELD_,8), \
+  glue4(PSCRIPT_PARSER_TYPE_TREE__GET_FIELD_INTTYPE__TYPE0_,type0,_FIELD_,9), \
+  }  
+
+static const int8_t pscript_parser_type_tree__field_inttype__by_type0[][10] = { 
+  PSCRIPT_PARSER_TYPE_TREE__FIELD_INTTYPE__BY_TYPE__ROW(0), 
+  PSCRIPT_PARSER_TYPE_TREE__FIELD_INTTYPE__BY_TYPE__ROW(1), 
+  PSCRIPT_PARSER_TYPE_TREE__FIELD_INTTYPE__BY_TYPE__ROW(2), 
+  PSCRIPT_PARSER_TYPE_TREE__FIELD_INTTYPE__BY_TYPE__ROW(3), 
+  PSCRIPT_PARSER_TYPE_TREE__FIELD_INTTYPE__BY_TYPE__ROW(4), 
+  PSCRIPT_PARSER_TYPE_TREE__FIELD_INTTYPE__BY_TYPE__ROW(5), 
+  PSCRIPT_PARSER_TYPE_TREE__FIELD_INTTYPE__BY_TYPE__ROW(6), 
+  PSCRIPT_PARSER_TYPE_TREE__FIELD_INTTYPE__BY_TYPE__ROW(7), 
+  PSCRIPT_PARSER_TYPE_TREE__FIELD_INTTYPE__BY_TYPE__ROW(8), 
+  PSCRIPT_PARSER_TYPE_TREE__FIELD_INTTYPE__BY_TYPE__ROW(9), 
+  PSCRIPT_PARSER_TYPE_TREE__FIELD_INTTYPE__BY_TYPE__ROW(10), 
+  PSCRIPT_PARSER_TYPE_TREE__FIELD_INTTYPE__BY_TYPE__ROW(11), 
+  PSCRIPT_PARSER_TYPE_TREE__FIELD_INTTYPE__BY_TYPE__ROW(12), 
+  PSCRIPT_PARSER_TYPE_TREE__FIELD_INTTYPE__BY_TYPE__ROW(13), 
+  PSCRIPT_PARSER_TYPE_TREE__FIELD_INTTYPE__BY_TYPE__ROW(14), 
+  PSCRIPT_PARSER_TYPE_TREE__FIELD_INTTYPE__BY_TYPE__ROW(15), 
+}; 
+static const int8_t (* pscript_parser_type_tree__field_inttype__by_type__shifted)[10] = pscript_parser_type_tree__field_inttype__by_type0 - PSCRIPT_TYPE_TREE__TYPE__BASE - 1;  
+
+#define PSCRIPT_PARSER_TYPE_TREE__FIELD_SIZEOF__BY_TYPE0__DEFINE_ENUM(type0)  \
+enum { glue4(PSCRIPT_PARSER_TYPE_TREE__GET_FIELD_SIZEOF__TYPE0_,type0,_FIELD_,0) = PSCRIPT_SIZEOF(glue4(PSCRIPT_PARSER_TYPE_TREE__GET_FIELD_INTTYPE__TYPE0_,type0,_FIELD_,0)) }; \
+enum { glue4(PSCRIPT_PARSER_TYPE_TREE__GET_FIELD_SIZEOF__TYPE0_,type0,_FIELD_,1) = PSCRIPT_SIZEOF(glue4(PSCRIPT_PARSER_TYPE_TREE__GET_FIELD_INTTYPE__TYPE0_,type0,_FIELD_,1)) }; \
+enum { glue4(PSCRIPT_PARSER_TYPE_TREE__GET_FIELD_SIZEOF__TYPE0_,type0,_FIELD_,2) = PSCRIPT_SIZEOF(glue4(PSCRIPT_PARSER_TYPE_TREE__GET_FIELD_INTTYPE__TYPE0_,type0,_FIELD_,2)) }; \
+enum { glue4(PSCRIPT_PARSER_TYPE_TREE__GET_FIELD_SIZEOF__TYPE0_,type0,_FIELD_,3) = PSCRIPT_SIZEOF(glue4(PSCRIPT_PARSER_TYPE_TREE__GET_FIELD_INTTYPE__TYPE0_,type0,_FIELD_,3)) }; \
+enum { glue4(PSCRIPT_PARSER_TYPE_TREE__GET_FIELD_SIZEOF__TYPE0_,type0,_FIELD_,4) = PSCRIPT_SIZEOF(glue4(PSCRIPT_PARSER_TYPE_TREE__GET_FIELD_INTTYPE__TYPE0_,type0,_FIELD_,4)) }; \
+enum { glue4(PSCRIPT_PARSER_TYPE_TREE__GET_FIELD_SIZEOF__TYPE0_,type0,_FIELD_,5) = PSCRIPT_SIZEOF(glue4(PSCRIPT_PARSER_TYPE_TREE__GET_FIELD_INTTYPE__TYPE0_,type0,_FIELD_,5)) }; \
+enum { glue4(PSCRIPT_PARSER_TYPE_TREE__GET_FIELD_SIZEOF__TYPE0_,type0,_FIELD_,6) = PSCRIPT_SIZEOF(glue4(PSCRIPT_PARSER_TYPE_TREE__GET_FIELD_INTTYPE__TYPE0_,type0,_FIELD_,6)) }; \
+enum { glue4(PSCRIPT_PARSER_TYPE_TREE__GET_FIELD_SIZEOF__TYPE0_,type0,_FIELD_,7) = PSCRIPT_SIZEOF(glue4(PSCRIPT_PARSER_TYPE_TREE__GET_FIELD_INTTYPE__TYPE0_,type0,_FIELD_,7)) }; \
+enum { glue4(PSCRIPT_PARSER_TYPE_TREE__GET_FIELD_SIZEOF__TYPE0_,type0,_FIELD_,8) = PSCRIPT_SIZEOF(glue4(PSCRIPT_PARSER_TYPE_TREE__GET_FIELD_INTTYPE__TYPE0_,type0,_FIELD_,8)) }; \
+enum { glue4(PSCRIPT_PARSER_TYPE_TREE__GET_FIELD_SIZEOF__TYPE0_,type0,_FIELD_,9) = PSCRIPT_SIZEOF(glue4(PSCRIPT_PARSER_TYPE_TREE__GET_FIELD_INTTYPE__TYPE0_,type0,_FIELD_,9)) }; \
+
+PSCRIPT_PARSER_TYPE_TREE__FIELD_SIZEOF__BY_TYPE0__DEFINE_ENUM(0); 
+PSCRIPT_PARSER_TYPE_TREE__FIELD_SIZEOF__BY_TYPE0__DEFINE_ENUM(1); 
+PSCRIPT_PARSER_TYPE_TREE__FIELD_SIZEOF__BY_TYPE0__DEFINE_ENUM(2); 
+PSCRIPT_PARSER_TYPE_TREE__FIELD_SIZEOF__BY_TYPE0__DEFINE_ENUM(3); 
+PSCRIPT_PARSER_TYPE_TREE__FIELD_SIZEOF__BY_TYPE0__DEFINE_ENUM(4); 
+PSCRIPT_PARSER_TYPE_TREE__FIELD_SIZEOF__BY_TYPE0__DEFINE_ENUM(5); 
+PSCRIPT_PARSER_TYPE_TREE__FIELD_SIZEOF__BY_TYPE0__DEFINE_ENUM(6); 
+PSCRIPT_PARSER_TYPE_TREE__FIELD_SIZEOF__BY_TYPE0__DEFINE_ENUM(7); 
+PSCRIPT_PARSER_TYPE_TREE__FIELD_SIZEOF__BY_TYPE0__DEFINE_ENUM(8); 
+PSCRIPT_PARSER_TYPE_TREE__FIELD_SIZEOF__BY_TYPE0__DEFINE_ENUM(9); 
+PSCRIPT_PARSER_TYPE_TREE__FIELD_SIZEOF__BY_TYPE0__DEFINE_ENUM(10); 
+PSCRIPT_PARSER_TYPE_TREE__FIELD_SIZEOF__BY_TYPE0__DEFINE_ENUM(11); 
+PSCRIPT_PARSER_TYPE_TREE__FIELD_SIZEOF__BY_TYPE0__DEFINE_ENUM(12); 
+PSCRIPT_PARSER_TYPE_TREE__FIELD_SIZEOF__BY_TYPE0__DEFINE_ENUM(13); 
+PSCRIPT_PARSER_TYPE_TREE__FIELD_SIZEOF__BY_TYPE0__DEFINE_ENUM(14); 
+PSCRIPT_PARSER_TYPE_TREE__FIELD_SIZEOF__BY_TYPE0__DEFINE_ENUM(15); 
+
+#define PSCRIPT_PARSER_TYPE_TREE__FIELD_SIZEOF__BY_TYPE__ROW(type0) {  \
+  glue4(PSCRIPT_PARSER_TYPE_TREE__GET_FIELD_SIZEOF__TYPE0_,type0,_FIELD_,0), \
+  glue4(PSCRIPT_PARSER_TYPE_TREE__GET_FIELD_SIZEOF__TYPE0_,type0,_FIELD_,1), \
+  glue4(PSCRIPT_PARSER_TYPE_TREE__GET_FIELD_SIZEOF__TYPE0_,type0,_FIELD_,2), \
+  glue4(PSCRIPT_PARSER_TYPE_TREE__GET_FIELD_SIZEOF__TYPE0_,type0,_FIELD_,3), \
+  glue4(PSCRIPT_PARSER_TYPE_TREE__GET_FIELD_SIZEOF__TYPE0_,type0,_FIELD_,4), \
+  glue4(PSCRIPT_PARSER_TYPE_TREE__GET_FIELD_SIZEOF__TYPE0_,type0,_FIELD_,5), \
+  glue4(PSCRIPT_PARSER_TYPE_TREE__GET_FIELD_SIZEOF__TYPE0_,type0,_FIELD_,6), \
+  glue4(PSCRIPT_PARSER_TYPE_TREE__GET_FIELD_SIZEOF__TYPE0_,type0,_FIELD_,7), \
+  glue4(PSCRIPT_PARSER_TYPE_TREE__GET_FIELD_SIZEOF__TYPE0_,type0,_FIELD_,8), \
+  glue4(PSCRIPT_PARSER_TYPE_TREE__GET_FIELD_SIZEOF__TYPE0_,type0,_FIELD_,9), \
+  }  
+
+static const int8_t pscript_parser_type_tree__field_sizeof__by_type0[][10] = { 
+  PSCRIPT_PARSER_TYPE_TREE__FIELD_SIZEOF__BY_TYPE__ROW(0), 
+  PSCRIPT_PARSER_TYPE_TREE__FIELD_SIZEOF__BY_TYPE__ROW(1), 
+  PSCRIPT_PARSER_TYPE_TREE__FIELD_SIZEOF__BY_TYPE__ROW(2), 
+  PSCRIPT_PARSER_TYPE_TREE__FIELD_SIZEOF__BY_TYPE__ROW(3), 
+  PSCRIPT_PARSER_TYPE_TREE__FIELD_SIZEOF__BY_TYPE__ROW(4), 
+  PSCRIPT_PARSER_TYPE_TREE__FIELD_SIZEOF__BY_TYPE__ROW(5), 
+  PSCRIPT_PARSER_TYPE_TREE__FIELD_SIZEOF__BY_TYPE__ROW(6), 
+  PSCRIPT_PARSER_TYPE_TREE__FIELD_SIZEOF__BY_TYPE__ROW(7), 
+  PSCRIPT_PARSER_TYPE_TREE__FIELD_SIZEOF__BY_TYPE__ROW(8), 
+  PSCRIPT_PARSER_TYPE_TREE__FIELD_SIZEOF__BY_TYPE__ROW(9), 
+  PSCRIPT_PARSER_TYPE_TREE__FIELD_SIZEOF__BY_TYPE__ROW(10), 
+  PSCRIPT_PARSER_TYPE_TREE__FIELD_SIZEOF__BY_TYPE__ROW(11), 
+  PSCRIPT_PARSER_TYPE_TREE__FIELD_SIZEOF__BY_TYPE__ROW(12), 
+  PSCRIPT_PARSER_TYPE_TREE__FIELD_SIZEOF__BY_TYPE__ROW(13), 
+  PSCRIPT_PARSER_TYPE_TREE__FIELD_SIZEOF__BY_TYPE__ROW(14), 
+  PSCRIPT_PARSER_TYPE_TREE__FIELD_SIZEOF__BY_TYPE__ROW(15), 
+}; 
+static const int8_t (* pscript_parser_type_tree__field_sizeof__by_type__shifted)[10] = pscript_parser_type_tree__field_sizeof__by_type0 - PSCRIPT_TYPE_TREE__TYPE__BASE - 1;  
+
+
+	
+#define PSCRIPT_PARSER_TYPE_TREE__FIELD_SIZEOF_CUMULATED__BY_TYPE0__DEFINE_ENUM(type0)  \
+enum { glue4(PSCRIPT_PARSER_TYPE_TREE__GET_FIELD_SIZEOF_CUMULATED__TYPE0_,type0,_FIELD_,0) = 0 }; \
+enum { glue4(PSCRIPT_PARSER_TYPE_TREE__GET_FIELD_SIZEOF_CUMULATED__TYPE0_,type0,_FIELD_,1) = glue4(PSCRIPT_PARSER_TYPE_TREE__GET_FIELD_SIZEOF_CUMULATED__TYPE0_,type0,_FIELD_,0) + glue4(PSCRIPT_PARSER_TYPE_TREE__GET_FIELD_SIZEOF__TYPE0_,type0,_FIELD_,0) }; \
+enum { glue4(PSCRIPT_PARSER_TYPE_TREE__GET_FIELD_SIZEOF_CUMULATED__TYPE0_,type0,_FIELD_,2) = glue4(PSCRIPT_PARSER_TYPE_TREE__GET_FIELD_SIZEOF_CUMULATED__TYPE0_,type0,_FIELD_,1) + glue4(PSCRIPT_PARSER_TYPE_TREE__GET_FIELD_SIZEOF__TYPE0_,type0,_FIELD_,1) }; \
+enum { glue4(PSCRIPT_PARSER_TYPE_TREE__GET_FIELD_SIZEOF_CUMULATED__TYPE0_,type0,_FIELD_,3) = glue4(PSCRIPT_PARSER_TYPE_TREE__GET_FIELD_SIZEOF_CUMULATED__TYPE0_,type0,_FIELD_,2) + glue4(PSCRIPT_PARSER_TYPE_TREE__GET_FIELD_SIZEOF__TYPE0_,type0,_FIELD_,2) }; \
+enum { glue4(PSCRIPT_PARSER_TYPE_TREE__GET_FIELD_SIZEOF_CUMULATED__TYPE0_,type0,_FIELD_,4) = glue4(PSCRIPT_PARSER_TYPE_TREE__GET_FIELD_SIZEOF_CUMULATED__TYPE0_,type0,_FIELD_,3) + glue4(PSCRIPT_PARSER_TYPE_TREE__GET_FIELD_SIZEOF__TYPE0_,type0,_FIELD_,3) }; \
+enum { glue4(PSCRIPT_PARSER_TYPE_TREE__GET_FIELD_SIZEOF_CUMULATED__TYPE0_,type0,_FIELD_,5) = glue4(PSCRIPT_PARSER_TYPE_TREE__GET_FIELD_SIZEOF_CUMULATED__TYPE0_,type0,_FIELD_,4) + glue4(PSCRIPT_PARSER_TYPE_TREE__GET_FIELD_SIZEOF__TYPE0_,type0,_FIELD_,4) }; \
+enum { glue4(PSCRIPT_PARSER_TYPE_TREE__GET_FIELD_SIZEOF_CUMULATED__TYPE0_,type0,_FIELD_,6) = glue4(PSCRIPT_PARSER_TYPE_TREE__GET_FIELD_SIZEOF_CUMULATED__TYPE0_,type0,_FIELD_,5) + glue4(PSCRIPT_PARSER_TYPE_TREE__GET_FIELD_SIZEOF__TYPE0_,type0,_FIELD_,5) }; \
+enum { glue4(PSCRIPT_PARSER_TYPE_TREE__GET_FIELD_SIZEOF_CUMULATED__TYPE0_,type0,_FIELD_,7) = glue4(PSCRIPT_PARSER_TYPE_TREE__GET_FIELD_SIZEOF_CUMULATED__TYPE0_,type0,_FIELD_,6) + glue4(PSCRIPT_PARSER_TYPE_TREE__GET_FIELD_SIZEOF__TYPE0_,type0,_FIELD_,6) }; \
+enum { glue4(PSCRIPT_PARSER_TYPE_TREE__GET_FIELD_SIZEOF_CUMULATED__TYPE0_,type0,_FIELD_,8) = glue4(PSCRIPT_PARSER_TYPE_TREE__GET_FIELD_SIZEOF_CUMULATED__TYPE0_,type0,_FIELD_,7) + glue4(PSCRIPT_PARSER_TYPE_TREE__GET_FIELD_SIZEOF__TYPE0_,type0,_FIELD_,7) }; \
+enum { glue4(PSCRIPT_PARSER_TYPE_TREE__GET_FIELD_SIZEOF_CUMULATED__TYPE0_,type0,_FIELD_,9) = glue4(PSCRIPT_PARSER_TYPE_TREE__GET_FIELD_SIZEOF_CUMULATED__TYPE0_,type0,_FIELD_,8) + glue4(PSCRIPT_PARSER_TYPE_TREE__GET_FIELD_SIZEOF__TYPE0_,type0,_FIELD_,8) }; \
+
+PSCRIPT_PARSER_TYPE_TREE__FIELD_SIZEOF_CUMULATED__BY_TYPE0__DEFINE_ENUM(0); 
+PSCRIPT_PARSER_TYPE_TREE__FIELD_SIZEOF_CUMULATED__BY_TYPE0__DEFINE_ENUM(1); 
+PSCRIPT_PARSER_TYPE_TREE__FIELD_SIZEOF_CUMULATED__BY_TYPE0__DEFINE_ENUM(2); 
+PSCRIPT_PARSER_TYPE_TREE__FIELD_SIZEOF_CUMULATED__BY_TYPE0__DEFINE_ENUM(3); 
+PSCRIPT_PARSER_TYPE_TREE__FIELD_SIZEOF_CUMULATED__BY_TYPE0__DEFINE_ENUM(4); 
+PSCRIPT_PARSER_TYPE_TREE__FIELD_SIZEOF_CUMULATED__BY_TYPE0__DEFINE_ENUM(5); 
+PSCRIPT_PARSER_TYPE_TREE__FIELD_SIZEOF_CUMULATED__BY_TYPE0__DEFINE_ENUM(6); 
+PSCRIPT_PARSER_TYPE_TREE__FIELD_SIZEOF_CUMULATED__BY_TYPE0__DEFINE_ENUM(7); 
+PSCRIPT_PARSER_TYPE_TREE__FIELD_SIZEOF_CUMULATED__BY_TYPE0__DEFINE_ENUM(8); 
+PSCRIPT_PARSER_TYPE_TREE__FIELD_SIZEOF_CUMULATED__BY_TYPE0__DEFINE_ENUM(9); 
+PSCRIPT_PARSER_TYPE_TREE__FIELD_SIZEOF_CUMULATED__BY_TYPE0__DEFINE_ENUM(10); 
+PSCRIPT_PARSER_TYPE_TREE__FIELD_SIZEOF_CUMULATED__BY_TYPE0__DEFINE_ENUM(11); 
+PSCRIPT_PARSER_TYPE_TREE__FIELD_SIZEOF_CUMULATED__BY_TYPE0__DEFINE_ENUM(12); 
+PSCRIPT_PARSER_TYPE_TREE__FIELD_SIZEOF_CUMULATED__BY_TYPE0__DEFINE_ENUM(13); 
+PSCRIPT_PARSER_TYPE_TREE__FIELD_SIZEOF_CUMULATED__BY_TYPE0__DEFINE_ENUM(14); 
+PSCRIPT_PARSER_TYPE_TREE__FIELD_SIZEOF_CUMULATED__BY_TYPE0__DEFINE_ENUM(15); 
+
+#define PSCRIPT_PARSER_TYPE_TREE__FIELD_SIZEOF_CUMULATED__BY_TYPE__ROW(type0) {  \
+  glue4(PSCRIPT_PARSER_TYPE_TREE__GET_FIELD_SIZEOF_CUMULATED__TYPE0_,type0,_FIELD_,0), \
+  glue4(PSCRIPT_PARSER_TYPE_TREE__GET_FIELD_SIZEOF_CUMULATED__TYPE0_,type0,_FIELD_,1), \
+  glue4(PSCRIPT_PARSER_TYPE_TREE__GET_FIELD_SIZEOF_CUMULATED__TYPE0_,type0,_FIELD_,2), \
+  glue4(PSCRIPT_PARSER_TYPE_TREE__GET_FIELD_SIZEOF_CUMULATED__TYPE0_,type0,_FIELD_,3), \
+  glue4(PSCRIPT_PARSER_TYPE_TREE__GET_FIELD_SIZEOF_CUMULATED__TYPE0_,type0,_FIELD_,4), \
+  glue4(PSCRIPT_PARSER_TYPE_TREE__GET_FIELD_SIZEOF_CUMULATED__TYPE0_,type0,_FIELD_,5), \
+  glue4(PSCRIPT_PARSER_TYPE_TREE__GET_FIELD_SIZEOF_CUMULATED__TYPE0_,type0,_FIELD_,6), \
+  glue4(PSCRIPT_PARSER_TYPE_TREE__GET_FIELD_SIZEOF_CUMULATED__TYPE0_,type0,_FIELD_,7), \
+  glue4(PSCRIPT_PARSER_TYPE_TREE__GET_FIELD_SIZEOF_CUMULATED__TYPE0_,type0,_FIELD_,8), \
+  glue4(PSCRIPT_PARSER_TYPE_TREE__GET_FIELD_SIZEOF_CUMULATED__TYPE0_,type0,_FIELD_,9), \
+  }  
+
+static const int8_t pscript_parser_type_tree__field_sizeof_cumulated__by_type0[][10] = { 
+  PSCRIPT_PARSER_TYPE_TREE__FIELD_SIZEOF_CUMULATED__BY_TYPE__ROW(0), 
+  PSCRIPT_PARSER_TYPE_TREE__FIELD_SIZEOF_CUMULATED__BY_TYPE__ROW(1), 
+  PSCRIPT_PARSER_TYPE_TREE__FIELD_SIZEOF_CUMULATED__BY_TYPE__ROW(2), 
+  PSCRIPT_PARSER_TYPE_TREE__FIELD_SIZEOF_CUMULATED__BY_TYPE__ROW(3), 
+  PSCRIPT_PARSER_TYPE_TREE__FIELD_SIZEOF_CUMULATED__BY_TYPE__ROW(4), 
+  PSCRIPT_PARSER_TYPE_TREE__FIELD_SIZEOF_CUMULATED__BY_TYPE__ROW(5), 
+  PSCRIPT_PARSER_TYPE_TREE__FIELD_SIZEOF_CUMULATED__BY_TYPE__ROW(6), 
+  PSCRIPT_PARSER_TYPE_TREE__FIELD_SIZEOF_CUMULATED__BY_TYPE__ROW(7), 
+  PSCRIPT_PARSER_TYPE_TREE__FIELD_SIZEOF_CUMULATED__BY_TYPE__ROW(8), 
+  PSCRIPT_PARSER_TYPE_TREE__FIELD_SIZEOF_CUMULATED__BY_TYPE__ROW(9), 
+  PSCRIPT_PARSER_TYPE_TREE__FIELD_SIZEOF_CUMULATED__BY_TYPE__ROW(10), 
+  PSCRIPT_PARSER_TYPE_TREE__FIELD_SIZEOF_CUMULATED__BY_TYPE__ROW(11), 
+  PSCRIPT_PARSER_TYPE_TREE__FIELD_SIZEOF_CUMULATED__BY_TYPE__ROW(12), 
+  PSCRIPT_PARSER_TYPE_TREE__FIELD_SIZEOF_CUMULATED__BY_TYPE__ROW(13), 
+  PSCRIPT_PARSER_TYPE_TREE__FIELD_SIZEOF_CUMULATED__BY_TYPE__ROW(14), 
+  PSCRIPT_PARSER_TYPE_TREE__FIELD_SIZEOF_CUMULATED__BY_TYPE__ROW(15), 
+}; 
+static const int8_t (* pscript_parser_type_tree__field_sizeof_cumulated__by_type__shifted)[10] = pscript_parser_type_tree__field_sizeof_cumulated__by_type0 - PSCRIPT_TYPE_TREE__TYPE__BASE - 1;  
+
+#define GET_CHUNK_SIZE__TYPE_TREE__BY_TYPE0(type0) (			\
+  glue(PSCRIPT_PARSER_TYPE_TREE__FIELDS_NB__TYPE0_,type0) == 0 ? glue3(PSCRIPT_PARSER_TYPE_TREE__GET_FIELD_SIZEOF_CUMULATED__TYPE0_,type0,_FIELD_0) : \
+  glue(PSCRIPT_PARSER_TYPE_TREE__FIELDS_NB__TYPE0_,type0) == 1 ? glue3(PSCRIPT_PARSER_TYPE_TREE__GET_FIELD_SIZEOF_CUMULATED__TYPE0_,type0,_FIELD_1) : \
+  glue(PSCRIPT_PARSER_TYPE_TREE__FIELDS_NB__TYPE0_,type0) == 2 ? glue3(PSCRIPT_PARSER_TYPE_TREE__GET_FIELD_SIZEOF_CUMULATED__TYPE0_,type0,_FIELD_2) : \
+  glue(PSCRIPT_PARSER_TYPE_TREE__FIELDS_NB__TYPE0_,type0) == 3 ? glue3(PSCRIPT_PARSER_TYPE_TREE__GET_FIELD_SIZEOF_CUMULATED__TYPE0_,type0,_FIELD_3) : \
+  glue(PSCRIPT_PARSER_TYPE_TREE__FIELDS_NB__TYPE0_,type0) == 4 ? glue3(PSCRIPT_PARSER_TYPE_TREE__GET_FIELD_SIZEOF_CUMULATED__TYPE0_,type0,_FIELD_4) : \
+  glue(PSCRIPT_PARSER_TYPE_TREE__FIELDS_NB__TYPE0_,type0) == 5 ? glue3(PSCRIPT_PARSER_TYPE_TREE__GET_FIELD_SIZEOF_CUMULATED__TYPE0_,type0,_FIELD_5) : \
+  glue(PSCRIPT_PARSER_TYPE_TREE__FIELDS_NB__TYPE0_,type0) == 6 ? glue3(PSCRIPT_PARSER_TYPE_TREE__GET_FIELD_SIZEOF_CUMULATED__TYPE0_,type0,_FIELD_6) : \
+  glue(PSCRIPT_PARSER_TYPE_TREE__FIELDS_NB__TYPE0_,type0) == 7 ? glue3(PSCRIPT_PARSER_TYPE_TREE__GET_FIELD_SIZEOF_CUMULATED__TYPE0_,type0,_FIELD_7) : \
+  glue(PSCRIPT_PARSER_TYPE_TREE__FIELDS_NB__TYPE0_,type0) == 8 ? glue3(PSCRIPT_PARSER_TYPE_TREE__GET_FIELD_SIZEOF_CUMULATED__TYPE0_,type0,_FIELD_8) : \
+ -1) 
+
+enum { PSCRIPT_PARSER_TYPE_TREE__CHUNK_SIZE__TYPE0_0  = GET_CHUNK_SIZE__TYPE_TREE__BY_TYPE0(0) }; 
+enum { PSCRIPT_PARSER_TYPE_TREE__CHUNK_SIZE__TYPE0_1  = GET_CHUNK_SIZE__TYPE_TREE__BY_TYPE0(1) };
+enum { PSCRIPT_PARSER_TYPE_TREE__CHUNK_SIZE__TYPE0_2  = GET_CHUNK_SIZE__TYPE_TREE__BY_TYPE0(2) }; 
+enum { PSCRIPT_PARSER_TYPE_TREE__CHUNK_SIZE__TYPE0_3  = GET_CHUNK_SIZE__TYPE_TREE__BY_TYPE0(3) }; 
+enum { PSCRIPT_PARSER_TYPE_TREE__CHUNK_SIZE__TYPE0_4  = GET_CHUNK_SIZE__TYPE_TREE__BY_TYPE0(4) }; 
+enum { PSCRIPT_PARSER_TYPE_TREE__CHUNK_SIZE__TYPE0_5  = GET_CHUNK_SIZE__TYPE_TREE__BY_TYPE0(5) }; 
+enum { PSCRIPT_PARSER_TYPE_TREE__CHUNK_SIZE__TYPE0_6  = GET_CHUNK_SIZE__TYPE_TREE__BY_TYPE0(6) }; 
+enum { PSCRIPT_PARSER_TYPE_TREE__CHUNK_SIZE__TYPE0_7  = GET_CHUNK_SIZE__TYPE_TREE__BY_TYPE0(7) }; 
+enum { PSCRIPT_PARSER_TYPE_TREE__CHUNK_SIZE__TYPE0_8  = GET_CHUNK_SIZE__TYPE_TREE__BY_TYPE0(8) }; 
+enum { PSCRIPT_PARSER_TYPE_TREE__CHUNK_SIZE__TYPE0_9  = GET_CHUNK_SIZE__TYPE_TREE__BY_TYPE0(9) }; 
+enum { PSCRIPT_PARSER_TYPE_TREE__CHUNK_SIZE__TYPE0_10 = GET_CHUNK_SIZE__TYPE_TREE__BY_TYPE0(10) }; 
+enum { PSCRIPT_PARSER_TYPE_TREE__CHUNK_SIZE__TYPE0_11 = GET_CHUNK_SIZE__TYPE_TREE__BY_TYPE0(11) }; 
+enum { PSCRIPT_PARSER_TYPE_TREE__CHUNK_SIZE__TYPE0_12 = GET_CHUNK_SIZE__TYPE_TREE__BY_TYPE0(12) }; 
+enum { PSCRIPT_PARSER_TYPE_TREE__CHUNK_SIZE__TYPE0_13 = GET_CHUNK_SIZE__TYPE_TREE__BY_TYPE0(13) }; 
+enum { PSCRIPT_PARSER_TYPE_TREE__CHUNK_SIZE__TYPE0_14 = GET_CHUNK_SIZE__TYPE_TREE__BY_TYPE0(14) }; 
+enum { PSCRIPT_PARSER_TYPE_TREE__CHUNK_SIZE__TYPE0_15 = GET_CHUNK_SIZE__TYPE_TREE__BY_TYPE0(15) }; 
+
+static const int8_t pscript_parser_type_tree__chunk_size__by_type0[] = { 
+  PSCRIPT_PARSER_TYPE_TREE__CHUNK_SIZE__TYPE0_0, 
+  PSCRIPT_PARSER_TYPE_TREE__CHUNK_SIZE__TYPE0_1, 
+  PSCRIPT_PARSER_TYPE_TREE__CHUNK_SIZE__TYPE0_2, 
+  PSCRIPT_PARSER_TYPE_TREE__CHUNK_SIZE__TYPE0_3, 
+  PSCRIPT_PARSER_TYPE_TREE__CHUNK_SIZE__TYPE0_4, 
+  PSCRIPT_PARSER_TYPE_TREE__CHUNK_SIZE__TYPE0_5, 
+  PSCRIPT_PARSER_TYPE_TREE__CHUNK_SIZE__TYPE0_6, 
+  PSCRIPT_PARSER_TYPE_TREE__CHUNK_SIZE__TYPE0_7, 
+  PSCRIPT_PARSER_TYPE_TREE__CHUNK_SIZE__TYPE0_8, 
+  PSCRIPT_PARSER_TYPE_TREE__CHUNK_SIZE__TYPE0_9, 
+  PSCRIPT_PARSER_TYPE_TREE__CHUNK_SIZE__TYPE0_10, 
+  PSCRIPT_PARSER_TYPE_TREE__CHUNK_SIZE__TYPE0_11, 
+  PSCRIPT_PARSER_TYPE_TREE__CHUNK_SIZE__TYPE0_12, 
+  PSCRIPT_PARSER_TYPE_TREE__CHUNK_SIZE__TYPE0_13, 
+  PSCRIPT_PARSER_TYPE_TREE__CHUNK_SIZE__TYPE0_14, 
+  PSCRIPT_PARSER_TYPE_TREE__CHUNK_SIZE__TYPE0_15, 
+}; 
+static const int8_t * pscript_parser_type_tree__chunk_size__by_type__shifted = pscript_parser_type_tree__chunk_size__by_type0 - PSCRIPT_TYPE_TREE__TYPE__BASE - 1; 
+
+
+#define GET_FIELD_NAME__TYPE_TREE__BY_TYPE(type) { \
+  PSCRIPT_PARSER_TYPE_TREE__GET_FIELD_NAME__BY_TYPE(type,0), \
+  PSCRIPT_PARSER_TYPE_TREE__GET_FIELD_NAME__BY_TYPE(type,1), \
+  PSCRIPT_PARSER_TYPE_TREE__GET_FIELD_NAME__BY_TYPE(type,2), \
+  PSCRIPT_PARSER_TYPE_TREE__GET_FIELD_NAME__BY_TYPE(type,3), \
+  PSCRIPT_PARSER_TYPE_TREE__GET_FIELD_NAME__BY_TYPE(type,4), \
+  PSCRIPT_PARSER_TYPE_TREE__GET_FIELD_NAME__BY_TYPE(type,5), \
+  PSCRIPT_PARSER_TYPE_TREE__GET_FIELD_NAME__BY_TYPE(type,6), \
+  PSCRIPT_PARSER_TYPE_TREE__GET_FIELD_NAME__BY_TYPE(type,7), \
+  PSCRIPT_PARSER_TYPE_TREE__GET_FIELD_NAME__BY_TYPE(type,8), \
+  PSCRIPT_PARSER_TYPE_TREE__GET_FIELD_NAME__BY_TYPE(type,9), \
+ } 
+
+#define GET_FIELD_NAME__TYPE_TREE__BY_TYPE0(type0) GET_FIELD_NAME__TYPE_TREE__BY_TYPE(PSCRIPT_TYPE_TREE__TYPE__BASE + 1 + type0) 
+
+static const char * pscript_parser_type_tree__field_name__by_type0[][10] = { 
+  GET_FIELD_NAME__TYPE_TREE__BY_TYPE0(0), 
+  GET_FIELD_NAME__TYPE_TREE__BY_TYPE0(1), 
+  GET_FIELD_NAME__TYPE_TREE__BY_TYPE0(2), 
+  GET_FIELD_NAME__TYPE_TREE__BY_TYPE0(3), 
+  GET_FIELD_NAME__TYPE_TREE__BY_TYPE0(4), 
+  GET_FIELD_NAME__TYPE_TREE__BY_TYPE0(5), 
+  GET_FIELD_NAME__TYPE_TREE__BY_TYPE0(6), 
+  GET_FIELD_NAME__TYPE_TREE__BY_TYPE0(7), 
+  GET_FIELD_NAME__TYPE_TREE__BY_TYPE0(8), 
+  GET_FIELD_NAME__TYPE_TREE__BY_TYPE0(9), 
+  GET_FIELD_NAME__TYPE_TREE__BY_TYPE0(10), 
+  GET_FIELD_NAME__TYPE_TREE__BY_TYPE0(11), 
+  GET_FIELD_NAME__TYPE_TREE__BY_TYPE0(12), 
+  GET_FIELD_NAME__TYPE_TREE__BY_TYPE0(13), 
+  GET_FIELD_NAME__TYPE_TREE__BY_TYPE0(14), 
+  GET_FIELD_NAME__TYPE_TREE__BY_TYPE0(15), 
+}; 
+static const char * (* pscript_parser_type_tree__field_name__by_type__shifted)[10] = pscript_parser_type_tree__field_name__by_type0 - PSCRIPT_TYPE_TREE__TYPE__BASE - 1;  
+
+
+#define GET_FIELDS_NB__TYPE_TREE(type) (pscript_parser_type_tree__fields_nb__by_type__shifted[type]) 
+
+#define GET_FIELD_NAME__TYPE_TREE(type,field_i) (pscript_parser_type_tree__field_name__by_type__shifted[type][field_i]) 
+
+#define GET_FIELD_INTTYPE__TYPE_TREE(type,field_i) (pscript_parser_type_tree__field_inttype__by_type__shifted[type][field_i]) 
+
+#define GET_FIELD_SIZEOF__TYPE_TREE(type,field_i) (pscript_parser_type_tree__field_sizeof__by_type__shifted[type][field_i]) 
+
+#define GET_FIELD_OFFSETOF__TYPE_TREE(type,field_i) (pscript_parser_type_tree__field_sizeof_cumulated__by_type__shifted[type][field_i]) 
+
+#define GET_CHUNK_SIZE__TYPE_TREE(type,values_nb) (pscript_parser_type_tree__chunk_size__by_type__shifted[type])
+
+
+
+
+// *** INST_LIST *** 
+
+enum { PSCRIPT_PARSER_INST_LIST__FIELDS_NB__TYPE0_0  = PSCRIPT_PARSER_INST_LIST__GET_FIELDS_NB__BY_TYPE(PSCRIPT_INST_LIST__TYPE__BASE +  1) }; 
+enum { PSCRIPT_PARSER_INST_LIST__FIELDS_NB__TYPE0_1  = PSCRIPT_PARSER_INST_LIST__GET_FIELDS_NB__BY_TYPE(PSCRIPT_INST_LIST__TYPE__BASE +  2) }; 
+enum { PSCRIPT_PARSER_INST_LIST__FIELDS_NB__TYPE0_2  = PSCRIPT_PARSER_INST_LIST__GET_FIELDS_NB__BY_TYPE(PSCRIPT_INST_LIST__TYPE__BASE +  3) }; 
+enum { PSCRIPT_PARSER_INST_LIST__FIELDS_NB__TYPE0_3  = PSCRIPT_PARSER_INST_LIST__GET_FIELDS_NB__BY_TYPE(PSCRIPT_INST_LIST__TYPE__BASE +  4) }; 
+enum { PSCRIPT_PARSER_INST_LIST__FIELDS_NB__TYPE0_4  = PSCRIPT_PARSER_INST_LIST__GET_FIELDS_NB__BY_TYPE(PSCRIPT_INST_LIST__TYPE__BASE +  5) }; 
+enum { PSCRIPT_PARSER_INST_LIST__FIELDS_NB__TYPE0_5  = PSCRIPT_PARSER_INST_LIST__GET_FIELDS_NB__BY_TYPE(PSCRIPT_INST_LIST__TYPE__BASE +  6) }; 
+enum { PSCRIPT_PARSER_INST_LIST__FIELDS_NB__TYPE0_6  = PSCRIPT_PARSER_INST_LIST__GET_FIELDS_NB__BY_TYPE(PSCRIPT_INST_LIST__TYPE__BASE +  7) }; 
+enum { PSCRIPT_PARSER_INST_LIST__FIELDS_NB__TYPE0_7  = PSCRIPT_PARSER_INST_LIST__GET_FIELDS_NB__BY_TYPE(PSCRIPT_INST_LIST__TYPE__BASE +  8) }; 
+enum { PSCRIPT_PARSER_INST_LIST__FIELDS_NB__TYPE0_8  = PSCRIPT_PARSER_INST_LIST__GET_FIELDS_NB__BY_TYPE(PSCRIPT_INST_LIST__TYPE__BASE +  9) }; 
+enum { PSCRIPT_PARSER_INST_LIST__FIELDS_NB__TYPE0_9  = PSCRIPT_PARSER_INST_LIST__GET_FIELDS_NB__BY_TYPE(PSCRIPT_INST_LIST__TYPE__BASE + 10) }; 
+enum { PSCRIPT_PARSER_INST_LIST__FIELDS_NB__TYPE0_10 = PSCRIPT_PARSER_INST_LIST__GET_FIELDS_NB__BY_TYPE(PSCRIPT_INST_LIST__TYPE__BASE + 11) }; 
+enum { PSCRIPT_PARSER_INST_LIST__FIELDS_NB__TYPE0_11 = PSCRIPT_PARSER_INST_LIST__GET_FIELDS_NB__BY_TYPE(PSCRIPT_INST_LIST__TYPE__BASE + 12) }; 
+enum { PSCRIPT_PARSER_INST_LIST__FIELDS_NB__TYPE0_12 = PSCRIPT_PARSER_INST_LIST__GET_FIELDS_NB__BY_TYPE(PSCRIPT_INST_LIST__TYPE__BASE + 13) }; 
+enum { PSCRIPT_PARSER_INST_LIST__FIELDS_NB__TYPE0_13 = PSCRIPT_PARSER_INST_LIST__GET_FIELDS_NB__BY_TYPE(PSCRIPT_INST_LIST__TYPE__BASE + 14) }; 
+enum { PSCRIPT_PARSER_INST_LIST__FIELDS_NB__TYPE0_14 = PSCRIPT_PARSER_INST_LIST__GET_FIELDS_NB__BY_TYPE(PSCRIPT_INST_LIST__TYPE__BASE + 15) }; 
+enum { PSCRIPT_PARSER_INST_LIST__FIELDS_NB__TYPE0_15 = PSCRIPT_PARSER_INST_LIST__GET_FIELDS_NB__BY_TYPE(PSCRIPT_INST_LIST__TYPE__BASE + 16) }; 
+
+static const int8_t pscript_parser_inst_list__fields_nb__by_type0[] = { 
+  PSCRIPT_PARSER_INST_LIST__FIELDS_NB__TYPE0_0, 
+  PSCRIPT_PARSER_INST_LIST__FIELDS_NB__TYPE0_1, 
+  PSCRIPT_PARSER_INST_LIST__FIELDS_NB__TYPE0_2, 
+  PSCRIPT_PARSER_INST_LIST__FIELDS_NB__TYPE0_3, 
+  PSCRIPT_PARSER_INST_LIST__FIELDS_NB__TYPE0_4, 
+  PSCRIPT_PARSER_INST_LIST__FIELDS_NB__TYPE0_5, 
+  PSCRIPT_PARSER_INST_LIST__FIELDS_NB__TYPE0_6, 
+  PSCRIPT_PARSER_INST_LIST__FIELDS_NB__TYPE0_7, 
+  PSCRIPT_PARSER_INST_LIST__FIELDS_NB__TYPE0_8, 
+  PSCRIPT_PARSER_INST_LIST__FIELDS_NB__TYPE0_9, 
+  PSCRIPT_PARSER_INST_LIST__FIELDS_NB__TYPE0_10, 
+  PSCRIPT_PARSER_INST_LIST__FIELDS_NB__TYPE0_11, 
+  PSCRIPT_PARSER_INST_LIST__FIELDS_NB__TYPE0_12, 
+  PSCRIPT_PARSER_INST_LIST__FIELDS_NB__TYPE0_13, 
+  PSCRIPT_PARSER_INST_LIST__FIELDS_NB__TYPE0_14, 
+  PSCRIPT_PARSER_INST_LIST__FIELDS_NB__TYPE0_15, 
+}; 
+static const int8_t * pscript_parser_inst_list__fields_nb__by_type__shifted = pscript_parser_inst_list__fields_nb__by_type0 - PSCRIPT_INST_LIST__TYPE__BASE - 1; 
+
+
+
+#define PSCRIPT_PARSER_INST_LIST__FIELD_INTTYPE__BY_TYPE0__DEFINE_ENUM(type0)  \
+enum { glue4(PSCRIPT_PARSER_INST_LIST__GET_FIELD_INTTYPE__TYPE0_,type0,_FIELD_,0) = PSCRIPT_PARSER_INST_LIST__GET_FIELD_INTTYPE__BY_TYPE(PSCRIPT_INST_LIST__TYPE__BASE + type0 + 1,0) }; \
+enum { glue4(PSCRIPT_PARSER_INST_LIST__GET_FIELD_INTTYPE__TYPE0_,type0,_FIELD_,1) = PSCRIPT_PARSER_INST_LIST__GET_FIELD_INTTYPE__BY_TYPE(PSCRIPT_INST_LIST__TYPE__BASE + type0 + 1,1) }; \
+enum { glue4(PSCRIPT_PARSER_INST_LIST__GET_FIELD_INTTYPE__TYPE0_,type0,_FIELD_,2) = PSCRIPT_PARSER_INST_LIST__GET_FIELD_INTTYPE__BY_TYPE(PSCRIPT_INST_LIST__TYPE__BASE + type0 + 1,2) }; \
+enum { glue4(PSCRIPT_PARSER_INST_LIST__GET_FIELD_INTTYPE__TYPE0_,type0,_FIELD_,3) = PSCRIPT_PARSER_INST_LIST__GET_FIELD_INTTYPE__BY_TYPE(PSCRIPT_INST_LIST__TYPE__BASE + type0 + 1,3) }; \
+enum { glue4(PSCRIPT_PARSER_INST_LIST__GET_FIELD_INTTYPE__TYPE0_,type0,_FIELD_,4) = PSCRIPT_PARSER_INST_LIST__GET_FIELD_INTTYPE__BY_TYPE(PSCRIPT_INST_LIST__TYPE__BASE + type0 + 1,4) }; \
+enum { glue4(PSCRIPT_PARSER_INST_LIST__GET_FIELD_INTTYPE__TYPE0_,type0,_FIELD_,5) = PSCRIPT_PARSER_INST_LIST__GET_FIELD_INTTYPE__BY_TYPE(PSCRIPT_INST_LIST__TYPE__BASE + type0 + 1,5) }; \
+enum { glue4(PSCRIPT_PARSER_INST_LIST__GET_FIELD_INTTYPE__TYPE0_,type0,_FIELD_,6) = PSCRIPT_PARSER_INST_LIST__GET_FIELD_INTTYPE__BY_TYPE(PSCRIPT_INST_LIST__TYPE__BASE + type0 + 1,6) }; \
+enum { glue4(PSCRIPT_PARSER_INST_LIST__GET_FIELD_INTTYPE__TYPE0_,type0,_FIELD_,7) = PSCRIPT_PARSER_INST_LIST__GET_FIELD_INTTYPE__BY_TYPE(PSCRIPT_INST_LIST__TYPE__BASE + type0 + 1,7) }; \
+enum { glue4(PSCRIPT_PARSER_INST_LIST__GET_FIELD_INTTYPE__TYPE0_,type0,_FIELD_,8) = PSCRIPT_PARSER_INST_LIST__GET_FIELD_INTTYPE__BY_TYPE(PSCRIPT_INST_LIST__TYPE__BASE + type0 + 1,8) }; \
+enum { glue4(PSCRIPT_PARSER_INST_LIST__GET_FIELD_INTTYPE__TYPE0_,type0,_FIELD_,9) = PSCRIPT_PARSER_INST_LIST__GET_FIELD_INTTYPE__BY_TYPE(PSCRIPT_INST_LIST__TYPE__BASE + type0 + 1,9) }; 
+
+PSCRIPT_PARSER_INST_LIST__FIELD_INTTYPE__BY_TYPE0__DEFINE_ENUM(0); 
+PSCRIPT_PARSER_INST_LIST__FIELD_INTTYPE__BY_TYPE0__DEFINE_ENUM(1); 
+PSCRIPT_PARSER_INST_LIST__FIELD_INTTYPE__BY_TYPE0__DEFINE_ENUM(2); 
+PSCRIPT_PARSER_INST_LIST__FIELD_INTTYPE__BY_TYPE0__DEFINE_ENUM(3); 
+PSCRIPT_PARSER_INST_LIST__FIELD_INTTYPE__BY_TYPE0__DEFINE_ENUM(4); 
+PSCRIPT_PARSER_INST_LIST__FIELD_INTTYPE__BY_TYPE0__DEFINE_ENUM(5); 
+PSCRIPT_PARSER_INST_LIST__FIELD_INTTYPE__BY_TYPE0__DEFINE_ENUM(6); 
+PSCRIPT_PARSER_INST_LIST__FIELD_INTTYPE__BY_TYPE0__DEFINE_ENUM(7); 
+PSCRIPT_PARSER_INST_LIST__FIELD_INTTYPE__BY_TYPE0__DEFINE_ENUM(8); 
+PSCRIPT_PARSER_INST_LIST__FIELD_INTTYPE__BY_TYPE0__DEFINE_ENUM(9); 
+PSCRIPT_PARSER_INST_LIST__FIELD_INTTYPE__BY_TYPE0__DEFINE_ENUM(10); 
+PSCRIPT_PARSER_INST_LIST__FIELD_INTTYPE__BY_TYPE0__DEFINE_ENUM(11); 
+PSCRIPT_PARSER_INST_LIST__FIELD_INTTYPE__BY_TYPE0__DEFINE_ENUM(12); 
+PSCRIPT_PARSER_INST_LIST__FIELD_INTTYPE__BY_TYPE0__DEFINE_ENUM(13); 
+PSCRIPT_PARSER_INST_LIST__FIELD_INTTYPE__BY_TYPE0__DEFINE_ENUM(14); 
+PSCRIPT_PARSER_INST_LIST__FIELD_INTTYPE__BY_TYPE0__DEFINE_ENUM(15); 
+
+#define PSCRIPT_PARSER_INST_LIST__FIELD_INTTYPE__BY_TYPE__ROW(type0) {  \
+  glue4(PSCRIPT_PARSER_INST_LIST__GET_FIELD_INTTYPE__TYPE0_,type0,_FIELD_,0), \
+  glue4(PSCRIPT_PARSER_INST_LIST__GET_FIELD_INTTYPE__TYPE0_,type0,_FIELD_,1), \
+  glue4(PSCRIPT_PARSER_INST_LIST__GET_FIELD_INTTYPE__TYPE0_,type0,_FIELD_,2), \
+  glue4(PSCRIPT_PARSER_INST_LIST__GET_FIELD_INTTYPE__TYPE0_,type0,_FIELD_,3), \
+  glue4(PSCRIPT_PARSER_INST_LIST__GET_FIELD_INTTYPE__TYPE0_,type0,_FIELD_,4), \
+  glue4(PSCRIPT_PARSER_INST_LIST__GET_FIELD_INTTYPE__TYPE0_,type0,_FIELD_,5), \
+  glue4(PSCRIPT_PARSER_INST_LIST__GET_FIELD_INTTYPE__TYPE0_,type0,_FIELD_,6), \
+  glue4(PSCRIPT_PARSER_INST_LIST__GET_FIELD_INTTYPE__TYPE0_,type0,_FIELD_,7), \
+  glue4(PSCRIPT_PARSER_INST_LIST__GET_FIELD_INTTYPE__TYPE0_,type0,_FIELD_,8), \
+  glue4(PSCRIPT_PARSER_INST_LIST__GET_FIELD_INTTYPE__TYPE0_,type0,_FIELD_,9), \
+  }  
+
+static const int8_t pscript_parser_inst_list__field_inttype__by_type0[][10] = { 
+  PSCRIPT_PARSER_INST_LIST__FIELD_INTTYPE__BY_TYPE__ROW(0), 
+  PSCRIPT_PARSER_INST_LIST__FIELD_INTTYPE__BY_TYPE__ROW(1), 
+  PSCRIPT_PARSER_INST_LIST__FIELD_INTTYPE__BY_TYPE__ROW(2), 
+  PSCRIPT_PARSER_INST_LIST__FIELD_INTTYPE__BY_TYPE__ROW(3), 
+  PSCRIPT_PARSER_INST_LIST__FIELD_INTTYPE__BY_TYPE__ROW(4), 
+  PSCRIPT_PARSER_INST_LIST__FIELD_INTTYPE__BY_TYPE__ROW(5), 
+  PSCRIPT_PARSER_INST_LIST__FIELD_INTTYPE__BY_TYPE__ROW(6), 
+  PSCRIPT_PARSER_INST_LIST__FIELD_INTTYPE__BY_TYPE__ROW(7), 
+  PSCRIPT_PARSER_INST_LIST__FIELD_INTTYPE__BY_TYPE__ROW(8), 
+  PSCRIPT_PARSER_INST_LIST__FIELD_INTTYPE__BY_TYPE__ROW(9), 
+  PSCRIPT_PARSER_INST_LIST__FIELD_INTTYPE__BY_TYPE__ROW(10), 
+  PSCRIPT_PARSER_INST_LIST__FIELD_INTTYPE__BY_TYPE__ROW(11), 
+  PSCRIPT_PARSER_INST_LIST__FIELD_INTTYPE__BY_TYPE__ROW(12), 
+  PSCRIPT_PARSER_INST_LIST__FIELD_INTTYPE__BY_TYPE__ROW(13), 
+  PSCRIPT_PARSER_INST_LIST__FIELD_INTTYPE__BY_TYPE__ROW(14), 
+  PSCRIPT_PARSER_INST_LIST__FIELD_INTTYPE__BY_TYPE__ROW(15), 
+}; 
+static const int8_t (* pscript_parser_inst_list__field_inttype__by_type__shifted)[10] = pscript_parser_inst_list__field_inttype__by_type0 - PSCRIPT_INST_LIST__TYPE__BASE - 1;  
+
+#define PSCRIPT_PARSER_INST_LIST__FIELD_SIZEOF__BY_TYPE0__DEFINE_ENUM(type0)  \
+enum { glue4(PSCRIPT_PARSER_INST_LIST__GET_FIELD_SIZEOF__TYPE0_,type0,_FIELD_,0) = PSCRIPT_SIZEOF(glue4(PSCRIPT_PARSER_INST_LIST__GET_FIELD_INTTYPE__TYPE0_,type0,_FIELD_,0)) }; \
+enum { glue4(PSCRIPT_PARSER_INST_LIST__GET_FIELD_SIZEOF__TYPE0_,type0,_FIELD_,1) = PSCRIPT_SIZEOF(glue4(PSCRIPT_PARSER_INST_LIST__GET_FIELD_INTTYPE__TYPE0_,type0,_FIELD_,1)) }; \
+enum { glue4(PSCRIPT_PARSER_INST_LIST__GET_FIELD_SIZEOF__TYPE0_,type0,_FIELD_,2) = PSCRIPT_SIZEOF(glue4(PSCRIPT_PARSER_INST_LIST__GET_FIELD_INTTYPE__TYPE0_,type0,_FIELD_,2)) }; \
+enum { glue4(PSCRIPT_PARSER_INST_LIST__GET_FIELD_SIZEOF__TYPE0_,type0,_FIELD_,3) = PSCRIPT_SIZEOF(glue4(PSCRIPT_PARSER_INST_LIST__GET_FIELD_INTTYPE__TYPE0_,type0,_FIELD_,3)) }; \
+enum { glue4(PSCRIPT_PARSER_INST_LIST__GET_FIELD_SIZEOF__TYPE0_,type0,_FIELD_,4) = PSCRIPT_SIZEOF(glue4(PSCRIPT_PARSER_INST_LIST__GET_FIELD_INTTYPE__TYPE0_,type0,_FIELD_,4)) }; \
+enum { glue4(PSCRIPT_PARSER_INST_LIST__GET_FIELD_SIZEOF__TYPE0_,type0,_FIELD_,5) = PSCRIPT_SIZEOF(glue4(PSCRIPT_PARSER_INST_LIST__GET_FIELD_INTTYPE__TYPE0_,type0,_FIELD_,5)) }; \
+enum { glue4(PSCRIPT_PARSER_INST_LIST__GET_FIELD_SIZEOF__TYPE0_,type0,_FIELD_,6) = PSCRIPT_SIZEOF(glue4(PSCRIPT_PARSER_INST_LIST__GET_FIELD_INTTYPE__TYPE0_,type0,_FIELD_,6)) }; \
+enum { glue4(PSCRIPT_PARSER_INST_LIST__GET_FIELD_SIZEOF__TYPE0_,type0,_FIELD_,7) = PSCRIPT_SIZEOF(glue4(PSCRIPT_PARSER_INST_LIST__GET_FIELD_INTTYPE__TYPE0_,type0,_FIELD_,7)) }; \
+enum { glue4(PSCRIPT_PARSER_INST_LIST__GET_FIELD_SIZEOF__TYPE0_,type0,_FIELD_,8) = PSCRIPT_SIZEOF(glue4(PSCRIPT_PARSER_INST_LIST__GET_FIELD_INTTYPE__TYPE0_,type0,_FIELD_,8)) }; \
+enum { glue4(PSCRIPT_PARSER_INST_LIST__GET_FIELD_SIZEOF__TYPE0_,type0,_FIELD_,9) = PSCRIPT_SIZEOF(glue4(PSCRIPT_PARSER_INST_LIST__GET_FIELD_INTTYPE__TYPE0_,type0,_FIELD_,9)) }; \
+
+PSCRIPT_PARSER_INST_LIST__FIELD_SIZEOF__BY_TYPE0__DEFINE_ENUM(0); 
+PSCRIPT_PARSER_INST_LIST__FIELD_SIZEOF__BY_TYPE0__DEFINE_ENUM(1); 
+PSCRIPT_PARSER_INST_LIST__FIELD_SIZEOF__BY_TYPE0__DEFINE_ENUM(2); 
+PSCRIPT_PARSER_INST_LIST__FIELD_SIZEOF__BY_TYPE0__DEFINE_ENUM(3); 
+PSCRIPT_PARSER_INST_LIST__FIELD_SIZEOF__BY_TYPE0__DEFINE_ENUM(4); 
+PSCRIPT_PARSER_INST_LIST__FIELD_SIZEOF__BY_TYPE0__DEFINE_ENUM(5); 
+PSCRIPT_PARSER_INST_LIST__FIELD_SIZEOF__BY_TYPE0__DEFINE_ENUM(6); 
+PSCRIPT_PARSER_INST_LIST__FIELD_SIZEOF__BY_TYPE0__DEFINE_ENUM(7); 
+PSCRIPT_PARSER_INST_LIST__FIELD_SIZEOF__BY_TYPE0__DEFINE_ENUM(8); 
+PSCRIPT_PARSER_INST_LIST__FIELD_SIZEOF__BY_TYPE0__DEFINE_ENUM(9); 
+PSCRIPT_PARSER_INST_LIST__FIELD_SIZEOF__BY_TYPE0__DEFINE_ENUM(10); 
+PSCRIPT_PARSER_INST_LIST__FIELD_SIZEOF__BY_TYPE0__DEFINE_ENUM(11); 
+PSCRIPT_PARSER_INST_LIST__FIELD_SIZEOF__BY_TYPE0__DEFINE_ENUM(12); 
+PSCRIPT_PARSER_INST_LIST__FIELD_SIZEOF__BY_TYPE0__DEFINE_ENUM(13); 
+PSCRIPT_PARSER_INST_LIST__FIELD_SIZEOF__BY_TYPE0__DEFINE_ENUM(14); 
+PSCRIPT_PARSER_INST_LIST__FIELD_SIZEOF__BY_TYPE0__DEFINE_ENUM(15); 
+
+#define PSCRIPT_PARSER_INST_LIST__FIELD_SIZEOF__BY_TYPE__ROW(type0) {  \
+  glue4(PSCRIPT_PARSER_INST_LIST__GET_FIELD_SIZEOF__TYPE0_,type0,_FIELD_,0), \
+  glue4(PSCRIPT_PARSER_INST_LIST__GET_FIELD_SIZEOF__TYPE0_,type0,_FIELD_,1), \
+  glue4(PSCRIPT_PARSER_INST_LIST__GET_FIELD_SIZEOF__TYPE0_,type0,_FIELD_,2), \
+  glue4(PSCRIPT_PARSER_INST_LIST__GET_FIELD_SIZEOF__TYPE0_,type0,_FIELD_,3), \
+  glue4(PSCRIPT_PARSER_INST_LIST__GET_FIELD_SIZEOF__TYPE0_,type0,_FIELD_,4), \
+  glue4(PSCRIPT_PARSER_INST_LIST__GET_FIELD_SIZEOF__TYPE0_,type0,_FIELD_,5), \
+  glue4(PSCRIPT_PARSER_INST_LIST__GET_FIELD_SIZEOF__TYPE0_,type0,_FIELD_,6), \
+  glue4(PSCRIPT_PARSER_INST_LIST__GET_FIELD_SIZEOF__TYPE0_,type0,_FIELD_,7), \
+  glue4(PSCRIPT_PARSER_INST_LIST__GET_FIELD_SIZEOF__TYPE0_,type0,_FIELD_,8), \
+  glue4(PSCRIPT_PARSER_INST_LIST__GET_FIELD_SIZEOF__TYPE0_,type0,_FIELD_,9), \
+  }  
+
+static const int8_t pscript_parser_inst_list__field_sizeof__by_type0[][10] = { 
+  PSCRIPT_PARSER_INST_LIST__FIELD_SIZEOF__BY_TYPE__ROW(0), 
+  PSCRIPT_PARSER_INST_LIST__FIELD_SIZEOF__BY_TYPE__ROW(1), 
+  PSCRIPT_PARSER_INST_LIST__FIELD_SIZEOF__BY_TYPE__ROW(2), 
+  PSCRIPT_PARSER_INST_LIST__FIELD_SIZEOF__BY_TYPE__ROW(3), 
+  PSCRIPT_PARSER_INST_LIST__FIELD_SIZEOF__BY_TYPE__ROW(4), 
+  PSCRIPT_PARSER_INST_LIST__FIELD_SIZEOF__BY_TYPE__ROW(5), 
+  PSCRIPT_PARSER_INST_LIST__FIELD_SIZEOF__BY_TYPE__ROW(6), 
+  PSCRIPT_PARSER_INST_LIST__FIELD_SIZEOF__BY_TYPE__ROW(7), 
+  PSCRIPT_PARSER_INST_LIST__FIELD_SIZEOF__BY_TYPE__ROW(8), 
+  PSCRIPT_PARSER_INST_LIST__FIELD_SIZEOF__BY_TYPE__ROW(9), 
+  PSCRIPT_PARSER_INST_LIST__FIELD_SIZEOF__BY_TYPE__ROW(10), 
+  PSCRIPT_PARSER_INST_LIST__FIELD_SIZEOF__BY_TYPE__ROW(11), 
+  PSCRIPT_PARSER_INST_LIST__FIELD_SIZEOF__BY_TYPE__ROW(12), 
+  PSCRIPT_PARSER_INST_LIST__FIELD_SIZEOF__BY_TYPE__ROW(13), 
+  PSCRIPT_PARSER_INST_LIST__FIELD_SIZEOF__BY_TYPE__ROW(14), 
+  PSCRIPT_PARSER_INST_LIST__FIELD_SIZEOF__BY_TYPE__ROW(15), 
+}; 
+static const int8_t (* pscript_parser_inst_list__field_sizeof__by_type__shifted)[10] = pscript_parser_inst_list__field_sizeof__by_type0 - PSCRIPT_INST_LIST__TYPE__BASE - 1;  
+
+
+	
+#define PSCRIPT_PARSER_INST_LIST__FIELD_SIZEOF_CUMULATED__BY_TYPE0__DEFINE_ENUM(type0)  \
+enum { glue4(PSCRIPT_PARSER_INST_LIST__GET_FIELD_SIZEOF_CUMULATED__TYPE0_,type0,_FIELD_,0) = 0 }; \
+enum { glue4(PSCRIPT_PARSER_INST_LIST__GET_FIELD_SIZEOF_CUMULATED__TYPE0_,type0,_FIELD_,1) = glue4(PSCRIPT_PARSER_INST_LIST__GET_FIELD_SIZEOF_CUMULATED__TYPE0_,type0,_FIELD_,0) + glue4(PSCRIPT_PARSER_INST_LIST__GET_FIELD_SIZEOF__TYPE0_,type0,_FIELD_,0) }; \
+enum { glue4(PSCRIPT_PARSER_INST_LIST__GET_FIELD_SIZEOF_CUMULATED__TYPE0_,type0,_FIELD_,2) = glue4(PSCRIPT_PARSER_INST_LIST__GET_FIELD_SIZEOF_CUMULATED__TYPE0_,type0,_FIELD_,1) + glue4(PSCRIPT_PARSER_INST_LIST__GET_FIELD_SIZEOF__TYPE0_,type0,_FIELD_,1) }; \
+enum { glue4(PSCRIPT_PARSER_INST_LIST__GET_FIELD_SIZEOF_CUMULATED__TYPE0_,type0,_FIELD_,3) = glue4(PSCRIPT_PARSER_INST_LIST__GET_FIELD_SIZEOF_CUMULATED__TYPE0_,type0,_FIELD_,2) + glue4(PSCRIPT_PARSER_INST_LIST__GET_FIELD_SIZEOF__TYPE0_,type0,_FIELD_,2) }; \
+enum { glue4(PSCRIPT_PARSER_INST_LIST__GET_FIELD_SIZEOF_CUMULATED__TYPE0_,type0,_FIELD_,4) = glue4(PSCRIPT_PARSER_INST_LIST__GET_FIELD_SIZEOF_CUMULATED__TYPE0_,type0,_FIELD_,3) + glue4(PSCRIPT_PARSER_INST_LIST__GET_FIELD_SIZEOF__TYPE0_,type0,_FIELD_,3) }; \
+enum { glue4(PSCRIPT_PARSER_INST_LIST__GET_FIELD_SIZEOF_CUMULATED__TYPE0_,type0,_FIELD_,5) = glue4(PSCRIPT_PARSER_INST_LIST__GET_FIELD_SIZEOF_CUMULATED__TYPE0_,type0,_FIELD_,4) + glue4(PSCRIPT_PARSER_INST_LIST__GET_FIELD_SIZEOF__TYPE0_,type0,_FIELD_,4) }; \
+enum { glue4(PSCRIPT_PARSER_INST_LIST__GET_FIELD_SIZEOF_CUMULATED__TYPE0_,type0,_FIELD_,6) = glue4(PSCRIPT_PARSER_INST_LIST__GET_FIELD_SIZEOF_CUMULATED__TYPE0_,type0,_FIELD_,5) + glue4(PSCRIPT_PARSER_INST_LIST__GET_FIELD_SIZEOF__TYPE0_,type0,_FIELD_,5) }; \
+enum { glue4(PSCRIPT_PARSER_INST_LIST__GET_FIELD_SIZEOF_CUMULATED__TYPE0_,type0,_FIELD_,7) = glue4(PSCRIPT_PARSER_INST_LIST__GET_FIELD_SIZEOF_CUMULATED__TYPE0_,type0,_FIELD_,6) + glue4(PSCRIPT_PARSER_INST_LIST__GET_FIELD_SIZEOF__TYPE0_,type0,_FIELD_,6) }; \
+enum { glue4(PSCRIPT_PARSER_INST_LIST__GET_FIELD_SIZEOF_CUMULATED__TYPE0_,type0,_FIELD_,8) = glue4(PSCRIPT_PARSER_INST_LIST__GET_FIELD_SIZEOF_CUMULATED__TYPE0_,type0,_FIELD_,7) + glue4(PSCRIPT_PARSER_INST_LIST__GET_FIELD_SIZEOF__TYPE0_,type0,_FIELD_,7) }; \
+enum { glue4(PSCRIPT_PARSER_INST_LIST__GET_FIELD_SIZEOF_CUMULATED__TYPE0_,type0,_FIELD_,9) = glue4(PSCRIPT_PARSER_INST_LIST__GET_FIELD_SIZEOF_CUMULATED__TYPE0_,type0,_FIELD_,8) + glue4(PSCRIPT_PARSER_INST_LIST__GET_FIELD_SIZEOF__TYPE0_,type0,_FIELD_,8) }; \
+
+PSCRIPT_PARSER_INST_LIST__FIELD_SIZEOF_CUMULATED__BY_TYPE0__DEFINE_ENUM(0); 
+PSCRIPT_PARSER_INST_LIST__FIELD_SIZEOF_CUMULATED__BY_TYPE0__DEFINE_ENUM(1); 
+PSCRIPT_PARSER_INST_LIST__FIELD_SIZEOF_CUMULATED__BY_TYPE0__DEFINE_ENUM(2); 
+PSCRIPT_PARSER_INST_LIST__FIELD_SIZEOF_CUMULATED__BY_TYPE0__DEFINE_ENUM(3); 
+PSCRIPT_PARSER_INST_LIST__FIELD_SIZEOF_CUMULATED__BY_TYPE0__DEFINE_ENUM(4); 
+PSCRIPT_PARSER_INST_LIST__FIELD_SIZEOF_CUMULATED__BY_TYPE0__DEFINE_ENUM(5); 
+PSCRIPT_PARSER_INST_LIST__FIELD_SIZEOF_CUMULATED__BY_TYPE0__DEFINE_ENUM(6); 
+PSCRIPT_PARSER_INST_LIST__FIELD_SIZEOF_CUMULATED__BY_TYPE0__DEFINE_ENUM(7); 
+PSCRIPT_PARSER_INST_LIST__FIELD_SIZEOF_CUMULATED__BY_TYPE0__DEFINE_ENUM(8); 
+PSCRIPT_PARSER_INST_LIST__FIELD_SIZEOF_CUMULATED__BY_TYPE0__DEFINE_ENUM(9); 
+PSCRIPT_PARSER_INST_LIST__FIELD_SIZEOF_CUMULATED__BY_TYPE0__DEFINE_ENUM(10); 
+PSCRIPT_PARSER_INST_LIST__FIELD_SIZEOF_CUMULATED__BY_TYPE0__DEFINE_ENUM(11); 
+PSCRIPT_PARSER_INST_LIST__FIELD_SIZEOF_CUMULATED__BY_TYPE0__DEFINE_ENUM(12); 
+PSCRIPT_PARSER_INST_LIST__FIELD_SIZEOF_CUMULATED__BY_TYPE0__DEFINE_ENUM(13); 
+PSCRIPT_PARSER_INST_LIST__FIELD_SIZEOF_CUMULATED__BY_TYPE0__DEFINE_ENUM(14); 
+PSCRIPT_PARSER_INST_LIST__FIELD_SIZEOF_CUMULATED__BY_TYPE0__DEFINE_ENUM(15); 
+
+#define PSCRIPT_PARSER_INST_LIST__FIELD_SIZEOF_CUMULATED__BY_TYPE__ROW(type0) {  \
+  glue4(PSCRIPT_PARSER_INST_LIST__GET_FIELD_SIZEOF_CUMULATED__TYPE0_,type0,_FIELD_,0), \
+  glue4(PSCRIPT_PARSER_INST_LIST__GET_FIELD_SIZEOF_CUMULATED__TYPE0_,type0,_FIELD_,1), \
+  glue4(PSCRIPT_PARSER_INST_LIST__GET_FIELD_SIZEOF_CUMULATED__TYPE0_,type0,_FIELD_,2), \
+  glue4(PSCRIPT_PARSER_INST_LIST__GET_FIELD_SIZEOF_CUMULATED__TYPE0_,type0,_FIELD_,3), \
+  glue4(PSCRIPT_PARSER_INST_LIST__GET_FIELD_SIZEOF_CUMULATED__TYPE0_,type0,_FIELD_,4), \
+  glue4(PSCRIPT_PARSER_INST_LIST__GET_FIELD_SIZEOF_CUMULATED__TYPE0_,type0,_FIELD_,5), \
+  glue4(PSCRIPT_PARSER_INST_LIST__GET_FIELD_SIZEOF_CUMULATED__TYPE0_,type0,_FIELD_,6), \
+  glue4(PSCRIPT_PARSER_INST_LIST__GET_FIELD_SIZEOF_CUMULATED__TYPE0_,type0,_FIELD_,7), \
+  glue4(PSCRIPT_PARSER_INST_LIST__GET_FIELD_SIZEOF_CUMULATED__TYPE0_,type0,_FIELD_,8), \
+  glue4(PSCRIPT_PARSER_INST_LIST__GET_FIELD_SIZEOF_CUMULATED__TYPE0_,type0,_FIELD_,9), \
+  }  
+
+static const int8_t pscript_parser_inst_list__field_sizeof_cumulated__by_type0[][10] = { 
+  PSCRIPT_PARSER_INST_LIST__FIELD_SIZEOF_CUMULATED__BY_TYPE__ROW(0), 
+  PSCRIPT_PARSER_INST_LIST__FIELD_SIZEOF_CUMULATED__BY_TYPE__ROW(1), 
+  PSCRIPT_PARSER_INST_LIST__FIELD_SIZEOF_CUMULATED__BY_TYPE__ROW(2), 
+  PSCRIPT_PARSER_INST_LIST__FIELD_SIZEOF_CUMULATED__BY_TYPE__ROW(3), 
+  PSCRIPT_PARSER_INST_LIST__FIELD_SIZEOF_CUMULATED__BY_TYPE__ROW(4), 
+  PSCRIPT_PARSER_INST_LIST__FIELD_SIZEOF_CUMULATED__BY_TYPE__ROW(5), 
+  PSCRIPT_PARSER_INST_LIST__FIELD_SIZEOF_CUMULATED__BY_TYPE__ROW(6), 
+  PSCRIPT_PARSER_INST_LIST__FIELD_SIZEOF_CUMULATED__BY_TYPE__ROW(7), 
+  PSCRIPT_PARSER_INST_LIST__FIELD_SIZEOF_CUMULATED__BY_TYPE__ROW(8), 
+  PSCRIPT_PARSER_INST_LIST__FIELD_SIZEOF_CUMULATED__BY_TYPE__ROW(9), 
+  PSCRIPT_PARSER_INST_LIST__FIELD_SIZEOF_CUMULATED__BY_TYPE__ROW(10), 
+  PSCRIPT_PARSER_INST_LIST__FIELD_SIZEOF_CUMULATED__BY_TYPE__ROW(11), 
+  PSCRIPT_PARSER_INST_LIST__FIELD_SIZEOF_CUMULATED__BY_TYPE__ROW(12), 
+  PSCRIPT_PARSER_INST_LIST__FIELD_SIZEOF_CUMULATED__BY_TYPE__ROW(13), 
+  PSCRIPT_PARSER_INST_LIST__FIELD_SIZEOF_CUMULATED__BY_TYPE__ROW(14), 
+  PSCRIPT_PARSER_INST_LIST__FIELD_SIZEOF_CUMULATED__BY_TYPE__ROW(15), 
+}; 
+static const int8_t (* pscript_parser_inst_list__field_sizeof_cumulated__by_type__shifted)[10] = pscript_parser_inst_list__field_sizeof_cumulated__by_type0 - PSCRIPT_INST_LIST__TYPE__BASE - 1;  
+
+#define GET_CHUNK_SIZE__INST_LIST__BY_TYPE0(type0) (			\
+  glue(PSCRIPT_PARSER_INST_LIST__FIELDS_NB__TYPE0_,type0) == 0 ? glue3(PSCRIPT_PARSER_INST_LIST__GET_FIELD_SIZEOF_CUMULATED__TYPE0_,type0,_FIELD_0) : \
+  glue(PSCRIPT_PARSER_INST_LIST__FIELDS_NB__TYPE0_,type0) == 1 ? glue3(PSCRIPT_PARSER_INST_LIST__GET_FIELD_SIZEOF_CUMULATED__TYPE0_,type0,_FIELD_1) : \
+  glue(PSCRIPT_PARSER_INST_LIST__FIELDS_NB__TYPE0_,type0) == 2 ? glue3(PSCRIPT_PARSER_INST_LIST__GET_FIELD_SIZEOF_CUMULATED__TYPE0_,type0,_FIELD_2) : \
+  glue(PSCRIPT_PARSER_INST_LIST__FIELDS_NB__TYPE0_,type0) == 3 ? glue3(PSCRIPT_PARSER_INST_LIST__GET_FIELD_SIZEOF_CUMULATED__TYPE0_,type0,_FIELD_3) : \
+  glue(PSCRIPT_PARSER_INST_LIST__FIELDS_NB__TYPE0_,type0) == 4 ? glue3(PSCRIPT_PARSER_INST_LIST__GET_FIELD_SIZEOF_CUMULATED__TYPE0_,type0,_FIELD_4) : \
+  glue(PSCRIPT_PARSER_INST_LIST__FIELDS_NB__TYPE0_,type0) == 5 ? glue3(PSCRIPT_PARSER_INST_LIST__GET_FIELD_SIZEOF_CUMULATED__TYPE0_,type0,_FIELD_5) : \
+  glue(PSCRIPT_PARSER_INST_LIST__FIELDS_NB__TYPE0_,type0) == 6 ? glue3(PSCRIPT_PARSER_INST_LIST__GET_FIELD_SIZEOF_CUMULATED__TYPE0_,type0,_FIELD_6) : \
+  glue(PSCRIPT_PARSER_INST_LIST__FIELDS_NB__TYPE0_,type0) == 7 ? glue3(PSCRIPT_PARSER_INST_LIST__GET_FIELD_SIZEOF_CUMULATED__TYPE0_,type0,_FIELD_7) : \
+  glue(PSCRIPT_PARSER_INST_LIST__FIELDS_NB__TYPE0_,type0) == 8 ? glue3(PSCRIPT_PARSER_INST_LIST__GET_FIELD_SIZEOF_CUMULATED__TYPE0_,type0,_FIELD_8) : \
+ -1) 
+
+enum { PSCRIPT_PARSER_INST_LIST__CHUNK_SIZE__TYPE0_0  = GET_CHUNK_SIZE__INST_LIST__BY_TYPE0(0) }; 
+enum { PSCRIPT_PARSER_INST_LIST__CHUNK_SIZE__TYPE0_1  = GET_CHUNK_SIZE__INST_LIST__BY_TYPE0(1) };
+enum { PSCRIPT_PARSER_INST_LIST__CHUNK_SIZE__TYPE0_2  = GET_CHUNK_SIZE__INST_LIST__BY_TYPE0(2) }; 
+enum { PSCRIPT_PARSER_INST_LIST__CHUNK_SIZE__TYPE0_3  = GET_CHUNK_SIZE__INST_LIST__BY_TYPE0(3) }; 
+enum { PSCRIPT_PARSER_INST_LIST__CHUNK_SIZE__TYPE0_4  = GET_CHUNK_SIZE__INST_LIST__BY_TYPE0(4) }; 
+enum { PSCRIPT_PARSER_INST_LIST__CHUNK_SIZE__TYPE0_5  = GET_CHUNK_SIZE__INST_LIST__BY_TYPE0(5) }; 
+enum { PSCRIPT_PARSER_INST_LIST__CHUNK_SIZE__TYPE0_6  = GET_CHUNK_SIZE__INST_LIST__BY_TYPE0(6) }; 
+enum { PSCRIPT_PARSER_INST_LIST__CHUNK_SIZE__TYPE0_7  = GET_CHUNK_SIZE__INST_LIST__BY_TYPE0(7) }; 
+enum { PSCRIPT_PARSER_INST_LIST__CHUNK_SIZE__TYPE0_8  = GET_CHUNK_SIZE__INST_LIST__BY_TYPE0(8) }; 
+enum { PSCRIPT_PARSER_INST_LIST__CHUNK_SIZE__TYPE0_9  = GET_CHUNK_SIZE__INST_LIST__BY_TYPE0(9) }; 
+enum { PSCRIPT_PARSER_INST_LIST__CHUNK_SIZE__TYPE0_10 = GET_CHUNK_SIZE__INST_LIST__BY_TYPE0(10) }; 
+enum { PSCRIPT_PARSER_INST_LIST__CHUNK_SIZE__TYPE0_11 = GET_CHUNK_SIZE__INST_LIST__BY_TYPE0(11) }; 
+enum { PSCRIPT_PARSER_INST_LIST__CHUNK_SIZE__TYPE0_12 = GET_CHUNK_SIZE__INST_LIST__BY_TYPE0(12) }; 
+enum { PSCRIPT_PARSER_INST_LIST__CHUNK_SIZE__TYPE0_13 = GET_CHUNK_SIZE__INST_LIST__BY_TYPE0(13) }; 
+enum { PSCRIPT_PARSER_INST_LIST__CHUNK_SIZE__TYPE0_14 = GET_CHUNK_SIZE__INST_LIST__BY_TYPE0(14) }; 
+enum { PSCRIPT_PARSER_INST_LIST__CHUNK_SIZE__TYPE0_15 = GET_CHUNK_SIZE__INST_LIST__BY_TYPE0(15) }; 
+
+static const int8_t pscript_parser_inst_list__chunk_size__by_type0[] = { 
+  PSCRIPT_PARSER_INST_LIST__CHUNK_SIZE__TYPE0_0, 
+  PSCRIPT_PARSER_INST_LIST__CHUNK_SIZE__TYPE0_1, 
+  PSCRIPT_PARSER_INST_LIST__CHUNK_SIZE__TYPE0_2, 
+  PSCRIPT_PARSER_INST_LIST__CHUNK_SIZE__TYPE0_3, 
+  PSCRIPT_PARSER_INST_LIST__CHUNK_SIZE__TYPE0_4, 
+  PSCRIPT_PARSER_INST_LIST__CHUNK_SIZE__TYPE0_5, 
+  PSCRIPT_PARSER_INST_LIST__CHUNK_SIZE__TYPE0_6, 
+  PSCRIPT_PARSER_INST_LIST__CHUNK_SIZE__TYPE0_7, 
+  PSCRIPT_PARSER_INST_LIST__CHUNK_SIZE__TYPE0_8, 
+  PSCRIPT_PARSER_INST_LIST__CHUNK_SIZE__TYPE0_9, 
+  PSCRIPT_PARSER_INST_LIST__CHUNK_SIZE__TYPE0_10, 
+  PSCRIPT_PARSER_INST_LIST__CHUNK_SIZE__TYPE0_11, 
+  PSCRIPT_PARSER_INST_LIST__CHUNK_SIZE__TYPE0_12, 
+  PSCRIPT_PARSER_INST_LIST__CHUNK_SIZE__TYPE0_13, 
+  PSCRIPT_PARSER_INST_LIST__CHUNK_SIZE__TYPE0_14, 
+  PSCRIPT_PARSER_INST_LIST__CHUNK_SIZE__TYPE0_15, 
+}; 
+static const int8_t * pscript_parser_inst_list__chunk_size__by_type__shifted = pscript_parser_inst_list__chunk_size__by_type0 - PSCRIPT_INST_LIST__TYPE__BASE - 1; 
+
+
+#define GET_FIELD_NAME__INST_LIST__BY_TYPE(type) { \
+  PSCRIPT_PARSER_INST_LIST__GET_FIELD_NAME__BY_TYPE(type,0), \
+  PSCRIPT_PARSER_INST_LIST__GET_FIELD_NAME__BY_TYPE(type,1), \
+  PSCRIPT_PARSER_INST_LIST__GET_FIELD_NAME__BY_TYPE(type,2), \
+  PSCRIPT_PARSER_INST_LIST__GET_FIELD_NAME__BY_TYPE(type,3), \
+  PSCRIPT_PARSER_INST_LIST__GET_FIELD_NAME__BY_TYPE(type,4), \
+  PSCRIPT_PARSER_INST_LIST__GET_FIELD_NAME__BY_TYPE(type,5), \
+  PSCRIPT_PARSER_INST_LIST__GET_FIELD_NAME__BY_TYPE(type,6), \
+  PSCRIPT_PARSER_INST_LIST__GET_FIELD_NAME__BY_TYPE(type,7), \
+  PSCRIPT_PARSER_INST_LIST__GET_FIELD_NAME__BY_TYPE(type,8), \
+  PSCRIPT_PARSER_INST_LIST__GET_FIELD_NAME__BY_TYPE(type,9), \
+ } 
+
+#define GET_FIELD_NAME__INST_LIST__BY_TYPE0(type0) GET_FIELD_NAME__INST_LIST__BY_TYPE(PSCRIPT_INST_LIST__TYPE__BASE + 1 + type0) 
+
+static const char * pscript_parser_inst_list__field_name__by_type0[][10] = { 
+  GET_FIELD_NAME__INST_LIST__BY_TYPE0(0), 
+  GET_FIELD_NAME__INST_LIST__BY_TYPE0(1), 
+  GET_FIELD_NAME__INST_LIST__BY_TYPE0(2), 
+  GET_FIELD_NAME__INST_LIST__BY_TYPE0(3), 
+  GET_FIELD_NAME__INST_LIST__BY_TYPE0(4), 
+  GET_FIELD_NAME__INST_LIST__BY_TYPE0(5), 
+  GET_FIELD_NAME__INST_LIST__BY_TYPE0(6), 
+  GET_FIELD_NAME__INST_LIST__BY_TYPE0(7), 
+  GET_FIELD_NAME__INST_LIST__BY_TYPE0(8), 
+  GET_FIELD_NAME__INST_LIST__BY_TYPE0(9), 
+  GET_FIELD_NAME__INST_LIST__BY_TYPE0(10), 
+  GET_FIELD_NAME__INST_LIST__BY_TYPE0(11), 
+  GET_FIELD_NAME__INST_LIST__BY_TYPE0(12), 
+  GET_FIELD_NAME__INST_LIST__BY_TYPE0(13), 
+  GET_FIELD_NAME__INST_LIST__BY_TYPE0(14), 
+  GET_FIELD_NAME__INST_LIST__BY_TYPE0(15), 
+}; 
+static const char * (* pscript_parser_inst_list__field_name__by_type__shifted)[10] = pscript_parser_inst_list__field_name__by_type0 - PSCRIPT_INST_LIST__TYPE__BASE - 1;  
+
+
+#define GET_FIELDS_NB__INST_LIST(type) (pscript_parser_inst_list__fields_nb__by_type__shifted[type]) 
+
+#define GET_FIELD_NAME__INST_LIST(type,field_i) (pscript_parser_inst_list__field_name__by_type__shifted[type][field_i]) 
+
+#define GET_FIELD_INTTYPE__INST_LIST(type,field_i) (pscript_parser_inst_list__field_inttype__by_type__shifted[type][field_i]) 
+
+#define GET_FIELD_SIZEOF__INST_LIST(type,field_i) (pscript_parser_inst_list__field_sizeof__by_type__shifted[type][field_i]) 
+
+#define GET_FIELD_OFFSETOF__INST_LIST(type,field_i) (pscript_parser_inst_list__field_sizeof_cumulated__by_type__shifted[type][field_i]) 
+
+#define GET_CHUNK_SIZE__INST_LIST(type,values_nb) (pscript_parser_inst_list__chunk_size__by_type__shifted[type])
+
+
+
+
+
+
+// *** DECL_LOCAL_LIST *** 
+
+enum { PSCRIPT_PARSER_DECL_LOCAL_LIST__FIELDS_NB__TYPE0_0  = PSCRIPT_PARSER_DECL_LOCAL_LIST__GET_FIELDS_NB__BY_TYPE(PSCRIPT_DECL_LOCAL_LIST__TYPE__BASE +  1) }; 
+enum { PSCRIPT_PARSER_DECL_LOCAL_LIST__FIELDS_NB__TYPE0_1  = PSCRIPT_PARSER_DECL_LOCAL_LIST__GET_FIELDS_NB__BY_TYPE(PSCRIPT_DECL_LOCAL_LIST__TYPE__BASE +  2) }; 
+enum { PSCRIPT_PARSER_DECL_LOCAL_LIST__FIELDS_NB__TYPE0_2  = PSCRIPT_PARSER_DECL_LOCAL_LIST__GET_FIELDS_NB__BY_TYPE(PSCRIPT_DECL_LOCAL_LIST__TYPE__BASE +  3) }; 
+enum { PSCRIPT_PARSER_DECL_LOCAL_LIST__FIELDS_NB__TYPE0_3  = PSCRIPT_PARSER_DECL_LOCAL_LIST__GET_FIELDS_NB__BY_TYPE(PSCRIPT_DECL_LOCAL_LIST__TYPE__BASE +  4) }; 
+enum { PSCRIPT_PARSER_DECL_LOCAL_LIST__FIELDS_NB__TYPE0_4  = PSCRIPT_PARSER_DECL_LOCAL_LIST__GET_FIELDS_NB__BY_TYPE(PSCRIPT_DECL_LOCAL_LIST__TYPE__BASE +  5) }; 
+enum { PSCRIPT_PARSER_DECL_LOCAL_LIST__FIELDS_NB__TYPE0_5  = PSCRIPT_PARSER_DECL_LOCAL_LIST__GET_FIELDS_NB__BY_TYPE(PSCRIPT_DECL_LOCAL_LIST__TYPE__BASE +  6) }; 
+enum { PSCRIPT_PARSER_DECL_LOCAL_LIST__FIELDS_NB__TYPE0_6  = PSCRIPT_PARSER_DECL_LOCAL_LIST__GET_FIELDS_NB__BY_TYPE(PSCRIPT_DECL_LOCAL_LIST__TYPE__BASE +  7) }; 
+enum { PSCRIPT_PARSER_DECL_LOCAL_LIST__FIELDS_NB__TYPE0_7  = PSCRIPT_PARSER_DECL_LOCAL_LIST__GET_FIELDS_NB__BY_TYPE(PSCRIPT_DECL_LOCAL_LIST__TYPE__BASE +  8) }; 
+enum { PSCRIPT_PARSER_DECL_LOCAL_LIST__FIELDS_NB__TYPE0_8  = PSCRIPT_PARSER_DECL_LOCAL_LIST__GET_FIELDS_NB__BY_TYPE(PSCRIPT_DECL_LOCAL_LIST__TYPE__BASE +  9) }; 
+enum { PSCRIPT_PARSER_DECL_LOCAL_LIST__FIELDS_NB__TYPE0_9  = PSCRIPT_PARSER_DECL_LOCAL_LIST__GET_FIELDS_NB__BY_TYPE(PSCRIPT_DECL_LOCAL_LIST__TYPE__BASE + 10) }; 
+enum { PSCRIPT_PARSER_DECL_LOCAL_LIST__FIELDS_NB__TYPE0_10 = PSCRIPT_PARSER_DECL_LOCAL_LIST__GET_FIELDS_NB__BY_TYPE(PSCRIPT_DECL_LOCAL_LIST__TYPE__BASE + 11) }; 
+enum { PSCRIPT_PARSER_DECL_LOCAL_LIST__FIELDS_NB__TYPE0_11 = PSCRIPT_PARSER_DECL_LOCAL_LIST__GET_FIELDS_NB__BY_TYPE(PSCRIPT_DECL_LOCAL_LIST__TYPE__BASE + 12) }; 
+enum { PSCRIPT_PARSER_DECL_LOCAL_LIST__FIELDS_NB__TYPE0_12 = PSCRIPT_PARSER_DECL_LOCAL_LIST__GET_FIELDS_NB__BY_TYPE(PSCRIPT_DECL_LOCAL_LIST__TYPE__BASE + 13) }; 
+enum { PSCRIPT_PARSER_DECL_LOCAL_LIST__FIELDS_NB__TYPE0_13 = PSCRIPT_PARSER_DECL_LOCAL_LIST__GET_FIELDS_NB__BY_TYPE(PSCRIPT_DECL_LOCAL_LIST__TYPE__BASE + 14) }; 
+enum { PSCRIPT_PARSER_DECL_LOCAL_LIST__FIELDS_NB__TYPE0_14 = PSCRIPT_PARSER_DECL_LOCAL_LIST__GET_FIELDS_NB__BY_TYPE(PSCRIPT_DECL_LOCAL_LIST__TYPE__BASE + 15) }; 
+enum { PSCRIPT_PARSER_DECL_LOCAL_LIST__FIELDS_NB__TYPE0_15 = PSCRIPT_PARSER_DECL_LOCAL_LIST__GET_FIELDS_NB__BY_TYPE(PSCRIPT_DECL_LOCAL_LIST__TYPE__BASE + 16) }; 
+
+static const int8_t pscript_parser_decl_local_list__fields_nb__by_type0[] = { 
+  PSCRIPT_PARSER_DECL_LOCAL_LIST__FIELDS_NB__TYPE0_0, 
+  PSCRIPT_PARSER_DECL_LOCAL_LIST__FIELDS_NB__TYPE0_1, 
+  PSCRIPT_PARSER_DECL_LOCAL_LIST__FIELDS_NB__TYPE0_2, 
+  PSCRIPT_PARSER_DECL_LOCAL_LIST__FIELDS_NB__TYPE0_3, 
+  PSCRIPT_PARSER_DECL_LOCAL_LIST__FIELDS_NB__TYPE0_4, 
+  PSCRIPT_PARSER_DECL_LOCAL_LIST__FIELDS_NB__TYPE0_5, 
+  PSCRIPT_PARSER_DECL_LOCAL_LIST__FIELDS_NB__TYPE0_6, 
+  PSCRIPT_PARSER_DECL_LOCAL_LIST__FIELDS_NB__TYPE0_7, 
+  PSCRIPT_PARSER_DECL_LOCAL_LIST__FIELDS_NB__TYPE0_8, 
+  PSCRIPT_PARSER_DECL_LOCAL_LIST__FIELDS_NB__TYPE0_9, 
+  PSCRIPT_PARSER_DECL_LOCAL_LIST__FIELDS_NB__TYPE0_10, 
+  PSCRIPT_PARSER_DECL_LOCAL_LIST__FIELDS_NB__TYPE0_11, 
+  PSCRIPT_PARSER_DECL_LOCAL_LIST__FIELDS_NB__TYPE0_12, 
+  PSCRIPT_PARSER_DECL_LOCAL_LIST__FIELDS_NB__TYPE0_13, 
+  PSCRIPT_PARSER_DECL_LOCAL_LIST__FIELDS_NB__TYPE0_14, 
+  PSCRIPT_PARSER_DECL_LOCAL_LIST__FIELDS_NB__TYPE0_15, 
+}; 
+static const int8_t * pscript_parser_decl_local_list__fields_nb__by_type__shifted = pscript_parser_decl_local_list__fields_nb__by_type0 - PSCRIPT_DECL_LOCAL_LIST__TYPE__BASE - 1; 
+
+
+
+#define PSCRIPT_PARSER_DECL_LOCAL_LIST__FIELD_INTTYPE__BY_TYPE0__DEFINE_ENUM(type0)  \
+enum { glue4(PSCRIPT_PARSER_DECL_LOCAL_LIST__GET_FIELD_INTTYPE__TYPE0_,type0,_FIELD_,0) = PSCRIPT_PARSER_DECL_LOCAL_LIST__GET_FIELD_INTTYPE__BY_TYPE(PSCRIPT_DECL_LOCAL_LIST__TYPE__BASE + type0 + 1,0) }; \
+enum { glue4(PSCRIPT_PARSER_DECL_LOCAL_LIST__GET_FIELD_INTTYPE__TYPE0_,type0,_FIELD_,1) = PSCRIPT_PARSER_DECL_LOCAL_LIST__GET_FIELD_INTTYPE__BY_TYPE(PSCRIPT_DECL_LOCAL_LIST__TYPE__BASE + type0 + 1,1) }; \
+enum { glue4(PSCRIPT_PARSER_DECL_LOCAL_LIST__GET_FIELD_INTTYPE__TYPE0_,type0,_FIELD_,2) = PSCRIPT_PARSER_DECL_LOCAL_LIST__GET_FIELD_INTTYPE__BY_TYPE(PSCRIPT_DECL_LOCAL_LIST__TYPE__BASE + type0 + 1,2) }; \
+enum { glue4(PSCRIPT_PARSER_DECL_LOCAL_LIST__GET_FIELD_INTTYPE__TYPE0_,type0,_FIELD_,3) = PSCRIPT_PARSER_DECL_LOCAL_LIST__GET_FIELD_INTTYPE__BY_TYPE(PSCRIPT_DECL_LOCAL_LIST__TYPE__BASE + type0 + 1,3) }; \
+enum { glue4(PSCRIPT_PARSER_DECL_LOCAL_LIST__GET_FIELD_INTTYPE__TYPE0_,type0,_FIELD_,4) = PSCRIPT_PARSER_DECL_LOCAL_LIST__GET_FIELD_INTTYPE__BY_TYPE(PSCRIPT_DECL_LOCAL_LIST__TYPE__BASE + type0 + 1,4) }; \
+enum { glue4(PSCRIPT_PARSER_DECL_LOCAL_LIST__GET_FIELD_INTTYPE__TYPE0_,type0,_FIELD_,5) = PSCRIPT_PARSER_DECL_LOCAL_LIST__GET_FIELD_INTTYPE__BY_TYPE(PSCRIPT_DECL_LOCAL_LIST__TYPE__BASE + type0 + 1,5) }; \
+enum { glue4(PSCRIPT_PARSER_DECL_LOCAL_LIST__GET_FIELD_INTTYPE__TYPE0_,type0,_FIELD_,6) = PSCRIPT_PARSER_DECL_LOCAL_LIST__GET_FIELD_INTTYPE__BY_TYPE(PSCRIPT_DECL_LOCAL_LIST__TYPE__BASE + type0 + 1,6) }; \
+enum { glue4(PSCRIPT_PARSER_DECL_LOCAL_LIST__GET_FIELD_INTTYPE__TYPE0_,type0,_FIELD_,7) = PSCRIPT_PARSER_DECL_LOCAL_LIST__GET_FIELD_INTTYPE__BY_TYPE(PSCRIPT_DECL_LOCAL_LIST__TYPE__BASE + type0 + 1,7) }; \
+enum { glue4(PSCRIPT_PARSER_DECL_LOCAL_LIST__GET_FIELD_INTTYPE__TYPE0_,type0,_FIELD_,8) = PSCRIPT_PARSER_DECL_LOCAL_LIST__GET_FIELD_INTTYPE__BY_TYPE(PSCRIPT_DECL_LOCAL_LIST__TYPE__BASE + type0 + 1,8) }; \
+enum { glue4(PSCRIPT_PARSER_DECL_LOCAL_LIST__GET_FIELD_INTTYPE__TYPE0_,type0,_FIELD_,9) = PSCRIPT_PARSER_DECL_LOCAL_LIST__GET_FIELD_INTTYPE__BY_TYPE(PSCRIPT_DECL_LOCAL_LIST__TYPE__BASE + type0 + 1,9) }; 
+
+PSCRIPT_PARSER_DECL_LOCAL_LIST__FIELD_INTTYPE__BY_TYPE0__DEFINE_ENUM(0); 
+PSCRIPT_PARSER_DECL_LOCAL_LIST__FIELD_INTTYPE__BY_TYPE0__DEFINE_ENUM(1); 
+PSCRIPT_PARSER_DECL_LOCAL_LIST__FIELD_INTTYPE__BY_TYPE0__DEFINE_ENUM(2); 
+PSCRIPT_PARSER_DECL_LOCAL_LIST__FIELD_INTTYPE__BY_TYPE0__DEFINE_ENUM(3); 
+PSCRIPT_PARSER_DECL_LOCAL_LIST__FIELD_INTTYPE__BY_TYPE0__DEFINE_ENUM(4); 
+PSCRIPT_PARSER_DECL_LOCAL_LIST__FIELD_INTTYPE__BY_TYPE0__DEFINE_ENUM(5); 
+PSCRIPT_PARSER_DECL_LOCAL_LIST__FIELD_INTTYPE__BY_TYPE0__DEFINE_ENUM(6); 
+PSCRIPT_PARSER_DECL_LOCAL_LIST__FIELD_INTTYPE__BY_TYPE0__DEFINE_ENUM(7); 
+PSCRIPT_PARSER_DECL_LOCAL_LIST__FIELD_INTTYPE__BY_TYPE0__DEFINE_ENUM(8); 
+PSCRIPT_PARSER_DECL_LOCAL_LIST__FIELD_INTTYPE__BY_TYPE0__DEFINE_ENUM(9); 
+PSCRIPT_PARSER_DECL_LOCAL_LIST__FIELD_INTTYPE__BY_TYPE0__DEFINE_ENUM(10); 
+PSCRIPT_PARSER_DECL_LOCAL_LIST__FIELD_INTTYPE__BY_TYPE0__DEFINE_ENUM(11); 
+PSCRIPT_PARSER_DECL_LOCAL_LIST__FIELD_INTTYPE__BY_TYPE0__DEFINE_ENUM(12); 
+PSCRIPT_PARSER_DECL_LOCAL_LIST__FIELD_INTTYPE__BY_TYPE0__DEFINE_ENUM(13); 
+PSCRIPT_PARSER_DECL_LOCAL_LIST__FIELD_INTTYPE__BY_TYPE0__DEFINE_ENUM(14); 
+PSCRIPT_PARSER_DECL_LOCAL_LIST__FIELD_INTTYPE__BY_TYPE0__DEFINE_ENUM(15); 
+
+#define PSCRIPT_PARSER_DECL_LOCAL_LIST__FIELD_INTTYPE__BY_TYPE__ROW(type0) {  \
+  glue4(PSCRIPT_PARSER_DECL_LOCAL_LIST__GET_FIELD_INTTYPE__TYPE0_,type0,_FIELD_,0), \
+  glue4(PSCRIPT_PARSER_DECL_LOCAL_LIST__GET_FIELD_INTTYPE__TYPE0_,type0,_FIELD_,1), \
+  glue4(PSCRIPT_PARSER_DECL_LOCAL_LIST__GET_FIELD_INTTYPE__TYPE0_,type0,_FIELD_,2), \
+  glue4(PSCRIPT_PARSER_DECL_LOCAL_LIST__GET_FIELD_INTTYPE__TYPE0_,type0,_FIELD_,3), \
+  glue4(PSCRIPT_PARSER_DECL_LOCAL_LIST__GET_FIELD_INTTYPE__TYPE0_,type0,_FIELD_,4), \
+  glue4(PSCRIPT_PARSER_DECL_LOCAL_LIST__GET_FIELD_INTTYPE__TYPE0_,type0,_FIELD_,5), \
+  glue4(PSCRIPT_PARSER_DECL_LOCAL_LIST__GET_FIELD_INTTYPE__TYPE0_,type0,_FIELD_,6), \
+  glue4(PSCRIPT_PARSER_DECL_LOCAL_LIST__GET_FIELD_INTTYPE__TYPE0_,type0,_FIELD_,7), \
+  glue4(PSCRIPT_PARSER_DECL_LOCAL_LIST__GET_FIELD_INTTYPE__TYPE0_,type0,_FIELD_,8), \
+  glue4(PSCRIPT_PARSER_DECL_LOCAL_LIST__GET_FIELD_INTTYPE__TYPE0_,type0,_FIELD_,9), \
+  }  
+
+static const int8_t pscript_parser_decl_local_list__field_inttype__by_type0[][10] = { 
+  PSCRIPT_PARSER_DECL_LOCAL_LIST__FIELD_INTTYPE__BY_TYPE__ROW(0), 
+  PSCRIPT_PARSER_DECL_LOCAL_LIST__FIELD_INTTYPE__BY_TYPE__ROW(1), 
+  PSCRIPT_PARSER_DECL_LOCAL_LIST__FIELD_INTTYPE__BY_TYPE__ROW(2), 
+  PSCRIPT_PARSER_DECL_LOCAL_LIST__FIELD_INTTYPE__BY_TYPE__ROW(3), 
+  PSCRIPT_PARSER_DECL_LOCAL_LIST__FIELD_INTTYPE__BY_TYPE__ROW(4), 
+  PSCRIPT_PARSER_DECL_LOCAL_LIST__FIELD_INTTYPE__BY_TYPE__ROW(5), 
+  PSCRIPT_PARSER_DECL_LOCAL_LIST__FIELD_INTTYPE__BY_TYPE__ROW(6), 
+  PSCRIPT_PARSER_DECL_LOCAL_LIST__FIELD_INTTYPE__BY_TYPE__ROW(7), 
+  PSCRIPT_PARSER_DECL_LOCAL_LIST__FIELD_INTTYPE__BY_TYPE__ROW(8), 
+  PSCRIPT_PARSER_DECL_LOCAL_LIST__FIELD_INTTYPE__BY_TYPE__ROW(9), 
+  PSCRIPT_PARSER_DECL_LOCAL_LIST__FIELD_INTTYPE__BY_TYPE__ROW(10), 
+  PSCRIPT_PARSER_DECL_LOCAL_LIST__FIELD_INTTYPE__BY_TYPE__ROW(11), 
+  PSCRIPT_PARSER_DECL_LOCAL_LIST__FIELD_INTTYPE__BY_TYPE__ROW(12), 
+  PSCRIPT_PARSER_DECL_LOCAL_LIST__FIELD_INTTYPE__BY_TYPE__ROW(13), 
+  PSCRIPT_PARSER_DECL_LOCAL_LIST__FIELD_INTTYPE__BY_TYPE__ROW(14), 
+  PSCRIPT_PARSER_DECL_LOCAL_LIST__FIELD_INTTYPE__BY_TYPE__ROW(15), 
+}; 
+static const int8_t (* pscript_parser_decl_local_list__field_inttype__by_type__shifted)[10] = pscript_parser_decl_local_list__field_inttype__by_type0 - PSCRIPT_DECL_LOCAL_LIST__TYPE__BASE - 1;  
+
+#define PSCRIPT_PARSER_DECL_LOCAL_LIST__FIELD_SIZEOF__BY_TYPE0__DEFINE_ENUM(type0)  \
+enum { glue4(PSCRIPT_PARSER_DECL_LOCAL_LIST__GET_FIELD_SIZEOF__TYPE0_,type0,_FIELD_,0) = PSCRIPT_SIZEOF(glue4(PSCRIPT_PARSER_DECL_LOCAL_LIST__GET_FIELD_INTTYPE__TYPE0_,type0,_FIELD_,0)) }; \
+enum { glue4(PSCRIPT_PARSER_DECL_LOCAL_LIST__GET_FIELD_SIZEOF__TYPE0_,type0,_FIELD_,1) = PSCRIPT_SIZEOF(glue4(PSCRIPT_PARSER_DECL_LOCAL_LIST__GET_FIELD_INTTYPE__TYPE0_,type0,_FIELD_,1)) }; \
+enum { glue4(PSCRIPT_PARSER_DECL_LOCAL_LIST__GET_FIELD_SIZEOF__TYPE0_,type0,_FIELD_,2) = PSCRIPT_SIZEOF(glue4(PSCRIPT_PARSER_DECL_LOCAL_LIST__GET_FIELD_INTTYPE__TYPE0_,type0,_FIELD_,2)) }; \
+enum { glue4(PSCRIPT_PARSER_DECL_LOCAL_LIST__GET_FIELD_SIZEOF__TYPE0_,type0,_FIELD_,3) = PSCRIPT_SIZEOF(glue4(PSCRIPT_PARSER_DECL_LOCAL_LIST__GET_FIELD_INTTYPE__TYPE0_,type0,_FIELD_,3)) }; \
+enum { glue4(PSCRIPT_PARSER_DECL_LOCAL_LIST__GET_FIELD_SIZEOF__TYPE0_,type0,_FIELD_,4) = PSCRIPT_SIZEOF(glue4(PSCRIPT_PARSER_DECL_LOCAL_LIST__GET_FIELD_INTTYPE__TYPE0_,type0,_FIELD_,4)) }; \
+enum { glue4(PSCRIPT_PARSER_DECL_LOCAL_LIST__GET_FIELD_SIZEOF__TYPE0_,type0,_FIELD_,5) = PSCRIPT_SIZEOF(glue4(PSCRIPT_PARSER_DECL_LOCAL_LIST__GET_FIELD_INTTYPE__TYPE0_,type0,_FIELD_,5)) }; \
+enum { glue4(PSCRIPT_PARSER_DECL_LOCAL_LIST__GET_FIELD_SIZEOF__TYPE0_,type0,_FIELD_,6) = PSCRIPT_SIZEOF(glue4(PSCRIPT_PARSER_DECL_LOCAL_LIST__GET_FIELD_INTTYPE__TYPE0_,type0,_FIELD_,6)) }; \
+enum { glue4(PSCRIPT_PARSER_DECL_LOCAL_LIST__GET_FIELD_SIZEOF__TYPE0_,type0,_FIELD_,7) = PSCRIPT_SIZEOF(glue4(PSCRIPT_PARSER_DECL_LOCAL_LIST__GET_FIELD_INTTYPE__TYPE0_,type0,_FIELD_,7)) }; \
+enum { glue4(PSCRIPT_PARSER_DECL_LOCAL_LIST__GET_FIELD_SIZEOF__TYPE0_,type0,_FIELD_,8) = PSCRIPT_SIZEOF(glue4(PSCRIPT_PARSER_DECL_LOCAL_LIST__GET_FIELD_INTTYPE__TYPE0_,type0,_FIELD_,8)) }; \
+enum { glue4(PSCRIPT_PARSER_DECL_LOCAL_LIST__GET_FIELD_SIZEOF__TYPE0_,type0,_FIELD_,9) = PSCRIPT_SIZEOF(glue4(PSCRIPT_PARSER_DECL_LOCAL_LIST__GET_FIELD_INTTYPE__TYPE0_,type0,_FIELD_,9)) }; \
+
+PSCRIPT_PARSER_DECL_LOCAL_LIST__FIELD_SIZEOF__BY_TYPE0__DEFINE_ENUM(0); 
+PSCRIPT_PARSER_DECL_LOCAL_LIST__FIELD_SIZEOF__BY_TYPE0__DEFINE_ENUM(1); 
+PSCRIPT_PARSER_DECL_LOCAL_LIST__FIELD_SIZEOF__BY_TYPE0__DEFINE_ENUM(2); 
+PSCRIPT_PARSER_DECL_LOCAL_LIST__FIELD_SIZEOF__BY_TYPE0__DEFINE_ENUM(3); 
+PSCRIPT_PARSER_DECL_LOCAL_LIST__FIELD_SIZEOF__BY_TYPE0__DEFINE_ENUM(4); 
+PSCRIPT_PARSER_DECL_LOCAL_LIST__FIELD_SIZEOF__BY_TYPE0__DEFINE_ENUM(5); 
+PSCRIPT_PARSER_DECL_LOCAL_LIST__FIELD_SIZEOF__BY_TYPE0__DEFINE_ENUM(6); 
+PSCRIPT_PARSER_DECL_LOCAL_LIST__FIELD_SIZEOF__BY_TYPE0__DEFINE_ENUM(7); 
+PSCRIPT_PARSER_DECL_LOCAL_LIST__FIELD_SIZEOF__BY_TYPE0__DEFINE_ENUM(8); 
+PSCRIPT_PARSER_DECL_LOCAL_LIST__FIELD_SIZEOF__BY_TYPE0__DEFINE_ENUM(9); 
+PSCRIPT_PARSER_DECL_LOCAL_LIST__FIELD_SIZEOF__BY_TYPE0__DEFINE_ENUM(10); 
+PSCRIPT_PARSER_DECL_LOCAL_LIST__FIELD_SIZEOF__BY_TYPE0__DEFINE_ENUM(11); 
+PSCRIPT_PARSER_DECL_LOCAL_LIST__FIELD_SIZEOF__BY_TYPE0__DEFINE_ENUM(12); 
+PSCRIPT_PARSER_DECL_LOCAL_LIST__FIELD_SIZEOF__BY_TYPE0__DEFINE_ENUM(13); 
+PSCRIPT_PARSER_DECL_LOCAL_LIST__FIELD_SIZEOF__BY_TYPE0__DEFINE_ENUM(14); 
+PSCRIPT_PARSER_DECL_LOCAL_LIST__FIELD_SIZEOF__BY_TYPE0__DEFINE_ENUM(15); 
+
+#define PSCRIPT_PARSER_DECL_LOCAL_LIST__FIELD_SIZEOF__BY_TYPE__ROW(type0) {  \
+  glue4(PSCRIPT_PARSER_DECL_LOCAL_LIST__GET_FIELD_SIZEOF__TYPE0_,type0,_FIELD_,0), \
+  glue4(PSCRIPT_PARSER_DECL_LOCAL_LIST__GET_FIELD_SIZEOF__TYPE0_,type0,_FIELD_,1), \
+  glue4(PSCRIPT_PARSER_DECL_LOCAL_LIST__GET_FIELD_SIZEOF__TYPE0_,type0,_FIELD_,2), \
+  glue4(PSCRIPT_PARSER_DECL_LOCAL_LIST__GET_FIELD_SIZEOF__TYPE0_,type0,_FIELD_,3), \
+  glue4(PSCRIPT_PARSER_DECL_LOCAL_LIST__GET_FIELD_SIZEOF__TYPE0_,type0,_FIELD_,4), \
+  glue4(PSCRIPT_PARSER_DECL_LOCAL_LIST__GET_FIELD_SIZEOF__TYPE0_,type0,_FIELD_,5), \
+  glue4(PSCRIPT_PARSER_DECL_LOCAL_LIST__GET_FIELD_SIZEOF__TYPE0_,type0,_FIELD_,6), \
+  glue4(PSCRIPT_PARSER_DECL_LOCAL_LIST__GET_FIELD_SIZEOF__TYPE0_,type0,_FIELD_,7), \
+  glue4(PSCRIPT_PARSER_DECL_LOCAL_LIST__GET_FIELD_SIZEOF__TYPE0_,type0,_FIELD_,8), \
+  glue4(PSCRIPT_PARSER_DECL_LOCAL_LIST__GET_FIELD_SIZEOF__TYPE0_,type0,_FIELD_,9), \
+  }  
+
+static const int8_t pscript_parser_decl_local_list__field_sizeof__by_type0[][10] = { 
+  PSCRIPT_PARSER_DECL_LOCAL_LIST__FIELD_SIZEOF__BY_TYPE__ROW(0), 
+  PSCRIPT_PARSER_DECL_LOCAL_LIST__FIELD_SIZEOF__BY_TYPE__ROW(1), 
+  PSCRIPT_PARSER_DECL_LOCAL_LIST__FIELD_SIZEOF__BY_TYPE__ROW(2), 
+  PSCRIPT_PARSER_DECL_LOCAL_LIST__FIELD_SIZEOF__BY_TYPE__ROW(3), 
+  PSCRIPT_PARSER_DECL_LOCAL_LIST__FIELD_SIZEOF__BY_TYPE__ROW(4), 
+  PSCRIPT_PARSER_DECL_LOCAL_LIST__FIELD_SIZEOF__BY_TYPE__ROW(5), 
+  PSCRIPT_PARSER_DECL_LOCAL_LIST__FIELD_SIZEOF__BY_TYPE__ROW(6), 
+  PSCRIPT_PARSER_DECL_LOCAL_LIST__FIELD_SIZEOF__BY_TYPE__ROW(7), 
+  PSCRIPT_PARSER_DECL_LOCAL_LIST__FIELD_SIZEOF__BY_TYPE__ROW(8), 
+  PSCRIPT_PARSER_DECL_LOCAL_LIST__FIELD_SIZEOF__BY_TYPE__ROW(9), 
+  PSCRIPT_PARSER_DECL_LOCAL_LIST__FIELD_SIZEOF__BY_TYPE__ROW(10), 
+  PSCRIPT_PARSER_DECL_LOCAL_LIST__FIELD_SIZEOF__BY_TYPE__ROW(11), 
+  PSCRIPT_PARSER_DECL_LOCAL_LIST__FIELD_SIZEOF__BY_TYPE__ROW(12), 
+  PSCRIPT_PARSER_DECL_LOCAL_LIST__FIELD_SIZEOF__BY_TYPE__ROW(13), 
+  PSCRIPT_PARSER_DECL_LOCAL_LIST__FIELD_SIZEOF__BY_TYPE__ROW(14), 
+  PSCRIPT_PARSER_DECL_LOCAL_LIST__FIELD_SIZEOF__BY_TYPE__ROW(15), 
+}; 
+static const int8_t (* pscript_parser_decl_local_list__field_sizeof__by_type__shifted)[10] = pscript_parser_decl_local_list__field_sizeof__by_type0 - PSCRIPT_DECL_LOCAL_LIST__TYPE__BASE - 1;  
+
+
+	
+#define PSCRIPT_PARSER_DECL_LOCAL_LIST__FIELD_SIZEOF_CUMULATED__BY_TYPE0__DEFINE_ENUM(type0)  \
+enum { glue4(PSCRIPT_PARSER_DECL_LOCAL_LIST__GET_FIELD_SIZEOF_CUMULATED__TYPE0_,type0,_FIELD_,0) = 0 }; \
+enum { glue4(PSCRIPT_PARSER_DECL_LOCAL_LIST__GET_FIELD_SIZEOF_CUMULATED__TYPE0_,type0,_FIELD_,1) = glue4(PSCRIPT_PARSER_DECL_LOCAL_LIST__GET_FIELD_SIZEOF_CUMULATED__TYPE0_,type0,_FIELD_,0) + glue4(PSCRIPT_PARSER_DECL_LOCAL_LIST__GET_FIELD_SIZEOF__TYPE0_,type0,_FIELD_,0) }; \
+enum { glue4(PSCRIPT_PARSER_DECL_LOCAL_LIST__GET_FIELD_SIZEOF_CUMULATED__TYPE0_,type0,_FIELD_,2) = glue4(PSCRIPT_PARSER_DECL_LOCAL_LIST__GET_FIELD_SIZEOF_CUMULATED__TYPE0_,type0,_FIELD_,1) + glue4(PSCRIPT_PARSER_DECL_LOCAL_LIST__GET_FIELD_SIZEOF__TYPE0_,type0,_FIELD_,1) }; \
+enum { glue4(PSCRIPT_PARSER_DECL_LOCAL_LIST__GET_FIELD_SIZEOF_CUMULATED__TYPE0_,type0,_FIELD_,3) = glue4(PSCRIPT_PARSER_DECL_LOCAL_LIST__GET_FIELD_SIZEOF_CUMULATED__TYPE0_,type0,_FIELD_,2) + glue4(PSCRIPT_PARSER_DECL_LOCAL_LIST__GET_FIELD_SIZEOF__TYPE0_,type0,_FIELD_,2) }; \
+enum { glue4(PSCRIPT_PARSER_DECL_LOCAL_LIST__GET_FIELD_SIZEOF_CUMULATED__TYPE0_,type0,_FIELD_,4) = glue4(PSCRIPT_PARSER_DECL_LOCAL_LIST__GET_FIELD_SIZEOF_CUMULATED__TYPE0_,type0,_FIELD_,3) + glue4(PSCRIPT_PARSER_DECL_LOCAL_LIST__GET_FIELD_SIZEOF__TYPE0_,type0,_FIELD_,3) }; \
+enum { glue4(PSCRIPT_PARSER_DECL_LOCAL_LIST__GET_FIELD_SIZEOF_CUMULATED__TYPE0_,type0,_FIELD_,5) = glue4(PSCRIPT_PARSER_DECL_LOCAL_LIST__GET_FIELD_SIZEOF_CUMULATED__TYPE0_,type0,_FIELD_,4) + glue4(PSCRIPT_PARSER_DECL_LOCAL_LIST__GET_FIELD_SIZEOF__TYPE0_,type0,_FIELD_,4) }; \
+enum { glue4(PSCRIPT_PARSER_DECL_LOCAL_LIST__GET_FIELD_SIZEOF_CUMULATED__TYPE0_,type0,_FIELD_,6) = glue4(PSCRIPT_PARSER_DECL_LOCAL_LIST__GET_FIELD_SIZEOF_CUMULATED__TYPE0_,type0,_FIELD_,5) + glue4(PSCRIPT_PARSER_DECL_LOCAL_LIST__GET_FIELD_SIZEOF__TYPE0_,type0,_FIELD_,5) }; \
+enum { glue4(PSCRIPT_PARSER_DECL_LOCAL_LIST__GET_FIELD_SIZEOF_CUMULATED__TYPE0_,type0,_FIELD_,7) = glue4(PSCRIPT_PARSER_DECL_LOCAL_LIST__GET_FIELD_SIZEOF_CUMULATED__TYPE0_,type0,_FIELD_,6) + glue4(PSCRIPT_PARSER_DECL_LOCAL_LIST__GET_FIELD_SIZEOF__TYPE0_,type0,_FIELD_,6) }; \
+enum { glue4(PSCRIPT_PARSER_DECL_LOCAL_LIST__GET_FIELD_SIZEOF_CUMULATED__TYPE0_,type0,_FIELD_,8) = glue4(PSCRIPT_PARSER_DECL_LOCAL_LIST__GET_FIELD_SIZEOF_CUMULATED__TYPE0_,type0,_FIELD_,7) + glue4(PSCRIPT_PARSER_DECL_LOCAL_LIST__GET_FIELD_SIZEOF__TYPE0_,type0,_FIELD_,7) }; \
+enum { glue4(PSCRIPT_PARSER_DECL_LOCAL_LIST__GET_FIELD_SIZEOF_CUMULATED__TYPE0_,type0,_FIELD_,9) = glue4(PSCRIPT_PARSER_DECL_LOCAL_LIST__GET_FIELD_SIZEOF_CUMULATED__TYPE0_,type0,_FIELD_,8) + glue4(PSCRIPT_PARSER_DECL_LOCAL_LIST__GET_FIELD_SIZEOF__TYPE0_,type0,_FIELD_,8) }; \
+
+PSCRIPT_PARSER_DECL_LOCAL_LIST__FIELD_SIZEOF_CUMULATED__BY_TYPE0__DEFINE_ENUM(0); 
+PSCRIPT_PARSER_DECL_LOCAL_LIST__FIELD_SIZEOF_CUMULATED__BY_TYPE0__DEFINE_ENUM(1); 
+PSCRIPT_PARSER_DECL_LOCAL_LIST__FIELD_SIZEOF_CUMULATED__BY_TYPE0__DEFINE_ENUM(2); 
+PSCRIPT_PARSER_DECL_LOCAL_LIST__FIELD_SIZEOF_CUMULATED__BY_TYPE0__DEFINE_ENUM(3); 
+PSCRIPT_PARSER_DECL_LOCAL_LIST__FIELD_SIZEOF_CUMULATED__BY_TYPE0__DEFINE_ENUM(4); 
+PSCRIPT_PARSER_DECL_LOCAL_LIST__FIELD_SIZEOF_CUMULATED__BY_TYPE0__DEFINE_ENUM(5); 
+PSCRIPT_PARSER_DECL_LOCAL_LIST__FIELD_SIZEOF_CUMULATED__BY_TYPE0__DEFINE_ENUM(6); 
+PSCRIPT_PARSER_DECL_LOCAL_LIST__FIELD_SIZEOF_CUMULATED__BY_TYPE0__DEFINE_ENUM(7); 
+PSCRIPT_PARSER_DECL_LOCAL_LIST__FIELD_SIZEOF_CUMULATED__BY_TYPE0__DEFINE_ENUM(8); 
+PSCRIPT_PARSER_DECL_LOCAL_LIST__FIELD_SIZEOF_CUMULATED__BY_TYPE0__DEFINE_ENUM(9); 
+PSCRIPT_PARSER_DECL_LOCAL_LIST__FIELD_SIZEOF_CUMULATED__BY_TYPE0__DEFINE_ENUM(10); 
+PSCRIPT_PARSER_DECL_LOCAL_LIST__FIELD_SIZEOF_CUMULATED__BY_TYPE0__DEFINE_ENUM(11); 
+PSCRIPT_PARSER_DECL_LOCAL_LIST__FIELD_SIZEOF_CUMULATED__BY_TYPE0__DEFINE_ENUM(12); 
+PSCRIPT_PARSER_DECL_LOCAL_LIST__FIELD_SIZEOF_CUMULATED__BY_TYPE0__DEFINE_ENUM(13); 
+PSCRIPT_PARSER_DECL_LOCAL_LIST__FIELD_SIZEOF_CUMULATED__BY_TYPE0__DEFINE_ENUM(14); 
+PSCRIPT_PARSER_DECL_LOCAL_LIST__FIELD_SIZEOF_CUMULATED__BY_TYPE0__DEFINE_ENUM(15); 
+
+#define PSCRIPT_PARSER_DECL_LOCAL_LIST__FIELD_SIZEOF_CUMULATED__BY_TYPE__ROW(type0) {  \
+  glue4(PSCRIPT_PARSER_DECL_LOCAL_LIST__GET_FIELD_SIZEOF_CUMULATED__TYPE0_,type0,_FIELD_,0), \
+  glue4(PSCRIPT_PARSER_DECL_LOCAL_LIST__GET_FIELD_SIZEOF_CUMULATED__TYPE0_,type0,_FIELD_,1), \
+  glue4(PSCRIPT_PARSER_DECL_LOCAL_LIST__GET_FIELD_SIZEOF_CUMULATED__TYPE0_,type0,_FIELD_,2), \
+  glue4(PSCRIPT_PARSER_DECL_LOCAL_LIST__GET_FIELD_SIZEOF_CUMULATED__TYPE0_,type0,_FIELD_,3), \
+  glue4(PSCRIPT_PARSER_DECL_LOCAL_LIST__GET_FIELD_SIZEOF_CUMULATED__TYPE0_,type0,_FIELD_,4), \
+  glue4(PSCRIPT_PARSER_DECL_LOCAL_LIST__GET_FIELD_SIZEOF_CUMULATED__TYPE0_,type0,_FIELD_,5), \
+  glue4(PSCRIPT_PARSER_DECL_LOCAL_LIST__GET_FIELD_SIZEOF_CUMULATED__TYPE0_,type0,_FIELD_,6), \
+  glue4(PSCRIPT_PARSER_DECL_LOCAL_LIST__GET_FIELD_SIZEOF_CUMULATED__TYPE0_,type0,_FIELD_,7), \
+  glue4(PSCRIPT_PARSER_DECL_LOCAL_LIST__GET_FIELD_SIZEOF_CUMULATED__TYPE0_,type0,_FIELD_,8), \
+  glue4(PSCRIPT_PARSER_DECL_LOCAL_LIST__GET_FIELD_SIZEOF_CUMULATED__TYPE0_,type0,_FIELD_,9), \
+  }  
+
+static const int8_t pscript_parser_decl_local_list__field_sizeof_cumulated__by_type0[][10] = { 
+  PSCRIPT_PARSER_DECL_LOCAL_LIST__FIELD_SIZEOF_CUMULATED__BY_TYPE__ROW(0), 
+  PSCRIPT_PARSER_DECL_LOCAL_LIST__FIELD_SIZEOF_CUMULATED__BY_TYPE__ROW(1), 
+  PSCRIPT_PARSER_DECL_LOCAL_LIST__FIELD_SIZEOF_CUMULATED__BY_TYPE__ROW(2), 
+  PSCRIPT_PARSER_DECL_LOCAL_LIST__FIELD_SIZEOF_CUMULATED__BY_TYPE__ROW(3), 
+  PSCRIPT_PARSER_DECL_LOCAL_LIST__FIELD_SIZEOF_CUMULATED__BY_TYPE__ROW(4), 
+  PSCRIPT_PARSER_DECL_LOCAL_LIST__FIELD_SIZEOF_CUMULATED__BY_TYPE__ROW(5), 
+  PSCRIPT_PARSER_DECL_LOCAL_LIST__FIELD_SIZEOF_CUMULATED__BY_TYPE__ROW(6), 
+  PSCRIPT_PARSER_DECL_LOCAL_LIST__FIELD_SIZEOF_CUMULATED__BY_TYPE__ROW(7), 
+  PSCRIPT_PARSER_DECL_LOCAL_LIST__FIELD_SIZEOF_CUMULATED__BY_TYPE__ROW(8), 
+  PSCRIPT_PARSER_DECL_LOCAL_LIST__FIELD_SIZEOF_CUMULATED__BY_TYPE__ROW(9), 
+  PSCRIPT_PARSER_DECL_LOCAL_LIST__FIELD_SIZEOF_CUMULATED__BY_TYPE__ROW(10), 
+  PSCRIPT_PARSER_DECL_LOCAL_LIST__FIELD_SIZEOF_CUMULATED__BY_TYPE__ROW(11), 
+  PSCRIPT_PARSER_DECL_LOCAL_LIST__FIELD_SIZEOF_CUMULATED__BY_TYPE__ROW(12), 
+  PSCRIPT_PARSER_DECL_LOCAL_LIST__FIELD_SIZEOF_CUMULATED__BY_TYPE__ROW(13), 
+  PSCRIPT_PARSER_DECL_LOCAL_LIST__FIELD_SIZEOF_CUMULATED__BY_TYPE__ROW(14), 
+  PSCRIPT_PARSER_DECL_LOCAL_LIST__FIELD_SIZEOF_CUMULATED__BY_TYPE__ROW(15), 
+}; 
+static const int8_t (* pscript_parser_decl_local_list__field_sizeof_cumulated__by_type__shifted)[10] = pscript_parser_decl_local_list__field_sizeof_cumulated__by_type0 - PSCRIPT_DECL_LOCAL_LIST__TYPE__BASE - 1;  
+
+#define GET_CHUNK_SIZE__DECL_LOCAL_LIST__BY_TYPE0(type0) (			\
+  glue(PSCRIPT_PARSER_DECL_LOCAL_LIST__FIELDS_NB__TYPE0_,type0) == 0 ? glue3(PSCRIPT_PARSER_DECL_LOCAL_LIST__GET_FIELD_SIZEOF_CUMULATED__TYPE0_,type0,_FIELD_0) : \
+  glue(PSCRIPT_PARSER_DECL_LOCAL_LIST__FIELDS_NB__TYPE0_,type0) == 1 ? glue3(PSCRIPT_PARSER_DECL_LOCAL_LIST__GET_FIELD_SIZEOF_CUMULATED__TYPE0_,type0,_FIELD_1) : \
+  glue(PSCRIPT_PARSER_DECL_LOCAL_LIST__FIELDS_NB__TYPE0_,type0) == 2 ? glue3(PSCRIPT_PARSER_DECL_LOCAL_LIST__GET_FIELD_SIZEOF_CUMULATED__TYPE0_,type0,_FIELD_2) : \
+  glue(PSCRIPT_PARSER_DECL_LOCAL_LIST__FIELDS_NB__TYPE0_,type0) == 3 ? glue3(PSCRIPT_PARSER_DECL_LOCAL_LIST__GET_FIELD_SIZEOF_CUMULATED__TYPE0_,type0,_FIELD_3) : \
+  glue(PSCRIPT_PARSER_DECL_LOCAL_LIST__FIELDS_NB__TYPE0_,type0) == 4 ? glue3(PSCRIPT_PARSER_DECL_LOCAL_LIST__GET_FIELD_SIZEOF_CUMULATED__TYPE0_,type0,_FIELD_4) : \
+  glue(PSCRIPT_PARSER_DECL_LOCAL_LIST__FIELDS_NB__TYPE0_,type0) == 5 ? glue3(PSCRIPT_PARSER_DECL_LOCAL_LIST__GET_FIELD_SIZEOF_CUMULATED__TYPE0_,type0,_FIELD_5) : \
+  glue(PSCRIPT_PARSER_DECL_LOCAL_LIST__FIELDS_NB__TYPE0_,type0) == 6 ? glue3(PSCRIPT_PARSER_DECL_LOCAL_LIST__GET_FIELD_SIZEOF_CUMULATED__TYPE0_,type0,_FIELD_6) : \
+  glue(PSCRIPT_PARSER_DECL_LOCAL_LIST__FIELDS_NB__TYPE0_,type0) == 7 ? glue3(PSCRIPT_PARSER_DECL_LOCAL_LIST__GET_FIELD_SIZEOF_CUMULATED__TYPE0_,type0,_FIELD_7) : \
+  glue(PSCRIPT_PARSER_DECL_LOCAL_LIST__FIELDS_NB__TYPE0_,type0) == 8 ? glue3(PSCRIPT_PARSER_DECL_LOCAL_LIST__GET_FIELD_SIZEOF_CUMULATED__TYPE0_,type0,_FIELD_8) : \
+ -1) 
+
+enum { PSCRIPT_PARSER_DECL_LOCAL_LIST__CHUNK_SIZE__TYPE0_0  = GET_CHUNK_SIZE__DECL_LOCAL_LIST__BY_TYPE0(0) }; 
+enum { PSCRIPT_PARSER_DECL_LOCAL_LIST__CHUNK_SIZE__TYPE0_1  = GET_CHUNK_SIZE__DECL_LOCAL_LIST__BY_TYPE0(1) };
+enum { PSCRIPT_PARSER_DECL_LOCAL_LIST__CHUNK_SIZE__TYPE0_2  = GET_CHUNK_SIZE__DECL_LOCAL_LIST__BY_TYPE0(2) }; 
+enum { PSCRIPT_PARSER_DECL_LOCAL_LIST__CHUNK_SIZE__TYPE0_3  = GET_CHUNK_SIZE__DECL_LOCAL_LIST__BY_TYPE0(3) }; 
+enum { PSCRIPT_PARSER_DECL_LOCAL_LIST__CHUNK_SIZE__TYPE0_4  = GET_CHUNK_SIZE__DECL_LOCAL_LIST__BY_TYPE0(4) }; 
+enum { PSCRIPT_PARSER_DECL_LOCAL_LIST__CHUNK_SIZE__TYPE0_5  = GET_CHUNK_SIZE__DECL_LOCAL_LIST__BY_TYPE0(5) }; 
+enum { PSCRIPT_PARSER_DECL_LOCAL_LIST__CHUNK_SIZE__TYPE0_6  = GET_CHUNK_SIZE__DECL_LOCAL_LIST__BY_TYPE0(6) }; 
+enum { PSCRIPT_PARSER_DECL_LOCAL_LIST__CHUNK_SIZE__TYPE0_7  = GET_CHUNK_SIZE__DECL_LOCAL_LIST__BY_TYPE0(7) }; 
+enum { PSCRIPT_PARSER_DECL_LOCAL_LIST__CHUNK_SIZE__TYPE0_8  = GET_CHUNK_SIZE__DECL_LOCAL_LIST__BY_TYPE0(8) }; 
+enum { PSCRIPT_PARSER_DECL_LOCAL_LIST__CHUNK_SIZE__TYPE0_9  = GET_CHUNK_SIZE__DECL_LOCAL_LIST__BY_TYPE0(9) }; 
+enum { PSCRIPT_PARSER_DECL_LOCAL_LIST__CHUNK_SIZE__TYPE0_10 = GET_CHUNK_SIZE__DECL_LOCAL_LIST__BY_TYPE0(10) }; 
+enum { PSCRIPT_PARSER_DECL_LOCAL_LIST__CHUNK_SIZE__TYPE0_11 = GET_CHUNK_SIZE__DECL_LOCAL_LIST__BY_TYPE0(11) }; 
+enum { PSCRIPT_PARSER_DECL_LOCAL_LIST__CHUNK_SIZE__TYPE0_12 = GET_CHUNK_SIZE__DECL_LOCAL_LIST__BY_TYPE0(12) }; 
+enum { PSCRIPT_PARSER_DECL_LOCAL_LIST__CHUNK_SIZE__TYPE0_13 = GET_CHUNK_SIZE__DECL_LOCAL_LIST__BY_TYPE0(13) }; 
+enum { PSCRIPT_PARSER_DECL_LOCAL_LIST__CHUNK_SIZE__TYPE0_14 = GET_CHUNK_SIZE__DECL_LOCAL_LIST__BY_TYPE0(14) }; 
+enum { PSCRIPT_PARSER_DECL_LOCAL_LIST__CHUNK_SIZE__TYPE0_15 = GET_CHUNK_SIZE__DECL_LOCAL_LIST__BY_TYPE0(15) }; 
+
+static const int8_t pscript_parser_decl_local_list__chunk_size__by_type0[] = { 
+  PSCRIPT_PARSER_DECL_LOCAL_LIST__CHUNK_SIZE__TYPE0_0, 
+  PSCRIPT_PARSER_DECL_LOCAL_LIST__CHUNK_SIZE__TYPE0_1, 
+  PSCRIPT_PARSER_DECL_LOCAL_LIST__CHUNK_SIZE__TYPE0_2, 
+  PSCRIPT_PARSER_DECL_LOCAL_LIST__CHUNK_SIZE__TYPE0_3, 
+  PSCRIPT_PARSER_DECL_LOCAL_LIST__CHUNK_SIZE__TYPE0_4, 
+  PSCRIPT_PARSER_DECL_LOCAL_LIST__CHUNK_SIZE__TYPE0_5, 
+  PSCRIPT_PARSER_DECL_LOCAL_LIST__CHUNK_SIZE__TYPE0_6, 
+  PSCRIPT_PARSER_DECL_LOCAL_LIST__CHUNK_SIZE__TYPE0_7, 
+  PSCRIPT_PARSER_DECL_LOCAL_LIST__CHUNK_SIZE__TYPE0_8, 
+  PSCRIPT_PARSER_DECL_LOCAL_LIST__CHUNK_SIZE__TYPE0_9, 
+  PSCRIPT_PARSER_DECL_LOCAL_LIST__CHUNK_SIZE__TYPE0_10, 
+  PSCRIPT_PARSER_DECL_LOCAL_LIST__CHUNK_SIZE__TYPE0_11, 
+  PSCRIPT_PARSER_DECL_LOCAL_LIST__CHUNK_SIZE__TYPE0_12, 
+  PSCRIPT_PARSER_DECL_LOCAL_LIST__CHUNK_SIZE__TYPE0_13, 
+  PSCRIPT_PARSER_DECL_LOCAL_LIST__CHUNK_SIZE__TYPE0_14, 
+  PSCRIPT_PARSER_DECL_LOCAL_LIST__CHUNK_SIZE__TYPE0_15, 
+}; 
+static const int8_t * pscript_parser_decl_local_list__chunk_size__by_type__shifted = pscript_parser_decl_local_list__chunk_size__by_type0 - PSCRIPT_DECL_LOCAL_LIST__TYPE__BASE - 1; 
+
+
+#define GET_FIELD_NAME__DECL_LOCAL_LIST__BY_TYPE(type) { \
+  PSCRIPT_PARSER_DECL_LOCAL_LIST__GET_FIELD_NAME__BY_TYPE(type,0), \
+  PSCRIPT_PARSER_DECL_LOCAL_LIST__GET_FIELD_NAME__BY_TYPE(type,1), \
+  PSCRIPT_PARSER_DECL_LOCAL_LIST__GET_FIELD_NAME__BY_TYPE(type,2), \
+  PSCRIPT_PARSER_DECL_LOCAL_LIST__GET_FIELD_NAME__BY_TYPE(type,3), \
+  PSCRIPT_PARSER_DECL_LOCAL_LIST__GET_FIELD_NAME__BY_TYPE(type,4), \
+  PSCRIPT_PARSER_DECL_LOCAL_LIST__GET_FIELD_NAME__BY_TYPE(type,5), \
+  PSCRIPT_PARSER_DECL_LOCAL_LIST__GET_FIELD_NAME__BY_TYPE(type,6), \
+  PSCRIPT_PARSER_DECL_LOCAL_LIST__GET_FIELD_NAME__BY_TYPE(type,7), \
+  PSCRIPT_PARSER_DECL_LOCAL_LIST__GET_FIELD_NAME__BY_TYPE(type,8), \
+  PSCRIPT_PARSER_DECL_LOCAL_LIST__GET_FIELD_NAME__BY_TYPE(type,9), \
+ } 
+
+#define GET_FIELD_NAME__DECL_LOCAL_LIST__BY_TYPE0(type0) GET_FIELD_NAME__DECL_LOCAL_LIST__BY_TYPE(PSCRIPT_DECL_LOCAL_LIST__TYPE__BASE + 1 + type0) 
+
+static const char * pscript_parser_decl_local_list__field_name__by_type0[][10] = { 
+  GET_FIELD_NAME__DECL_LOCAL_LIST__BY_TYPE0(0), 
+  GET_FIELD_NAME__DECL_LOCAL_LIST__BY_TYPE0(1), 
+  GET_FIELD_NAME__DECL_LOCAL_LIST__BY_TYPE0(2), 
+  GET_FIELD_NAME__DECL_LOCAL_LIST__BY_TYPE0(3), 
+  GET_FIELD_NAME__DECL_LOCAL_LIST__BY_TYPE0(4), 
+  GET_FIELD_NAME__DECL_LOCAL_LIST__BY_TYPE0(5), 
+  GET_FIELD_NAME__DECL_LOCAL_LIST__BY_TYPE0(6), 
+  GET_FIELD_NAME__DECL_LOCAL_LIST__BY_TYPE0(7), 
+  GET_FIELD_NAME__DECL_LOCAL_LIST__BY_TYPE0(8), 
+  GET_FIELD_NAME__DECL_LOCAL_LIST__BY_TYPE0(9), 
+  GET_FIELD_NAME__DECL_LOCAL_LIST__BY_TYPE0(10), 
+  GET_FIELD_NAME__DECL_LOCAL_LIST__BY_TYPE0(11), 
+  GET_FIELD_NAME__DECL_LOCAL_LIST__BY_TYPE0(12), 
+  GET_FIELD_NAME__DECL_LOCAL_LIST__BY_TYPE0(13), 
+  GET_FIELD_NAME__DECL_LOCAL_LIST__BY_TYPE0(14), 
+  GET_FIELD_NAME__DECL_LOCAL_LIST__BY_TYPE0(15), 
+}; 
+static const char * (* pscript_parser_decl_local_list__field_name__by_type__shifted)[10] = pscript_parser_decl_local_list__field_name__by_type0 - PSCRIPT_DECL_LOCAL_LIST__TYPE__BASE - 1;  
+
+
+#define GET_FIELDS_NB__DECL_LOCAL_LIST(type) (pscript_parser_decl_local_list__fields_nb__by_type__shifted[type]) 
+
+#define GET_FIELD_NAME__DECL_LOCAL_LIST(type,field_i) (pscript_parser_decl_local_list__field_name__by_type__shifted[type][field_i]) 
+
+#define GET_FIELD_INTTYPE__DECL_LOCAL_LIST(type,field_i) (pscript_parser_decl_local_list__field_inttype__by_type__shifted[type][field_i]) 
+
+#define GET_FIELD_SIZEOF__DECL_LOCAL_LIST(type,field_i) (pscript_parser_decl_local_list__field_sizeof__by_type__shifted[type][field_i]) 
+
+#define GET_FIELD_OFFSETOF__DECL_LOCAL_LIST(type,field_i) (pscript_parser_decl_local_list__field_sizeof_cumulated__by_type__shifted[type][field_i]) 
+
+#define GET_CHUNK_SIZE__DECL_LOCAL_LIST(type,values_nb) (pscript_parser_decl_local_list__chunk_size__by_type__shifted[type])
+
+
+
+
+// *** DECL_TOPLEVEL_LIST *** 
+
+enum { PSCRIPT_PARSER_DECL_TOPLEVEL_LIST__FIELDS_NB__TYPE0_0  = PSCRIPT_PARSER_DECL_TOPLEVEL_LIST__GET_FIELDS_NB__BY_TYPE(PSCRIPT_DECL_TOPLEVEL_LIST__TYPE__BASE +  1) }; 
+enum { PSCRIPT_PARSER_DECL_TOPLEVEL_LIST__FIELDS_NB__TYPE0_1  = PSCRIPT_PARSER_DECL_TOPLEVEL_LIST__GET_FIELDS_NB__BY_TYPE(PSCRIPT_DECL_TOPLEVEL_LIST__TYPE__BASE +  2) }; 
+enum { PSCRIPT_PARSER_DECL_TOPLEVEL_LIST__FIELDS_NB__TYPE0_2  = PSCRIPT_PARSER_DECL_TOPLEVEL_LIST__GET_FIELDS_NB__BY_TYPE(PSCRIPT_DECL_TOPLEVEL_LIST__TYPE__BASE +  3) }; 
+enum { PSCRIPT_PARSER_DECL_TOPLEVEL_LIST__FIELDS_NB__TYPE0_3  = PSCRIPT_PARSER_DECL_TOPLEVEL_LIST__GET_FIELDS_NB__BY_TYPE(PSCRIPT_DECL_TOPLEVEL_LIST__TYPE__BASE +  4) }; 
+enum { PSCRIPT_PARSER_DECL_TOPLEVEL_LIST__FIELDS_NB__TYPE0_4  = PSCRIPT_PARSER_DECL_TOPLEVEL_LIST__GET_FIELDS_NB__BY_TYPE(PSCRIPT_DECL_TOPLEVEL_LIST__TYPE__BASE +  5) }; 
+enum { PSCRIPT_PARSER_DECL_TOPLEVEL_LIST__FIELDS_NB__TYPE0_5  = PSCRIPT_PARSER_DECL_TOPLEVEL_LIST__GET_FIELDS_NB__BY_TYPE(PSCRIPT_DECL_TOPLEVEL_LIST__TYPE__BASE +  6) }; 
+enum { PSCRIPT_PARSER_DECL_TOPLEVEL_LIST__FIELDS_NB__TYPE0_6  = PSCRIPT_PARSER_DECL_TOPLEVEL_LIST__GET_FIELDS_NB__BY_TYPE(PSCRIPT_DECL_TOPLEVEL_LIST__TYPE__BASE +  7) }; 
+enum { PSCRIPT_PARSER_DECL_TOPLEVEL_LIST__FIELDS_NB__TYPE0_7  = PSCRIPT_PARSER_DECL_TOPLEVEL_LIST__GET_FIELDS_NB__BY_TYPE(PSCRIPT_DECL_TOPLEVEL_LIST__TYPE__BASE +  8) }; 
+enum { PSCRIPT_PARSER_DECL_TOPLEVEL_LIST__FIELDS_NB__TYPE0_8  = PSCRIPT_PARSER_DECL_TOPLEVEL_LIST__GET_FIELDS_NB__BY_TYPE(PSCRIPT_DECL_TOPLEVEL_LIST__TYPE__BASE +  9) }; 
+enum { PSCRIPT_PARSER_DECL_TOPLEVEL_LIST__FIELDS_NB__TYPE0_9  = PSCRIPT_PARSER_DECL_TOPLEVEL_LIST__GET_FIELDS_NB__BY_TYPE(PSCRIPT_DECL_TOPLEVEL_LIST__TYPE__BASE + 10) }; 
+enum { PSCRIPT_PARSER_DECL_TOPLEVEL_LIST__FIELDS_NB__TYPE0_10 = PSCRIPT_PARSER_DECL_TOPLEVEL_LIST__GET_FIELDS_NB__BY_TYPE(PSCRIPT_DECL_TOPLEVEL_LIST__TYPE__BASE + 11) }; 
+enum { PSCRIPT_PARSER_DECL_TOPLEVEL_LIST__FIELDS_NB__TYPE0_11 = PSCRIPT_PARSER_DECL_TOPLEVEL_LIST__GET_FIELDS_NB__BY_TYPE(PSCRIPT_DECL_TOPLEVEL_LIST__TYPE__BASE + 12) }; 
+enum { PSCRIPT_PARSER_DECL_TOPLEVEL_LIST__FIELDS_NB__TYPE0_12 = PSCRIPT_PARSER_DECL_TOPLEVEL_LIST__GET_FIELDS_NB__BY_TYPE(PSCRIPT_DECL_TOPLEVEL_LIST__TYPE__BASE + 13) }; 
+enum { PSCRIPT_PARSER_DECL_TOPLEVEL_LIST__FIELDS_NB__TYPE0_13 = PSCRIPT_PARSER_DECL_TOPLEVEL_LIST__GET_FIELDS_NB__BY_TYPE(PSCRIPT_DECL_TOPLEVEL_LIST__TYPE__BASE + 14) }; 
+enum { PSCRIPT_PARSER_DECL_TOPLEVEL_LIST__FIELDS_NB__TYPE0_14 = PSCRIPT_PARSER_DECL_TOPLEVEL_LIST__GET_FIELDS_NB__BY_TYPE(PSCRIPT_DECL_TOPLEVEL_LIST__TYPE__BASE + 15) }; 
+enum { PSCRIPT_PARSER_DECL_TOPLEVEL_LIST__FIELDS_NB__TYPE0_15 = PSCRIPT_PARSER_DECL_TOPLEVEL_LIST__GET_FIELDS_NB__BY_TYPE(PSCRIPT_DECL_TOPLEVEL_LIST__TYPE__BASE + 16) }; 
+
+static const int8_t pscript_parser_decl_toplevel_list__fields_nb__by_type0[] = { 
+  PSCRIPT_PARSER_DECL_TOPLEVEL_LIST__FIELDS_NB__TYPE0_0, 
+  PSCRIPT_PARSER_DECL_TOPLEVEL_LIST__FIELDS_NB__TYPE0_1, 
+  PSCRIPT_PARSER_DECL_TOPLEVEL_LIST__FIELDS_NB__TYPE0_2, 
+  PSCRIPT_PARSER_DECL_TOPLEVEL_LIST__FIELDS_NB__TYPE0_3, 
+  PSCRIPT_PARSER_DECL_TOPLEVEL_LIST__FIELDS_NB__TYPE0_4, 
+  PSCRIPT_PARSER_DECL_TOPLEVEL_LIST__FIELDS_NB__TYPE0_5, 
+  PSCRIPT_PARSER_DECL_TOPLEVEL_LIST__FIELDS_NB__TYPE0_6, 
+  PSCRIPT_PARSER_DECL_TOPLEVEL_LIST__FIELDS_NB__TYPE0_7, 
+  PSCRIPT_PARSER_DECL_TOPLEVEL_LIST__FIELDS_NB__TYPE0_8, 
+  PSCRIPT_PARSER_DECL_TOPLEVEL_LIST__FIELDS_NB__TYPE0_9, 
+  PSCRIPT_PARSER_DECL_TOPLEVEL_LIST__FIELDS_NB__TYPE0_10, 
+  PSCRIPT_PARSER_DECL_TOPLEVEL_LIST__FIELDS_NB__TYPE0_11, 
+  PSCRIPT_PARSER_DECL_TOPLEVEL_LIST__FIELDS_NB__TYPE0_12, 
+  PSCRIPT_PARSER_DECL_TOPLEVEL_LIST__FIELDS_NB__TYPE0_13, 
+  PSCRIPT_PARSER_DECL_TOPLEVEL_LIST__FIELDS_NB__TYPE0_14, 
+  PSCRIPT_PARSER_DECL_TOPLEVEL_LIST__FIELDS_NB__TYPE0_15, 
+}; 
+static const int8_t * pscript_parser_decl_toplevel_list__fields_nb__by_type__shifted = pscript_parser_decl_toplevel_list__fields_nb__by_type0 - PSCRIPT_DECL_TOPLEVEL_LIST__TYPE__BASE - 1; 
+
+
+
+#define PSCRIPT_PARSER_DECL_TOPLEVEL_LIST__FIELD_INTTYPE__BY_TYPE0__DEFINE_ENUM(type0)  \
+enum { glue4(PSCRIPT_PARSER_DECL_TOPLEVEL_LIST__GET_FIELD_INTTYPE__TYPE0_,type0,_FIELD_,0) = PSCRIPT_PARSER_DECL_TOPLEVEL_LIST__GET_FIELD_INTTYPE__BY_TYPE(PSCRIPT_DECL_TOPLEVEL_LIST__TYPE__BASE + type0 + 1,0) }; \
+enum { glue4(PSCRIPT_PARSER_DECL_TOPLEVEL_LIST__GET_FIELD_INTTYPE__TYPE0_,type0,_FIELD_,1) = PSCRIPT_PARSER_DECL_TOPLEVEL_LIST__GET_FIELD_INTTYPE__BY_TYPE(PSCRIPT_DECL_TOPLEVEL_LIST__TYPE__BASE + type0 + 1,1) }; \
+enum { glue4(PSCRIPT_PARSER_DECL_TOPLEVEL_LIST__GET_FIELD_INTTYPE__TYPE0_,type0,_FIELD_,2) = PSCRIPT_PARSER_DECL_TOPLEVEL_LIST__GET_FIELD_INTTYPE__BY_TYPE(PSCRIPT_DECL_TOPLEVEL_LIST__TYPE__BASE + type0 + 1,2) }; \
+enum { glue4(PSCRIPT_PARSER_DECL_TOPLEVEL_LIST__GET_FIELD_INTTYPE__TYPE0_,type0,_FIELD_,3) = PSCRIPT_PARSER_DECL_TOPLEVEL_LIST__GET_FIELD_INTTYPE__BY_TYPE(PSCRIPT_DECL_TOPLEVEL_LIST__TYPE__BASE + type0 + 1,3) }; \
+enum { glue4(PSCRIPT_PARSER_DECL_TOPLEVEL_LIST__GET_FIELD_INTTYPE__TYPE0_,type0,_FIELD_,4) = PSCRIPT_PARSER_DECL_TOPLEVEL_LIST__GET_FIELD_INTTYPE__BY_TYPE(PSCRIPT_DECL_TOPLEVEL_LIST__TYPE__BASE + type0 + 1,4) }; \
+enum { glue4(PSCRIPT_PARSER_DECL_TOPLEVEL_LIST__GET_FIELD_INTTYPE__TYPE0_,type0,_FIELD_,5) = PSCRIPT_PARSER_DECL_TOPLEVEL_LIST__GET_FIELD_INTTYPE__BY_TYPE(PSCRIPT_DECL_TOPLEVEL_LIST__TYPE__BASE + type0 + 1,5) }; \
+enum { glue4(PSCRIPT_PARSER_DECL_TOPLEVEL_LIST__GET_FIELD_INTTYPE__TYPE0_,type0,_FIELD_,6) = PSCRIPT_PARSER_DECL_TOPLEVEL_LIST__GET_FIELD_INTTYPE__BY_TYPE(PSCRIPT_DECL_TOPLEVEL_LIST__TYPE__BASE + type0 + 1,6) }; \
+enum { glue4(PSCRIPT_PARSER_DECL_TOPLEVEL_LIST__GET_FIELD_INTTYPE__TYPE0_,type0,_FIELD_,7) = PSCRIPT_PARSER_DECL_TOPLEVEL_LIST__GET_FIELD_INTTYPE__BY_TYPE(PSCRIPT_DECL_TOPLEVEL_LIST__TYPE__BASE + type0 + 1,7) }; \
+enum { glue4(PSCRIPT_PARSER_DECL_TOPLEVEL_LIST__GET_FIELD_INTTYPE__TYPE0_,type0,_FIELD_,8) = PSCRIPT_PARSER_DECL_TOPLEVEL_LIST__GET_FIELD_INTTYPE__BY_TYPE(PSCRIPT_DECL_TOPLEVEL_LIST__TYPE__BASE + type0 + 1,8) }; \
+enum { glue4(PSCRIPT_PARSER_DECL_TOPLEVEL_LIST__GET_FIELD_INTTYPE__TYPE0_,type0,_FIELD_,9) = PSCRIPT_PARSER_DECL_TOPLEVEL_LIST__GET_FIELD_INTTYPE__BY_TYPE(PSCRIPT_DECL_TOPLEVEL_LIST__TYPE__BASE + type0 + 1,9) }; 
+
+PSCRIPT_PARSER_DECL_TOPLEVEL_LIST__FIELD_INTTYPE__BY_TYPE0__DEFINE_ENUM(0); 
+PSCRIPT_PARSER_DECL_TOPLEVEL_LIST__FIELD_INTTYPE__BY_TYPE0__DEFINE_ENUM(1); 
+PSCRIPT_PARSER_DECL_TOPLEVEL_LIST__FIELD_INTTYPE__BY_TYPE0__DEFINE_ENUM(2); 
+PSCRIPT_PARSER_DECL_TOPLEVEL_LIST__FIELD_INTTYPE__BY_TYPE0__DEFINE_ENUM(3); 
+PSCRIPT_PARSER_DECL_TOPLEVEL_LIST__FIELD_INTTYPE__BY_TYPE0__DEFINE_ENUM(4); 
+PSCRIPT_PARSER_DECL_TOPLEVEL_LIST__FIELD_INTTYPE__BY_TYPE0__DEFINE_ENUM(5); 
+PSCRIPT_PARSER_DECL_TOPLEVEL_LIST__FIELD_INTTYPE__BY_TYPE0__DEFINE_ENUM(6); 
+PSCRIPT_PARSER_DECL_TOPLEVEL_LIST__FIELD_INTTYPE__BY_TYPE0__DEFINE_ENUM(7); 
+PSCRIPT_PARSER_DECL_TOPLEVEL_LIST__FIELD_INTTYPE__BY_TYPE0__DEFINE_ENUM(8); 
+PSCRIPT_PARSER_DECL_TOPLEVEL_LIST__FIELD_INTTYPE__BY_TYPE0__DEFINE_ENUM(9); 
+PSCRIPT_PARSER_DECL_TOPLEVEL_LIST__FIELD_INTTYPE__BY_TYPE0__DEFINE_ENUM(10); 
+PSCRIPT_PARSER_DECL_TOPLEVEL_LIST__FIELD_INTTYPE__BY_TYPE0__DEFINE_ENUM(11); 
+PSCRIPT_PARSER_DECL_TOPLEVEL_LIST__FIELD_INTTYPE__BY_TYPE0__DEFINE_ENUM(12); 
+PSCRIPT_PARSER_DECL_TOPLEVEL_LIST__FIELD_INTTYPE__BY_TYPE0__DEFINE_ENUM(13); 
+PSCRIPT_PARSER_DECL_TOPLEVEL_LIST__FIELD_INTTYPE__BY_TYPE0__DEFINE_ENUM(14); 
+PSCRIPT_PARSER_DECL_TOPLEVEL_LIST__FIELD_INTTYPE__BY_TYPE0__DEFINE_ENUM(15); 
+
+#define PSCRIPT_PARSER_DECL_TOPLEVEL_LIST__FIELD_INTTYPE__BY_TYPE__ROW(type0) {  \
+  glue4(PSCRIPT_PARSER_DECL_TOPLEVEL_LIST__GET_FIELD_INTTYPE__TYPE0_,type0,_FIELD_,0), \
+  glue4(PSCRIPT_PARSER_DECL_TOPLEVEL_LIST__GET_FIELD_INTTYPE__TYPE0_,type0,_FIELD_,1), \
+  glue4(PSCRIPT_PARSER_DECL_TOPLEVEL_LIST__GET_FIELD_INTTYPE__TYPE0_,type0,_FIELD_,2), \
+  glue4(PSCRIPT_PARSER_DECL_TOPLEVEL_LIST__GET_FIELD_INTTYPE__TYPE0_,type0,_FIELD_,3), \
+  glue4(PSCRIPT_PARSER_DECL_TOPLEVEL_LIST__GET_FIELD_INTTYPE__TYPE0_,type0,_FIELD_,4), \
+  glue4(PSCRIPT_PARSER_DECL_TOPLEVEL_LIST__GET_FIELD_INTTYPE__TYPE0_,type0,_FIELD_,5), \
+  glue4(PSCRIPT_PARSER_DECL_TOPLEVEL_LIST__GET_FIELD_INTTYPE__TYPE0_,type0,_FIELD_,6), \
+  glue4(PSCRIPT_PARSER_DECL_TOPLEVEL_LIST__GET_FIELD_INTTYPE__TYPE0_,type0,_FIELD_,7), \
+  glue4(PSCRIPT_PARSER_DECL_TOPLEVEL_LIST__GET_FIELD_INTTYPE__TYPE0_,type0,_FIELD_,8), \
+  glue4(PSCRIPT_PARSER_DECL_TOPLEVEL_LIST__GET_FIELD_INTTYPE__TYPE0_,type0,_FIELD_,9), \
+  }  
+
+static const int8_t pscript_parser_decl_toplevel_list__field_inttype__by_type0[][10] = { 
+  PSCRIPT_PARSER_DECL_TOPLEVEL_LIST__FIELD_INTTYPE__BY_TYPE__ROW(0), 
+  PSCRIPT_PARSER_DECL_TOPLEVEL_LIST__FIELD_INTTYPE__BY_TYPE__ROW(1), 
+  PSCRIPT_PARSER_DECL_TOPLEVEL_LIST__FIELD_INTTYPE__BY_TYPE__ROW(2), 
+  PSCRIPT_PARSER_DECL_TOPLEVEL_LIST__FIELD_INTTYPE__BY_TYPE__ROW(3), 
+  PSCRIPT_PARSER_DECL_TOPLEVEL_LIST__FIELD_INTTYPE__BY_TYPE__ROW(4), 
+  PSCRIPT_PARSER_DECL_TOPLEVEL_LIST__FIELD_INTTYPE__BY_TYPE__ROW(5), 
+  PSCRIPT_PARSER_DECL_TOPLEVEL_LIST__FIELD_INTTYPE__BY_TYPE__ROW(6), 
+  PSCRIPT_PARSER_DECL_TOPLEVEL_LIST__FIELD_INTTYPE__BY_TYPE__ROW(7), 
+  PSCRIPT_PARSER_DECL_TOPLEVEL_LIST__FIELD_INTTYPE__BY_TYPE__ROW(8), 
+  PSCRIPT_PARSER_DECL_TOPLEVEL_LIST__FIELD_INTTYPE__BY_TYPE__ROW(9), 
+  PSCRIPT_PARSER_DECL_TOPLEVEL_LIST__FIELD_INTTYPE__BY_TYPE__ROW(10), 
+  PSCRIPT_PARSER_DECL_TOPLEVEL_LIST__FIELD_INTTYPE__BY_TYPE__ROW(11), 
+  PSCRIPT_PARSER_DECL_TOPLEVEL_LIST__FIELD_INTTYPE__BY_TYPE__ROW(12), 
+  PSCRIPT_PARSER_DECL_TOPLEVEL_LIST__FIELD_INTTYPE__BY_TYPE__ROW(13), 
+  PSCRIPT_PARSER_DECL_TOPLEVEL_LIST__FIELD_INTTYPE__BY_TYPE__ROW(14), 
+  PSCRIPT_PARSER_DECL_TOPLEVEL_LIST__FIELD_INTTYPE__BY_TYPE__ROW(15), 
+}; 
+static const int8_t (* pscript_parser_decl_toplevel_list__field_inttype__by_type__shifted)[10] = pscript_parser_decl_toplevel_list__field_inttype__by_type0 - PSCRIPT_DECL_TOPLEVEL_LIST__TYPE__BASE - 1;  
+
+#define PSCRIPT_PARSER_DECL_TOPLEVEL_LIST__FIELD_SIZEOF__BY_TYPE0__DEFINE_ENUM(type0)  \
+enum { glue4(PSCRIPT_PARSER_DECL_TOPLEVEL_LIST__GET_FIELD_SIZEOF__TYPE0_,type0,_FIELD_,0) = PSCRIPT_SIZEOF(glue4(PSCRIPT_PARSER_DECL_TOPLEVEL_LIST__GET_FIELD_INTTYPE__TYPE0_,type0,_FIELD_,0)) }; \
+enum { glue4(PSCRIPT_PARSER_DECL_TOPLEVEL_LIST__GET_FIELD_SIZEOF__TYPE0_,type0,_FIELD_,1) = PSCRIPT_SIZEOF(glue4(PSCRIPT_PARSER_DECL_TOPLEVEL_LIST__GET_FIELD_INTTYPE__TYPE0_,type0,_FIELD_,1)) }; \
+enum { glue4(PSCRIPT_PARSER_DECL_TOPLEVEL_LIST__GET_FIELD_SIZEOF__TYPE0_,type0,_FIELD_,2) = PSCRIPT_SIZEOF(glue4(PSCRIPT_PARSER_DECL_TOPLEVEL_LIST__GET_FIELD_INTTYPE__TYPE0_,type0,_FIELD_,2)) }; \
+enum { glue4(PSCRIPT_PARSER_DECL_TOPLEVEL_LIST__GET_FIELD_SIZEOF__TYPE0_,type0,_FIELD_,3) = PSCRIPT_SIZEOF(glue4(PSCRIPT_PARSER_DECL_TOPLEVEL_LIST__GET_FIELD_INTTYPE__TYPE0_,type0,_FIELD_,3)) }; \
+enum { glue4(PSCRIPT_PARSER_DECL_TOPLEVEL_LIST__GET_FIELD_SIZEOF__TYPE0_,type0,_FIELD_,4) = PSCRIPT_SIZEOF(glue4(PSCRIPT_PARSER_DECL_TOPLEVEL_LIST__GET_FIELD_INTTYPE__TYPE0_,type0,_FIELD_,4)) }; \
+enum { glue4(PSCRIPT_PARSER_DECL_TOPLEVEL_LIST__GET_FIELD_SIZEOF__TYPE0_,type0,_FIELD_,5) = PSCRIPT_SIZEOF(glue4(PSCRIPT_PARSER_DECL_TOPLEVEL_LIST__GET_FIELD_INTTYPE__TYPE0_,type0,_FIELD_,5)) }; \
+enum { glue4(PSCRIPT_PARSER_DECL_TOPLEVEL_LIST__GET_FIELD_SIZEOF__TYPE0_,type0,_FIELD_,6) = PSCRIPT_SIZEOF(glue4(PSCRIPT_PARSER_DECL_TOPLEVEL_LIST__GET_FIELD_INTTYPE__TYPE0_,type0,_FIELD_,6)) }; \
+enum { glue4(PSCRIPT_PARSER_DECL_TOPLEVEL_LIST__GET_FIELD_SIZEOF__TYPE0_,type0,_FIELD_,7) = PSCRIPT_SIZEOF(glue4(PSCRIPT_PARSER_DECL_TOPLEVEL_LIST__GET_FIELD_INTTYPE__TYPE0_,type0,_FIELD_,7)) }; \
+enum { glue4(PSCRIPT_PARSER_DECL_TOPLEVEL_LIST__GET_FIELD_SIZEOF__TYPE0_,type0,_FIELD_,8) = PSCRIPT_SIZEOF(glue4(PSCRIPT_PARSER_DECL_TOPLEVEL_LIST__GET_FIELD_INTTYPE__TYPE0_,type0,_FIELD_,8)) }; \
+enum { glue4(PSCRIPT_PARSER_DECL_TOPLEVEL_LIST__GET_FIELD_SIZEOF__TYPE0_,type0,_FIELD_,9) = PSCRIPT_SIZEOF(glue4(PSCRIPT_PARSER_DECL_TOPLEVEL_LIST__GET_FIELD_INTTYPE__TYPE0_,type0,_FIELD_,9)) }; \
+
+PSCRIPT_PARSER_DECL_TOPLEVEL_LIST__FIELD_SIZEOF__BY_TYPE0__DEFINE_ENUM(0); 
+PSCRIPT_PARSER_DECL_TOPLEVEL_LIST__FIELD_SIZEOF__BY_TYPE0__DEFINE_ENUM(1); 
+PSCRIPT_PARSER_DECL_TOPLEVEL_LIST__FIELD_SIZEOF__BY_TYPE0__DEFINE_ENUM(2); 
+PSCRIPT_PARSER_DECL_TOPLEVEL_LIST__FIELD_SIZEOF__BY_TYPE0__DEFINE_ENUM(3); 
+PSCRIPT_PARSER_DECL_TOPLEVEL_LIST__FIELD_SIZEOF__BY_TYPE0__DEFINE_ENUM(4); 
+PSCRIPT_PARSER_DECL_TOPLEVEL_LIST__FIELD_SIZEOF__BY_TYPE0__DEFINE_ENUM(5); 
+PSCRIPT_PARSER_DECL_TOPLEVEL_LIST__FIELD_SIZEOF__BY_TYPE0__DEFINE_ENUM(6); 
+PSCRIPT_PARSER_DECL_TOPLEVEL_LIST__FIELD_SIZEOF__BY_TYPE0__DEFINE_ENUM(7); 
+PSCRIPT_PARSER_DECL_TOPLEVEL_LIST__FIELD_SIZEOF__BY_TYPE0__DEFINE_ENUM(8); 
+PSCRIPT_PARSER_DECL_TOPLEVEL_LIST__FIELD_SIZEOF__BY_TYPE0__DEFINE_ENUM(9); 
+PSCRIPT_PARSER_DECL_TOPLEVEL_LIST__FIELD_SIZEOF__BY_TYPE0__DEFINE_ENUM(10); 
+PSCRIPT_PARSER_DECL_TOPLEVEL_LIST__FIELD_SIZEOF__BY_TYPE0__DEFINE_ENUM(11); 
+PSCRIPT_PARSER_DECL_TOPLEVEL_LIST__FIELD_SIZEOF__BY_TYPE0__DEFINE_ENUM(12); 
+PSCRIPT_PARSER_DECL_TOPLEVEL_LIST__FIELD_SIZEOF__BY_TYPE0__DEFINE_ENUM(13); 
+PSCRIPT_PARSER_DECL_TOPLEVEL_LIST__FIELD_SIZEOF__BY_TYPE0__DEFINE_ENUM(14); 
+PSCRIPT_PARSER_DECL_TOPLEVEL_LIST__FIELD_SIZEOF__BY_TYPE0__DEFINE_ENUM(15); 
+
+#define PSCRIPT_PARSER_DECL_TOPLEVEL_LIST__FIELD_SIZEOF__BY_TYPE__ROW(type0) {  \
+  glue4(PSCRIPT_PARSER_DECL_TOPLEVEL_LIST__GET_FIELD_SIZEOF__TYPE0_,type0,_FIELD_,0), \
+  glue4(PSCRIPT_PARSER_DECL_TOPLEVEL_LIST__GET_FIELD_SIZEOF__TYPE0_,type0,_FIELD_,1), \
+  glue4(PSCRIPT_PARSER_DECL_TOPLEVEL_LIST__GET_FIELD_SIZEOF__TYPE0_,type0,_FIELD_,2), \
+  glue4(PSCRIPT_PARSER_DECL_TOPLEVEL_LIST__GET_FIELD_SIZEOF__TYPE0_,type0,_FIELD_,3), \
+  glue4(PSCRIPT_PARSER_DECL_TOPLEVEL_LIST__GET_FIELD_SIZEOF__TYPE0_,type0,_FIELD_,4), \
+  glue4(PSCRIPT_PARSER_DECL_TOPLEVEL_LIST__GET_FIELD_SIZEOF__TYPE0_,type0,_FIELD_,5), \
+  glue4(PSCRIPT_PARSER_DECL_TOPLEVEL_LIST__GET_FIELD_SIZEOF__TYPE0_,type0,_FIELD_,6), \
+  glue4(PSCRIPT_PARSER_DECL_TOPLEVEL_LIST__GET_FIELD_SIZEOF__TYPE0_,type0,_FIELD_,7), \
+  glue4(PSCRIPT_PARSER_DECL_TOPLEVEL_LIST__GET_FIELD_SIZEOF__TYPE0_,type0,_FIELD_,8), \
+  glue4(PSCRIPT_PARSER_DECL_TOPLEVEL_LIST__GET_FIELD_SIZEOF__TYPE0_,type0,_FIELD_,9), \
+  }  
+
+static const int8_t pscript_parser_decl_toplevel_list__field_sizeof__by_type0[][10] = { 
+  PSCRIPT_PARSER_DECL_TOPLEVEL_LIST__FIELD_SIZEOF__BY_TYPE__ROW(0), 
+  PSCRIPT_PARSER_DECL_TOPLEVEL_LIST__FIELD_SIZEOF__BY_TYPE__ROW(1), 
+  PSCRIPT_PARSER_DECL_TOPLEVEL_LIST__FIELD_SIZEOF__BY_TYPE__ROW(2), 
+  PSCRIPT_PARSER_DECL_TOPLEVEL_LIST__FIELD_SIZEOF__BY_TYPE__ROW(3), 
+  PSCRIPT_PARSER_DECL_TOPLEVEL_LIST__FIELD_SIZEOF__BY_TYPE__ROW(4), 
+  PSCRIPT_PARSER_DECL_TOPLEVEL_LIST__FIELD_SIZEOF__BY_TYPE__ROW(5), 
+  PSCRIPT_PARSER_DECL_TOPLEVEL_LIST__FIELD_SIZEOF__BY_TYPE__ROW(6), 
+  PSCRIPT_PARSER_DECL_TOPLEVEL_LIST__FIELD_SIZEOF__BY_TYPE__ROW(7), 
+  PSCRIPT_PARSER_DECL_TOPLEVEL_LIST__FIELD_SIZEOF__BY_TYPE__ROW(8), 
+  PSCRIPT_PARSER_DECL_TOPLEVEL_LIST__FIELD_SIZEOF__BY_TYPE__ROW(9), 
+  PSCRIPT_PARSER_DECL_TOPLEVEL_LIST__FIELD_SIZEOF__BY_TYPE__ROW(10), 
+  PSCRIPT_PARSER_DECL_TOPLEVEL_LIST__FIELD_SIZEOF__BY_TYPE__ROW(11), 
+  PSCRIPT_PARSER_DECL_TOPLEVEL_LIST__FIELD_SIZEOF__BY_TYPE__ROW(12), 
+  PSCRIPT_PARSER_DECL_TOPLEVEL_LIST__FIELD_SIZEOF__BY_TYPE__ROW(13), 
+  PSCRIPT_PARSER_DECL_TOPLEVEL_LIST__FIELD_SIZEOF__BY_TYPE__ROW(14), 
+  PSCRIPT_PARSER_DECL_TOPLEVEL_LIST__FIELD_SIZEOF__BY_TYPE__ROW(15), 
+}; 
+static const int8_t (* pscript_parser_decl_toplevel_list__field_sizeof__by_type__shifted)[10] = pscript_parser_decl_toplevel_list__field_sizeof__by_type0 - PSCRIPT_DECL_TOPLEVEL_LIST__TYPE__BASE - 1;  
+
+
+	
+#define PSCRIPT_PARSER_DECL_TOPLEVEL_LIST__FIELD_SIZEOF_CUMULATED__BY_TYPE0__DEFINE_ENUM(type0)  \
+enum { glue4(PSCRIPT_PARSER_DECL_TOPLEVEL_LIST__GET_FIELD_SIZEOF_CUMULATED__TYPE0_,type0,_FIELD_,0) = 0 }; \
+enum { glue4(PSCRIPT_PARSER_DECL_TOPLEVEL_LIST__GET_FIELD_SIZEOF_CUMULATED__TYPE0_,type0,_FIELD_,1) = glue4(PSCRIPT_PARSER_DECL_TOPLEVEL_LIST__GET_FIELD_SIZEOF_CUMULATED__TYPE0_,type0,_FIELD_,0) + glue4(PSCRIPT_PARSER_DECL_TOPLEVEL_LIST__GET_FIELD_SIZEOF__TYPE0_,type0,_FIELD_,0) }; \
+enum { glue4(PSCRIPT_PARSER_DECL_TOPLEVEL_LIST__GET_FIELD_SIZEOF_CUMULATED__TYPE0_,type0,_FIELD_,2) = glue4(PSCRIPT_PARSER_DECL_TOPLEVEL_LIST__GET_FIELD_SIZEOF_CUMULATED__TYPE0_,type0,_FIELD_,1) + glue4(PSCRIPT_PARSER_DECL_TOPLEVEL_LIST__GET_FIELD_SIZEOF__TYPE0_,type0,_FIELD_,1) }; \
+enum { glue4(PSCRIPT_PARSER_DECL_TOPLEVEL_LIST__GET_FIELD_SIZEOF_CUMULATED__TYPE0_,type0,_FIELD_,3) = glue4(PSCRIPT_PARSER_DECL_TOPLEVEL_LIST__GET_FIELD_SIZEOF_CUMULATED__TYPE0_,type0,_FIELD_,2) + glue4(PSCRIPT_PARSER_DECL_TOPLEVEL_LIST__GET_FIELD_SIZEOF__TYPE0_,type0,_FIELD_,2) }; \
+enum { glue4(PSCRIPT_PARSER_DECL_TOPLEVEL_LIST__GET_FIELD_SIZEOF_CUMULATED__TYPE0_,type0,_FIELD_,4) = glue4(PSCRIPT_PARSER_DECL_TOPLEVEL_LIST__GET_FIELD_SIZEOF_CUMULATED__TYPE0_,type0,_FIELD_,3) + glue4(PSCRIPT_PARSER_DECL_TOPLEVEL_LIST__GET_FIELD_SIZEOF__TYPE0_,type0,_FIELD_,3) }; \
+enum { glue4(PSCRIPT_PARSER_DECL_TOPLEVEL_LIST__GET_FIELD_SIZEOF_CUMULATED__TYPE0_,type0,_FIELD_,5) = glue4(PSCRIPT_PARSER_DECL_TOPLEVEL_LIST__GET_FIELD_SIZEOF_CUMULATED__TYPE0_,type0,_FIELD_,4) + glue4(PSCRIPT_PARSER_DECL_TOPLEVEL_LIST__GET_FIELD_SIZEOF__TYPE0_,type0,_FIELD_,4) }; \
+enum { glue4(PSCRIPT_PARSER_DECL_TOPLEVEL_LIST__GET_FIELD_SIZEOF_CUMULATED__TYPE0_,type0,_FIELD_,6) = glue4(PSCRIPT_PARSER_DECL_TOPLEVEL_LIST__GET_FIELD_SIZEOF_CUMULATED__TYPE0_,type0,_FIELD_,5) + glue4(PSCRIPT_PARSER_DECL_TOPLEVEL_LIST__GET_FIELD_SIZEOF__TYPE0_,type0,_FIELD_,5) }; \
+enum { glue4(PSCRIPT_PARSER_DECL_TOPLEVEL_LIST__GET_FIELD_SIZEOF_CUMULATED__TYPE0_,type0,_FIELD_,7) = glue4(PSCRIPT_PARSER_DECL_TOPLEVEL_LIST__GET_FIELD_SIZEOF_CUMULATED__TYPE0_,type0,_FIELD_,6) + glue4(PSCRIPT_PARSER_DECL_TOPLEVEL_LIST__GET_FIELD_SIZEOF__TYPE0_,type0,_FIELD_,6) }; \
+enum { glue4(PSCRIPT_PARSER_DECL_TOPLEVEL_LIST__GET_FIELD_SIZEOF_CUMULATED__TYPE0_,type0,_FIELD_,8) = glue4(PSCRIPT_PARSER_DECL_TOPLEVEL_LIST__GET_FIELD_SIZEOF_CUMULATED__TYPE0_,type0,_FIELD_,7) + glue4(PSCRIPT_PARSER_DECL_TOPLEVEL_LIST__GET_FIELD_SIZEOF__TYPE0_,type0,_FIELD_,7) }; \
+enum { glue4(PSCRIPT_PARSER_DECL_TOPLEVEL_LIST__GET_FIELD_SIZEOF_CUMULATED__TYPE0_,type0,_FIELD_,9) = glue4(PSCRIPT_PARSER_DECL_TOPLEVEL_LIST__GET_FIELD_SIZEOF_CUMULATED__TYPE0_,type0,_FIELD_,8) + glue4(PSCRIPT_PARSER_DECL_TOPLEVEL_LIST__GET_FIELD_SIZEOF__TYPE0_,type0,_FIELD_,8) }; \
+
+PSCRIPT_PARSER_DECL_TOPLEVEL_LIST__FIELD_SIZEOF_CUMULATED__BY_TYPE0__DEFINE_ENUM(0); 
+PSCRIPT_PARSER_DECL_TOPLEVEL_LIST__FIELD_SIZEOF_CUMULATED__BY_TYPE0__DEFINE_ENUM(1); 
+PSCRIPT_PARSER_DECL_TOPLEVEL_LIST__FIELD_SIZEOF_CUMULATED__BY_TYPE0__DEFINE_ENUM(2); 
+PSCRIPT_PARSER_DECL_TOPLEVEL_LIST__FIELD_SIZEOF_CUMULATED__BY_TYPE0__DEFINE_ENUM(3); 
+PSCRIPT_PARSER_DECL_TOPLEVEL_LIST__FIELD_SIZEOF_CUMULATED__BY_TYPE0__DEFINE_ENUM(4); 
+PSCRIPT_PARSER_DECL_TOPLEVEL_LIST__FIELD_SIZEOF_CUMULATED__BY_TYPE0__DEFINE_ENUM(5); 
+PSCRIPT_PARSER_DECL_TOPLEVEL_LIST__FIELD_SIZEOF_CUMULATED__BY_TYPE0__DEFINE_ENUM(6); 
+PSCRIPT_PARSER_DECL_TOPLEVEL_LIST__FIELD_SIZEOF_CUMULATED__BY_TYPE0__DEFINE_ENUM(7); 
+PSCRIPT_PARSER_DECL_TOPLEVEL_LIST__FIELD_SIZEOF_CUMULATED__BY_TYPE0__DEFINE_ENUM(8); 
+PSCRIPT_PARSER_DECL_TOPLEVEL_LIST__FIELD_SIZEOF_CUMULATED__BY_TYPE0__DEFINE_ENUM(9); 
+PSCRIPT_PARSER_DECL_TOPLEVEL_LIST__FIELD_SIZEOF_CUMULATED__BY_TYPE0__DEFINE_ENUM(10); 
+PSCRIPT_PARSER_DECL_TOPLEVEL_LIST__FIELD_SIZEOF_CUMULATED__BY_TYPE0__DEFINE_ENUM(11); 
+PSCRIPT_PARSER_DECL_TOPLEVEL_LIST__FIELD_SIZEOF_CUMULATED__BY_TYPE0__DEFINE_ENUM(12); 
+PSCRIPT_PARSER_DECL_TOPLEVEL_LIST__FIELD_SIZEOF_CUMULATED__BY_TYPE0__DEFINE_ENUM(13); 
+PSCRIPT_PARSER_DECL_TOPLEVEL_LIST__FIELD_SIZEOF_CUMULATED__BY_TYPE0__DEFINE_ENUM(14); 
+PSCRIPT_PARSER_DECL_TOPLEVEL_LIST__FIELD_SIZEOF_CUMULATED__BY_TYPE0__DEFINE_ENUM(15); 
+
+#define PSCRIPT_PARSER_DECL_TOPLEVEL_LIST__FIELD_SIZEOF_CUMULATED__BY_TYPE__ROW(type0) {  \
+  glue4(PSCRIPT_PARSER_DECL_TOPLEVEL_LIST__GET_FIELD_SIZEOF_CUMULATED__TYPE0_,type0,_FIELD_,0), \
+  glue4(PSCRIPT_PARSER_DECL_TOPLEVEL_LIST__GET_FIELD_SIZEOF_CUMULATED__TYPE0_,type0,_FIELD_,1), \
+  glue4(PSCRIPT_PARSER_DECL_TOPLEVEL_LIST__GET_FIELD_SIZEOF_CUMULATED__TYPE0_,type0,_FIELD_,2), \
+  glue4(PSCRIPT_PARSER_DECL_TOPLEVEL_LIST__GET_FIELD_SIZEOF_CUMULATED__TYPE0_,type0,_FIELD_,3), \
+  glue4(PSCRIPT_PARSER_DECL_TOPLEVEL_LIST__GET_FIELD_SIZEOF_CUMULATED__TYPE0_,type0,_FIELD_,4), \
+  glue4(PSCRIPT_PARSER_DECL_TOPLEVEL_LIST__GET_FIELD_SIZEOF_CUMULATED__TYPE0_,type0,_FIELD_,5), \
+  glue4(PSCRIPT_PARSER_DECL_TOPLEVEL_LIST__GET_FIELD_SIZEOF_CUMULATED__TYPE0_,type0,_FIELD_,6), \
+  glue4(PSCRIPT_PARSER_DECL_TOPLEVEL_LIST__GET_FIELD_SIZEOF_CUMULATED__TYPE0_,type0,_FIELD_,7), \
+  glue4(PSCRIPT_PARSER_DECL_TOPLEVEL_LIST__GET_FIELD_SIZEOF_CUMULATED__TYPE0_,type0,_FIELD_,8), \
+  glue4(PSCRIPT_PARSER_DECL_TOPLEVEL_LIST__GET_FIELD_SIZEOF_CUMULATED__TYPE0_,type0,_FIELD_,9), \
+  }  
+
+static const int8_t pscript_parser_decl_toplevel_list__field_sizeof_cumulated__by_type0[][10] = { 
+  PSCRIPT_PARSER_DECL_TOPLEVEL_LIST__FIELD_SIZEOF_CUMULATED__BY_TYPE__ROW(0), 
+  PSCRIPT_PARSER_DECL_TOPLEVEL_LIST__FIELD_SIZEOF_CUMULATED__BY_TYPE__ROW(1), 
+  PSCRIPT_PARSER_DECL_TOPLEVEL_LIST__FIELD_SIZEOF_CUMULATED__BY_TYPE__ROW(2), 
+  PSCRIPT_PARSER_DECL_TOPLEVEL_LIST__FIELD_SIZEOF_CUMULATED__BY_TYPE__ROW(3), 
+  PSCRIPT_PARSER_DECL_TOPLEVEL_LIST__FIELD_SIZEOF_CUMULATED__BY_TYPE__ROW(4), 
+  PSCRIPT_PARSER_DECL_TOPLEVEL_LIST__FIELD_SIZEOF_CUMULATED__BY_TYPE__ROW(5), 
+  PSCRIPT_PARSER_DECL_TOPLEVEL_LIST__FIELD_SIZEOF_CUMULATED__BY_TYPE__ROW(6), 
+  PSCRIPT_PARSER_DECL_TOPLEVEL_LIST__FIELD_SIZEOF_CUMULATED__BY_TYPE__ROW(7), 
+  PSCRIPT_PARSER_DECL_TOPLEVEL_LIST__FIELD_SIZEOF_CUMULATED__BY_TYPE__ROW(8), 
+  PSCRIPT_PARSER_DECL_TOPLEVEL_LIST__FIELD_SIZEOF_CUMULATED__BY_TYPE__ROW(9), 
+  PSCRIPT_PARSER_DECL_TOPLEVEL_LIST__FIELD_SIZEOF_CUMULATED__BY_TYPE__ROW(10), 
+  PSCRIPT_PARSER_DECL_TOPLEVEL_LIST__FIELD_SIZEOF_CUMULATED__BY_TYPE__ROW(11), 
+  PSCRIPT_PARSER_DECL_TOPLEVEL_LIST__FIELD_SIZEOF_CUMULATED__BY_TYPE__ROW(12), 
+  PSCRIPT_PARSER_DECL_TOPLEVEL_LIST__FIELD_SIZEOF_CUMULATED__BY_TYPE__ROW(13), 
+  PSCRIPT_PARSER_DECL_TOPLEVEL_LIST__FIELD_SIZEOF_CUMULATED__BY_TYPE__ROW(14), 
+  PSCRIPT_PARSER_DECL_TOPLEVEL_LIST__FIELD_SIZEOF_CUMULATED__BY_TYPE__ROW(15), 
+}; 
+static const int8_t (* pscript_parser_decl_toplevel_list__field_sizeof_cumulated__by_type__shifted)[10] = pscript_parser_decl_toplevel_list__field_sizeof_cumulated__by_type0 - PSCRIPT_DECL_TOPLEVEL_LIST__TYPE__BASE - 1;  
+
+#define GET_CHUNK_SIZE__DECL_TOPLEVEL_LIST__BY_TYPE0(type0) (			\
+  glue(PSCRIPT_PARSER_DECL_TOPLEVEL_LIST__FIELDS_NB__TYPE0_,type0) == 0 ? glue3(PSCRIPT_PARSER_DECL_TOPLEVEL_LIST__GET_FIELD_SIZEOF_CUMULATED__TYPE0_,type0,_FIELD_0) : \
+  glue(PSCRIPT_PARSER_DECL_TOPLEVEL_LIST__FIELDS_NB__TYPE0_,type0) == 1 ? glue3(PSCRIPT_PARSER_DECL_TOPLEVEL_LIST__GET_FIELD_SIZEOF_CUMULATED__TYPE0_,type0,_FIELD_1) : \
+  glue(PSCRIPT_PARSER_DECL_TOPLEVEL_LIST__FIELDS_NB__TYPE0_,type0) == 2 ? glue3(PSCRIPT_PARSER_DECL_TOPLEVEL_LIST__GET_FIELD_SIZEOF_CUMULATED__TYPE0_,type0,_FIELD_2) : \
+  glue(PSCRIPT_PARSER_DECL_TOPLEVEL_LIST__FIELDS_NB__TYPE0_,type0) == 3 ? glue3(PSCRIPT_PARSER_DECL_TOPLEVEL_LIST__GET_FIELD_SIZEOF_CUMULATED__TYPE0_,type0,_FIELD_3) : \
+  glue(PSCRIPT_PARSER_DECL_TOPLEVEL_LIST__FIELDS_NB__TYPE0_,type0) == 4 ? glue3(PSCRIPT_PARSER_DECL_TOPLEVEL_LIST__GET_FIELD_SIZEOF_CUMULATED__TYPE0_,type0,_FIELD_4) : \
+  glue(PSCRIPT_PARSER_DECL_TOPLEVEL_LIST__FIELDS_NB__TYPE0_,type0) == 5 ? glue3(PSCRIPT_PARSER_DECL_TOPLEVEL_LIST__GET_FIELD_SIZEOF_CUMULATED__TYPE0_,type0,_FIELD_5) : \
+  glue(PSCRIPT_PARSER_DECL_TOPLEVEL_LIST__FIELDS_NB__TYPE0_,type0) == 6 ? glue3(PSCRIPT_PARSER_DECL_TOPLEVEL_LIST__GET_FIELD_SIZEOF_CUMULATED__TYPE0_,type0,_FIELD_6) : \
+  glue(PSCRIPT_PARSER_DECL_TOPLEVEL_LIST__FIELDS_NB__TYPE0_,type0) == 7 ? glue3(PSCRIPT_PARSER_DECL_TOPLEVEL_LIST__GET_FIELD_SIZEOF_CUMULATED__TYPE0_,type0,_FIELD_7) : \
+  glue(PSCRIPT_PARSER_DECL_TOPLEVEL_LIST__FIELDS_NB__TYPE0_,type0) == 8 ? glue3(PSCRIPT_PARSER_DECL_TOPLEVEL_LIST__GET_FIELD_SIZEOF_CUMULATED__TYPE0_,type0,_FIELD_8) : \
+ -1) 
+
+enum { PSCRIPT_PARSER_DECL_TOPLEVEL_LIST__CHUNK_SIZE__TYPE0_0  = GET_CHUNK_SIZE__DECL_TOPLEVEL_LIST__BY_TYPE0(0) }; 
+enum { PSCRIPT_PARSER_DECL_TOPLEVEL_LIST__CHUNK_SIZE__TYPE0_1  = GET_CHUNK_SIZE__DECL_TOPLEVEL_LIST__BY_TYPE0(1) };
+enum { PSCRIPT_PARSER_DECL_TOPLEVEL_LIST__CHUNK_SIZE__TYPE0_2  = GET_CHUNK_SIZE__DECL_TOPLEVEL_LIST__BY_TYPE0(2) }; 
+enum { PSCRIPT_PARSER_DECL_TOPLEVEL_LIST__CHUNK_SIZE__TYPE0_3  = GET_CHUNK_SIZE__DECL_TOPLEVEL_LIST__BY_TYPE0(3) }; 
+enum { PSCRIPT_PARSER_DECL_TOPLEVEL_LIST__CHUNK_SIZE__TYPE0_4  = GET_CHUNK_SIZE__DECL_TOPLEVEL_LIST__BY_TYPE0(4) }; 
+enum { PSCRIPT_PARSER_DECL_TOPLEVEL_LIST__CHUNK_SIZE__TYPE0_5  = GET_CHUNK_SIZE__DECL_TOPLEVEL_LIST__BY_TYPE0(5) }; 
+enum { PSCRIPT_PARSER_DECL_TOPLEVEL_LIST__CHUNK_SIZE__TYPE0_6  = GET_CHUNK_SIZE__DECL_TOPLEVEL_LIST__BY_TYPE0(6) }; 
+enum { PSCRIPT_PARSER_DECL_TOPLEVEL_LIST__CHUNK_SIZE__TYPE0_7  = GET_CHUNK_SIZE__DECL_TOPLEVEL_LIST__BY_TYPE0(7) }; 
+enum { PSCRIPT_PARSER_DECL_TOPLEVEL_LIST__CHUNK_SIZE__TYPE0_8  = GET_CHUNK_SIZE__DECL_TOPLEVEL_LIST__BY_TYPE0(8) }; 
+enum { PSCRIPT_PARSER_DECL_TOPLEVEL_LIST__CHUNK_SIZE__TYPE0_9  = GET_CHUNK_SIZE__DECL_TOPLEVEL_LIST__BY_TYPE0(9) }; 
+enum { PSCRIPT_PARSER_DECL_TOPLEVEL_LIST__CHUNK_SIZE__TYPE0_10 = GET_CHUNK_SIZE__DECL_TOPLEVEL_LIST__BY_TYPE0(10) }; 
+enum { PSCRIPT_PARSER_DECL_TOPLEVEL_LIST__CHUNK_SIZE__TYPE0_11 = GET_CHUNK_SIZE__DECL_TOPLEVEL_LIST__BY_TYPE0(11) }; 
+enum { PSCRIPT_PARSER_DECL_TOPLEVEL_LIST__CHUNK_SIZE__TYPE0_12 = GET_CHUNK_SIZE__DECL_TOPLEVEL_LIST__BY_TYPE0(12) }; 
+enum { PSCRIPT_PARSER_DECL_TOPLEVEL_LIST__CHUNK_SIZE__TYPE0_13 = GET_CHUNK_SIZE__DECL_TOPLEVEL_LIST__BY_TYPE0(13) }; 
+enum { PSCRIPT_PARSER_DECL_TOPLEVEL_LIST__CHUNK_SIZE__TYPE0_14 = GET_CHUNK_SIZE__DECL_TOPLEVEL_LIST__BY_TYPE0(14) }; 
+enum { PSCRIPT_PARSER_DECL_TOPLEVEL_LIST__CHUNK_SIZE__TYPE0_15 = GET_CHUNK_SIZE__DECL_TOPLEVEL_LIST__BY_TYPE0(15) }; 
+
+static const int8_t pscript_parser_decl_toplevel_list__chunk_size__by_type0[] = { 
+  PSCRIPT_PARSER_DECL_TOPLEVEL_LIST__CHUNK_SIZE__TYPE0_0, 
+  PSCRIPT_PARSER_DECL_TOPLEVEL_LIST__CHUNK_SIZE__TYPE0_1, 
+  PSCRIPT_PARSER_DECL_TOPLEVEL_LIST__CHUNK_SIZE__TYPE0_2, 
+  PSCRIPT_PARSER_DECL_TOPLEVEL_LIST__CHUNK_SIZE__TYPE0_3, 
+  PSCRIPT_PARSER_DECL_TOPLEVEL_LIST__CHUNK_SIZE__TYPE0_4, 
+  PSCRIPT_PARSER_DECL_TOPLEVEL_LIST__CHUNK_SIZE__TYPE0_5, 
+  PSCRIPT_PARSER_DECL_TOPLEVEL_LIST__CHUNK_SIZE__TYPE0_6, 
+  PSCRIPT_PARSER_DECL_TOPLEVEL_LIST__CHUNK_SIZE__TYPE0_7, 
+  PSCRIPT_PARSER_DECL_TOPLEVEL_LIST__CHUNK_SIZE__TYPE0_8, 
+  PSCRIPT_PARSER_DECL_TOPLEVEL_LIST__CHUNK_SIZE__TYPE0_9, 
+  PSCRIPT_PARSER_DECL_TOPLEVEL_LIST__CHUNK_SIZE__TYPE0_10, 
+  PSCRIPT_PARSER_DECL_TOPLEVEL_LIST__CHUNK_SIZE__TYPE0_11, 
+  PSCRIPT_PARSER_DECL_TOPLEVEL_LIST__CHUNK_SIZE__TYPE0_12, 
+  PSCRIPT_PARSER_DECL_TOPLEVEL_LIST__CHUNK_SIZE__TYPE0_13, 
+  PSCRIPT_PARSER_DECL_TOPLEVEL_LIST__CHUNK_SIZE__TYPE0_14, 
+  PSCRIPT_PARSER_DECL_TOPLEVEL_LIST__CHUNK_SIZE__TYPE0_15, 
+}; 
+static const int8_t * pscript_parser_decl_toplevel_list__chunk_size__by_type__shifted = pscript_parser_decl_toplevel_list__chunk_size__by_type0 - PSCRIPT_DECL_TOPLEVEL_LIST__TYPE__BASE - 1; 
+
+
+#define GET_FIELD_NAME__DECL_TOPLEVEL_LIST__BY_TYPE(type) { \
+  PSCRIPT_PARSER_DECL_TOPLEVEL_LIST__GET_FIELD_NAME__BY_TYPE(type,0), \
+  PSCRIPT_PARSER_DECL_TOPLEVEL_LIST__GET_FIELD_NAME__BY_TYPE(type,1), \
+  PSCRIPT_PARSER_DECL_TOPLEVEL_LIST__GET_FIELD_NAME__BY_TYPE(type,2), \
+  PSCRIPT_PARSER_DECL_TOPLEVEL_LIST__GET_FIELD_NAME__BY_TYPE(type,3), \
+  PSCRIPT_PARSER_DECL_TOPLEVEL_LIST__GET_FIELD_NAME__BY_TYPE(type,4), \
+  PSCRIPT_PARSER_DECL_TOPLEVEL_LIST__GET_FIELD_NAME__BY_TYPE(type,5), \
+  PSCRIPT_PARSER_DECL_TOPLEVEL_LIST__GET_FIELD_NAME__BY_TYPE(type,6), \
+  PSCRIPT_PARSER_DECL_TOPLEVEL_LIST__GET_FIELD_NAME__BY_TYPE(type,7), \
+  PSCRIPT_PARSER_DECL_TOPLEVEL_LIST__GET_FIELD_NAME__BY_TYPE(type,8), \
+  PSCRIPT_PARSER_DECL_TOPLEVEL_LIST__GET_FIELD_NAME__BY_TYPE(type,9), \
+ } 
+
+#define GET_FIELD_NAME__DECL_TOPLEVEL_LIST__BY_TYPE0(type0) GET_FIELD_NAME__DECL_TOPLEVEL_LIST__BY_TYPE(PSCRIPT_DECL_TOPLEVEL_LIST__TYPE__BASE + 1 + type0) 
+
+static const char * pscript_parser_decl_toplevel_list__field_name__by_type0[][10] = { 
+  GET_FIELD_NAME__DECL_TOPLEVEL_LIST__BY_TYPE0(0), 
+  GET_FIELD_NAME__DECL_TOPLEVEL_LIST__BY_TYPE0(1), 
+  GET_FIELD_NAME__DECL_TOPLEVEL_LIST__BY_TYPE0(2), 
+  GET_FIELD_NAME__DECL_TOPLEVEL_LIST__BY_TYPE0(3), 
+  GET_FIELD_NAME__DECL_TOPLEVEL_LIST__BY_TYPE0(4), 
+  GET_FIELD_NAME__DECL_TOPLEVEL_LIST__BY_TYPE0(5), 
+  GET_FIELD_NAME__DECL_TOPLEVEL_LIST__BY_TYPE0(6), 
+  GET_FIELD_NAME__DECL_TOPLEVEL_LIST__BY_TYPE0(7), 
+  GET_FIELD_NAME__DECL_TOPLEVEL_LIST__BY_TYPE0(8), 
+  GET_FIELD_NAME__DECL_TOPLEVEL_LIST__BY_TYPE0(9), 
+  GET_FIELD_NAME__DECL_TOPLEVEL_LIST__BY_TYPE0(10), 
+  GET_FIELD_NAME__DECL_TOPLEVEL_LIST__BY_TYPE0(11), 
+  GET_FIELD_NAME__DECL_TOPLEVEL_LIST__BY_TYPE0(12), 
+  GET_FIELD_NAME__DECL_TOPLEVEL_LIST__BY_TYPE0(13), 
+  GET_FIELD_NAME__DECL_TOPLEVEL_LIST__BY_TYPE0(14), 
+  GET_FIELD_NAME__DECL_TOPLEVEL_LIST__BY_TYPE0(15), 
+}; 
+static const char * (* pscript_parser_decl_toplevel_list__field_name__by_type__shifted)[10] = pscript_parser_decl_toplevel_list__field_name__by_type0 - PSCRIPT_DECL_TOPLEVEL_LIST__TYPE__BASE - 1;  
+
+
+#define GET_FIELDS_NB__DECL_TOPLEVEL_LIST(type) (pscript_parser_decl_toplevel_list__fields_nb__by_type__shifted[type]) 
+
+#define GET_FIELD_NAME__DECL_TOPLEVEL_LIST(type,field_i) (pscript_parser_decl_toplevel_list__field_name__by_type__shifted[type][field_i]) 
+
+#define GET_FIELD_INTTYPE__DECL_TOPLEVEL_LIST(type,field_i) (pscript_parser_decl_toplevel_list__field_inttype__by_type__shifted[type][field_i]) 
+
+#define GET_FIELD_SIZEOF__DECL_TOPLEVEL_LIST(type,field_i) (pscript_parser_decl_toplevel_list__field_sizeof__by_type__shifted[type][field_i]) 
+
+#define GET_FIELD_OFFSETOF__DECL_TOPLEVEL_LIST(type,field_i) (pscript_parser_decl_toplevel_list__field_sizeof_cumulated__by_type__shifted[type][field_i]) 
+
+#define GET_CHUNK_SIZE__DECL_TOPLEVEL_LIST(type,values_nb) (pscript_parser_decl_toplevel_list__chunk_size__by_type__shifted[type])
+
+
+
+
+// ********************************************************************* 
+
+//#define TOKEN_MAX PSCRIPT_TOKEN_COUNT 
+//#define TOKEN_MAX PSCRIPT_TOKEN__SYNTAX_KEYWORD__TOP 
+
+#define GET_CHUNK_SIZE(type,provided_values_nb) (	\
+  (type) < TOKEN_MAX                                       ? GET_CHUNK_SIZE__TOKEN(type,provided_values_nb)         : \
+  (type) < PSCRIPT_EXPR_TREE__TYPE__COUNT_SHIFTED          ? GET_CHUNK_SIZE__EXPR_TREE(type,provided_values_nb)     : \
+  (type) < PSCRIPT_TYPE_TREE__TYPE__COUNT_SHIFTED          ? GET_CHUNK_SIZE__TYPE_TREE(type,provided_values_nb)     : \
+  (type) < PSCRIPT_INST_LIST__TYPE__COUNT_SHIFTED          ? GET_CHUNK_SIZE__INST_LIST(type,provided_values_nb)     : \
+  (type) < PSCRIPT_DECL_LOCAL_LIST__TYPE__COUNT_SHIFTED    ? GET_CHUNK_SIZE__DECL_LOCAL_LIST(type,provided_values_nb)    : \
+  (type) < PSCRIPT_DECL_TOPLEVEL_LIST__TYPE__COUNT_SHIFTED ? GET_CHUNK_SIZE__DECL_TOPLEVEL_LIST(type,provided_values_nb) : \
+    -1) 
+
+#define GET_FIELD_INTTYPE(type,field_i) (	\
+  (type) < TOKEN_MAX                                       ? GET_FIELD_INTTYPE__TOKEN(type,field_i)         : \
+  (type) < PSCRIPT_EXPR_TREE__TYPE__COUNT_SHIFTED          ? GET_FIELD_INTTYPE__EXPR_TREE(type,field_i)     : \
+  (type) < PSCRIPT_TYPE_TREE__TYPE__COUNT_SHIFTED          ? GET_FIELD_INTTYPE__TYPE_TREE(type,field_i)     : \
+  (type) < PSCRIPT_INST_LIST__TYPE__COUNT_SHIFTED          ? GET_FIELD_INTTYPE__INST_LIST(type,field_i)     : \
+  (type) < PSCRIPT_DECL_LOCAL_LIST__TYPE__COUNT_SHIFTED    ? GET_FIELD_INTTYPE__DECL_LOCAL_LIST(type,field_i)    : \
+  (type) < PSCRIPT_DECL_TOPLEVEL_LIST__TYPE__COUNT_SHIFTED ? GET_FIELD_INTTYPE__DECL_TOPLEVEL_LIST(type,field_i) : \
+    -1) 
+
+#define GET_FIELDS_NB(type,p) (	\
+  (type) < TOKEN_MAX                                       ? GET_FIELDS_NB__TOKEN(type,p)       : \
+  (type) < PSCRIPT_EXPR_TREE__TYPE__COUNT_SHIFTED          ? GET_FIELDS_NB__EXPR_TREE(type)     : \
+  (type) < PSCRIPT_TYPE_TREE__TYPE__COUNT_SHIFTED          ? GET_FIELDS_NB__TYPE_TREE(type)     : \
+  (type) < PSCRIPT_INST_LIST__TYPE__COUNT_SHIFTED          ? GET_FIELDS_NB__INST_LIST(type)     : \
+  (type) < PSCRIPT_DECL_LOCAL_LIST__TYPE__COUNT_SHIFTED    ? GET_FIELDS_NB__DECL_LOCAL_LIST(type)    : \
+  (type) < PSCRIPT_DECL_TOPLEVEL_LIST__TYPE__COUNT_SHIFTED ? GET_FIELDS_NB__DECL_TOPLEVEL_LIST(type) : \
+    -1) 
+
+#define GET_FIELD_OFFSETOF(type,field_i) (	\
+  (type) < TOKEN_MAX                                       ? GET_FIELD_OFFSETOF__TOKEN(type,field_i)         : \
+  (type) < PSCRIPT_EXPR_TREE__TYPE__COUNT_SHIFTED          ? GET_FIELD_OFFSETOF__EXPR_TREE(type,field_i)     : \
+  (type) < PSCRIPT_TYPE_TREE__TYPE__COUNT_SHIFTED          ? GET_FIELD_OFFSETOF__TYPE_TREE(type,field_i)     : \
+  (type) < PSCRIPT_INST_LIST__TYPE__COUNT_SHIFTED          ? GET_FIELD_OFFSETOF__INST_LIST(type,field_i)     : \
+  (type) < PSCRIPT_DECL_LOCAL_LIST__TYPE__COUNT_SHIFTED    ? GET_FIELD_OFFSETOF__DECL_LOCAL_LIST(type,field_i)    : \
+  (type) < PSCRIPT_DECL_TOPLEVEL_LIST__TYPE__COUNT_SHIFTED ? GET_FIELD_OFFSETOF__DECL_TOPLEVEL_LIST(type,field_i) : \
+    -1) 
+
+#define GET_FIELD_NAME(type,field_i) (	\
+  (type) < TOKEN_MAX                                       ? GET_FIELD_NAME__TOKEN(type,field_i)         : \
+  (type) < PSCRIPT_EXPR_TREE__TYPE__COUNT_SHIFTED          ? GET_FIELD_NAME__EXPR_TREE(type,field_i)     : \
+  (type) < PSCRIPT_TYPE_TREE__TYPE__COUNT_SHIFTED          ? GET_FIELD_NAME__TYPE_TREE(type,field_i)     : \
+  (type) < PSCRIPT_INST_LIST__TYPE__COUNT_SHIFTED          ? GET_FIELD_NAME__INST_LIST(type,field_i)     : \
+  (type) < PSCRIPT_DECL_LOCAL_LIST__TYPE__COUNT_SHIFTED    ? GET_FIELD_NAME__DECL_LOCAL_LIST(type,field_i)    : \
+  (type) < PSCRIPT_DECL_TOPLEVEL_LIST__TYPE__COUNT_SHIFTED ? GET_FIELD_NAME__DECL_TOPLEVEL_LIST(type,field_i) : \
+    NULL) 
+
+#define GET_TYPE_CSTR(type) (	\
+  (type) < TOKEN_MAX                                       ? GET_TYPE_CSTR__TOKEN(type)         : \
+  (type) < PSCRIPT_EXPR_TREE__TYPE__COUNT_SHIFTED          ? GET_TYPE_CSTR__EXPR_TREE(type)     : \
+  (type) < PSCRIPT_TYPE_TREE__TYPE__COUNT_SHIFTED          ? GET_TYPE_CSTR__TYPE_TREE(type)     : \
+  (type) < PSCRIPT_INST_LIST__TYPE__COUNT_SHIFTED          ? GET_TYPE_CSTR__INST_LIST(type)     : \
+  (type) < PSCRIPT_DECL_LOCAL_LIST__TYPE__COUNT_SHIFTED    ? GET_TYPE_CSTR__DECL_LOCAL_LIST(type)    : \
+  (type) < PSCRIPT_DECL_TOPLEVEL_LIST__TYPE__COUNT_SHIFTED ? GET_TYPE_CSTR__DECL_TOPLEVEL_LIST(type) : \
+    NULL) 
+
+
+// *** CHUNK ENV *** 
+
+static int pscript_parser_chunk_env__push_array(pscript_chunk_env_t * this, const int type, const int values_nb, const int values_array[]) { 
+  const int chunk_size = GET_CHUNK_SIZE(type,values_nb); 
+  
+  ASSERT_DEBUG_ABORT_IF_TRUE(this -> memory__array_nb + chunk_size > this -> memory__array_size) { return -1; }; // RL: TODO XXX FIXME: Throw an exception please. 
+  const int16_t chunk_offset = this -> memory__array_nb; 
+  this -> memory__array_nb += chunk_size; 
+  char * p = this -> memory__array + chunk_offset; 
+  
+  *((uint8_t *) p) = type; 
+  
+  int cumulated_offset = 1; 
+  if (type < TOKEN_MAX) { 
+    *((int8_t *) (p + cumulated_offset)) = 2 + values_nb; 
+    cumulated_offset += 1; 
+  }; 
+  const int field_shift = type < TOKEN_MAX ? 2 : 1; 
+  for (int value_i = 0; value_i < values_nb; value_i++) { 
+    const int field_i = value_i + field_shift; 
+    const int field_inttype = GET_FIELD_INTTYPE(type,field_i); // RL: "+1" as 'type' is the field #0. 
+    const int field_sizeof = PSCRIPT_SIZEOF(field_inttype); 
+    switch (field_inttype) { 
+    default: assert(false); break; // RL: TODO XXX FIXME: Throw an exception please. 
+    case PSCRIPT_INT8  : *((int8_t   *) (p + cumulated_offset)) = values_array[value_i]; break; 
+    case PSCRIPT_UINT8 : *((uint8_t  *) (p + cumulated_offset)) = values_array[value_i]; break;  
+    case PSCRIPT_INT16 : *((int16_t  *) (p + cumulated_offset)) = values_array[value_i]; break;  
+    case PSCRIPT_UINT16: *((uint16_t *) (p + cumulated_offset)) = values_array[value_i]; break;  
+    case PSCRIPT_INT24 : INT24_PACKED_WRITE(((p + cumulated_offset)),(values_array[value_i])); break;  
+    case PSCRIPT_UINT24: UINT24_PACKED_WRITE((p + cumulated_offset),values_array[value_i]); break;  
+    case PSCRIPT_INT32 : *((int32_t  *) (p + cumulated_offset)) = values_array[value_i]; break;  
+    case PSCRIPT_UINT32: *((uint32_t *) (p + cumulated_offset)) = values_array[value_i]; break;  
+    case PSCRIPT_INT64 : *((int64_t  *) (p + cumulated_offset)) = values_array[value_i]; break;  
+    case PSCRIPT_UINT64: *((uint64_t *) (p + cumulated_offset)) = values_array[value_i]; break;  
+    }; 
+    //assert(type >= TOKEN_MAX); 
+    cumulated_offset += field_sizeof; 
+  }; 
+  assert(cumulated_offset == chunk_size); 
+  
+  return chunk_offset; 
+  //return chunk_size; 
+}; 
+
+#define pscript_parser_chunk_env__push_array__2(this,type,array) pscript_parser_chunk_env__push_array(this,type,ARRAY_SIZE(array),array) 
+
+#define pscript_parser_chunk_env__push_array__(this,type,...) pscript_parser_chunk_env__push_array__2(this,type,((const int []) { __VA_ARGS__ })) 
+
+#define pscript_parser_chunk_env__push pscript_parser_chunk_env__push_array__
+
+static int pscript_parser_chunk_env__push0(pscript_chunk_env_t * this, const int type) { 
+  return pscript_parser_chunk_env__push_array__(this, type); 
+}; 
+
+static int pscript_parser_chunk_env__push1(pscript_chunk_env_t * this, const int type, const int values1) { 
+  return pscript_parser_chunk_env__push_array__(this, type, values1); 
+}; 
+
+static int pscript_parser_chunk_env__push2(pscript_chunk_env_t * this, const int type, const int values1, const int values2) { 
+  return pscript_parser_chunk_env__push_array__(this, type, values1, values2); 
+}; 
+
+static int pscript_parser_chunk_env__push3(pscript_chunk_env_t * this, const int type, const int values1, const int values2, const int values3) { 
+  return pscript_parser_chunk_env__push_array__(this, type, values1, values2, values3); 
+}; 
+
+static int pscript_parser_chunk_env__push4(pscript_chunk_env_t * this, const int type, const int values1, const int values2, const int values3, const int values4) { 
+  return pscript_parser_chunk_env__push_array__(this, type, values1, values2, values3, values4); 
+}; 
+
+
+
+static int pscript_parser_chunk_env__get_field_value(const pscript_chunk_env_t * this, const int chunk_offset, const int field_i) { 
+  const char * p = this -> memory__array + chunk_offset; 
+  const int type = *((const uint8_t *) (p)); 
+  const int fields_nb = GET_FIELDS_NB(type,p); 
+  if ((field_i < 0) || (field_i >= fields_nb)) { return -1; }; // RL: TODO XXX FIXME: Throw an exception please. 
+  const int field_inttype = GET_FIELD_INTTYPE(type,field_i); 
+  const int field_sizeof  = PSCRIPT_SIZEOF(field_inttype); 
+  const int field_offset  = GET_FIELD_OFFSETOF(type,field_i); 
+  int field_value; 
+  switch (field_inttype) { 
+  default: assert(false); break; // RL: TODO XXX FIXME: Throw an exception please. 
+  case PSCRIPT_INT8  : field_value = *((const int8_t   *) (p + field_offset)); break; 
+  case PSCRIPT_UINT8 : field_value = *((const uint8_t  *) (p + field_offset)); break;  
+  case PSCRIPT_INT16 : field_value = *((const int16_t  *) (p + field_offset)); break;  
+  case PSCRIPT_UINT16: field_value = *((const uint16_t *) (p + field_offset)); break;  
+  case PSCRIPT_INT24 : INT24_PACKED_READ(((p + field_offset)),field_value); break;  
+  case PSCRIPT_UINT24: UINT24_PACKED_READ((p + field_offset),field_value); break;  
+  case PSCRIPT_INT32 : field_value = *((const int32_t  *) (p + field_offset)); break;  
+  case PSCRIPT_UINT32: field_value = *((const uint32_t *) (p + field_offset)); break;  
+  case PSCRIPT_INT64 : field_value = *((const int64_t  *) (p + field_offset)); break;  
+  case PSCRIPT_UINT64: field_value = *((const uint64_t *) (p + field_offset)); break;  
+  }; 
+  return field_value; 
+}; 
+
+static void pscript_parser_chunk_env__set_field_value(pscript_chunk_env_t * this, const int chunk_offset, const int field_i, const int field_value) { 
+  char * p = this -> memory__array + chunk_offset; 
+  const int type = *((const uint8_t *) (p)); 
+  const int fields_nb = GET_FIELDS_NB(type,p); 
+  if ((field_i < 0) || (field_i >= fields_nb)) { return; }; // RL: TODO XXX FIXME: Throw an exception please. 
+  const int field_inttype = GET_FIELD_INTTYPE(type,field_i); 
+  const int field_sizeof  = PSCRIPT_SIZEOF(field_inttype); 
+  const int field_offset  = GET_FIELD_OFFSETOF(type,field_i); 
+  switch (field_inttype) { 
+  default: assert(false); break; // RL: TODO XXX FIXME: Throw an exception please. 
+  case PSCRIPT_INT8  : *((int8_t   *) (p + field_offset)) = field_value; break; 
+  case PSCRIPT_UINT8 : *((uint8_t  *) (p + field_offset)) = field_value; break;  
+  case PSCRIPT_INT16 : *((int16_t  *) (p + field_offset)) = field_value; break;  
+  case PSCRIPT_UINT16: *((uint16_t *) (p + field_offset)) = field_value; break;  
+  case PSCRIPT_INT24 : INT24_PACKED_WRITE(((p + field_offset)),field_value); break;  
+  case PSCRIPT_UINT24: UINT24_PACKED_WRITE((p + field_offset),field_value); break;  
+  case PSCRIPT_INT32 : *((int32_t  *) (p + field_offset)) = field_value; break;  
+  case PSCRIPT_UINT32: *((uint32_t *) (p + field_offset)) = field_value; break;  
+  case PSCRIPT_INT64 : *((int64_t  *) (p + field_offset)) = field_value; break;  
+  case PSCRIPT_UINT64: *((uint64_t *) (p + field_offset)) = field_value; break;  
+  }; 
+}; 
+
+static const char * pscript_parser_chunk_env__get_field_name(const pscript_chunk_env_t * this, const int chunk_offset, const int field_i) { 
+  const char * p = this -> memory__array + chunk_offset; 
+  const int type = *((const uint8_t *) (p)); 
+  const int fields_nb = GET_FIELDS_NB(type,p); 
+  if ((field_i < 0) || (field_i >= fields_nb)) { return NULL; }; // RL: TODO XXX FIXME: Throw an exception please. 
+  const char * field_name = GET_FIELD_NAME(type,field_i); 
+  return field_name; 
+}; 
+
+static int pscript_parser_chunk_env__get_fields_nb(const pscript_chunk_env_t * this, const int chunk_offset) { 
+  const char * p = this -> memory__array + chunk_offset; 
+  const int type = *((const uint8_t *) (p)); 
+  const int fields_nb = GET_FIELDS_NB(type,p); 
+  return fields_nb; 
+}; 
+
+static int pscript_parser_chunk_env__field_lookup_by_name(const pscript_chunk_env_t * this, const int chunk_offset, const char * field_name_cstr) { 
+  const char * p = this -> memory__array + chunk_offset; 
+  const int type = *((const uint8_t *) (p)); 
+  const int fields_nb = GET_FIELDS_NB(type,p); 
+  //if ((field_i < 0) || (field_i >= fields_nb)) { return NULL; }; // RL: TODO XXX FIXME: Throw an exception please. 
+  const char * field_name_lower_cstr = cstring__tolower__stack(field_name_cstr); 
+  for (int field_i = 0; field_i < fields_nb; field_i++) { 
+    const char * field_i_name = GET_FIELD_NAME(type,field_i); 
+    const char * field_i_name_lower = cstring__tolower__stack(field_i_name); 
+    if (0 == strcmp(field_name_lower_cstr, field_i_name_lower)) { return field_i; }; 
+  }; 
+  return -1; 
+}; 
+
+static void pscript_parser_chunk_env__set_field_value_by_name(pscript_chunk_env_t * this, const int chunk_offset, const char * field_name_cstr, const int field_value) { 
+  const int field_i = pscript_parser_chunk_env__field_lookup_by_name(this, chunk_offset, field_name_cstr); 
+  assert(field_i >= 0); // RL: TODO XXX FIXME: Throw an exception please. 
+  pscript_parser_chunk_env__set_field_value(this, chunk_offset, field_i, field_value); 
+}; 
+
+static int pscript_parser_chunk_env__get_type(const pscript_chunk_env_t * this, const int chunk_offset) { 
+  const char * p = this -> memory__array + chunk_offset; 
+  const int type = *((const uint8_t *) (p)); 
+  return type; 
+}; 
+
+static int pscript_parser_chunk_env__get_chunk_size(const pscript_chunk_env_t * this, const int chunk_offset) { 
+  const char * p = this -> memory__array + chunk_offset; 
+  const int type = *((const uint8_t *) (p)); 
+  const int fields_nb = GET_FIELDS_NB(type,p); 
+  const int field_shift = type < TOKEN_MAX ? 2 : 1; 
+  const int provided_values_nb = fields_nb - field_shift; 
+  const int chunk_size = GET_CHUNK_SIZE(type,provided_values_nb); 
+  return chunk_size; 
+}; 
+
+static int pscript_parser_chunk_env__type__get_field_shift(const int chunk_type) { 
+  const int field_shift = chunk_type < TOKEN_MAX ? 2 : 1; 
+  return field_shift; 
+}; 
+
+#if 1
+static const char * pscript_parser_chunk_env__type__get_cstr(const int chunk_type) { 
+  const char * type_cstr = GET_TYPE_CSTR(chunk_type); 
+  return type_cstr; 
+}; 
+#else 
+static const char * pscript_parser_chunk_env__type__get_cstr(const pscript_chunk_env_t * this, const int chunk_offset) { 
+  const char * p = this -> memory__array + chunk_offset; 
+  const int type = *((const uint8_t *) (p)); 
+  const char * type_cstr = GET_TYPE_CSTR(type); 
+  return type_cstr; 
+}; 
+#endif 
+
+#define pscript_chunk_env__get__chunk_size  pscript_parser_chunk_env__get_chunk_size
+#define pscript_chunk_env__get__type        pscript_parser_chunk_env__get_type
+#define pscript_chunk_env__get__fields_nb   pscript_parser_chunk_env__get_fields_nb
+#define pscript_chunk_env__get__field_name  pscript_parser_chunk_env__get_field_name
+#define pscript_chunk_env__get__field_value pscript_parser_chunk_env__get_field_value
+#define pscript_chunk_env__type__get_cstr   pscript_parser_chunk_env__type__get_cstr
+
+
+
+
+
+

@@ -1,0 +1,283 @@
+// =================================================================================================== 
+// MAIN OPTIONS 
+ 
+enum {
+      PROGRAM_OPTIONS_INDEX__VERSION, 
+      PROGRAM_OPTIONS_INDEX__COPYRIGHT, 
+      PROGRAM_OPTIONS_INDEX__COPYRIGHT_CSTR, 
+      PROGRAM_OPTIONS_INDEX__LICENCE, 
+      PROGRAM_OPTIONS_INDEX__HELP, 
+      PROGRAM_OPTIONS_INDEX__VERBOSE_LEVEL, 
+      PROGRAM_OPTIONS_INDEX__CHARS_COUNT, 
+      PROGRAM_OPTIONS_INDEX__LINES_COUNT, 
+      PROGRAM_OPTIONS_INDEX__STRING_COUNT, 
+      PROGRAM_OPTIONS_INDEX__STRING_STATS, 
+      PROGRAM_OPTIONS_INDEX__STRING_SHORT, 
+      PROGRAM_OPTIONS_INDEX__STRING_ALL, 
+      PROGRAM_OPTIONS_INDEX__TOKEN_COUNT, 
+      PROGRAM_OPTIONS_INDEX__TOKEN_STATS, 
+      PROGRAM_OPTIONS_INDEX__TOKEN_SHORT, 
+      PROGRAM_OPTIONS_INDEX__TOKEN_ALL, 
+      PROGRAM_OPTIONS_INDEX__SYNTAX_TREES_COUNT, 
+      PROGRAM_OPTIONS_INDEX__SYNTAX_TREES_SHORT, 
+      PROGRAM_OPTIONS_INDEX__SYNTAX_TREES_ALL, 
+      PROGRAM_OPTIONS_INDEX__SYNTAX_TREES_DOTTY, 
+      PROGRAM_OPTIONS_INDEX__FUNPROC_COUNT, 
+      PROGRAM_OPTIONS_INDEX__FUNPROC_SHORT, 
+      PROGRAM_OPTIONS_INDEX__FUNPROC_ALL, 
+      PROGRAM_OPTIONS_INDEX__MAINPROC_COUNT, 
+      PROGRAM_OPTIONS_INDEX__MAINPROC_SHORT, 
+      PROGRAM_OPTIONS_INDEX__MAINPROC_ALL, 
+      PROGRAM_OPTIONS_INDEX__FFIPROC_COUNT, 
+      PROGRAM_OPTIONS_INDEX__FFIPROC_SHORT, 
+      PROGRAM_OPTIONS_INDEX__FFIPROC_ALL, 
+      PROGRAM_OPTIONS_INDEX__BYTECODE_COUNT, 
+      PROGRAM_OPTIONS_INDEX__BYTECODE_SHORT, 
+      PROGRAM_OPTIONS_INDEX__BYTECODE_ALL, 
+      PROGRAM_OPTIONS_INDEX__MEM_STATS, 
+      PROGRAM_OPTIONS_INDEX__INPUT_STATS, 
+      PROGRAM_OPTIONS_INDEX__COUNT, 
+}; 
+ 
+static int program_options[PROGRAM_OPTIONS_INDEX__COUNT] = {}; 
+ 
+enum { PROGRAM_OPTIONS__ARGC_MAX = 64 };   
+static int program_options__unknown[PROGRAM_OPTIONS__ARGC_MAX] = {}; 
+static int program_options__unknown__nb = 0; 
+static int program_options__filenames[PROGRAM_OPTIONS__ARGC_MAX] = {}; 
+static int program_options__filenames__nb = 0; 
+
+static void program_options__unknown__push(const int argc) { 
+  assert(program_options__unknown__nb < PROGRAM_OPTIONS__ARGC_MAX); 
+  program_options__unknown[program_options__unknown__nb] = argc; 
+  program_options__unknown__nb++; 
+}; 
+
+static void program_options__filenames__push(const int argc) { 
+  assert(program_options__filenames__nb < PROGRAM_OPTIONS__ARGC_MAX); 
+  program_options__filenames[program_options__filenames__nb] = argc; 
+  program_options__filenames__nb++; 
+}; 
+
+static void program_options__bzero(void) {
+  { 
+    int * p = program_options; 
+    for (int i = 0; i < PROGRAM_OPTIONS_INDEX__COUNT; i++) { 
+      *p = 0; 
+      p++; 
+    }; 
+  };
+};
+
+static int program_options__parse(const int argc, const char * argv[]) {
+  int allright_huh; 
+  program_options__bzero();
+  program_options__unknown__nb = 0;
+  program_options__filenames__nb = 0; 
+  const char * * p = argv;
+  for (int i = 1;; i++) { 
+    p++; 
+    const char * s = *p;
+    if (NULL == s) { break; }; 
+    if ('\0' == *s) { continue; }; 
+    if ('-' != *s) { program_options__filenames__push(i); continue; }; 
+    s++; 
+    if ('\0' == *s) { program_options__filenames__push(i); continue; }; 
+    if (('-' == *s) && ('\0' == *(s+1))) { break; }; 
+    if ('-' != *s) { 
+      for (;;) {
+	switch (*s) {
+	 case 'h': program_options[PROGRAM_OPTIONS_INDEX__HELP]++; break; 
+	 case 'v': program_options[PROGRAM_OPTIONS_INDEX__VERBOSE_LEVEL]++; break; 
+         case 'V': program_options[PROGRAM_OPTIONS_INDEX__VERSION]++; break; 
+         default: program_options__unknown__push(i); break; 
+	}; 
+	s++;
+	if ('\0' == *s) { break; }; 
+      };
+      continue; 
+    }; 
+    s++;
+    if (0 == strcmp(s, "help"           )) { program_options[PROGRAM_OPTIONS_INDEX__HELP          ]++; continue; }; 
+    if (0 == strcmp(s, "usage"          )) { program_options[PROGRAM_OPTIONS_INDEX__HELP          ]++; continue; }; 
+    if (0 == strcmp(s, "copyright"      )) { program_options[PROGRAM_OPTIONS_INDEX__COPYRIGHT     ]++; continue; }; 
+    if (0 == strcmp(s, "copyright-cstr" )) { program_options[PROGRAM_OPTIONS_INDEX__COPYRIGHT_CSTR]++; continue; }; 
+    if (0 == strcmp(s, "license"        )) { program_options[PROGRAM_OPTIONS_INDEX__COPYRIGHT     ]++; continue; }; 
+    if (0 == strcmp(s, "verbose"        )) { program_options[PROGRAM_OPTIONS_INDEX__VERBOSE_LEVEL ]++; continue; }; 
+    if (0 == strcmp(s, "version"        )) { program_options[PROGRAM_OPTIONS_INDEX__VERSION       ]++; continue; }; 
+    if (0 == strcmp(s, "chars-count"    )) { program_options[PROGRAM_OPTIONS_INDEX__CHARS_COUNT   ]++; continue; }; 
+    if (0 == strcmp(s, "lines-count"    )) { program_options[PROGRAM_OPTIONS_INDEX__LINES_COUNT   ]++; continue; }; 
+    if (0 == strcmp(s, "strings-count"  )) { program_options[PROGRAM_OPTIONS_INDEX__STRING_COUNT  ]++; continue; }; 
+    if (0 == strcmp(s, "strings-stats"  )) { program_options[PROGRAM_OPTIONS_INDEX__STRING_STATS  ]++; continue; }; 
+    if (0 == strcmp(s, "strings"        )) { program_options[PROGRAM_OPTIONS_INDEX__STRING_SHORT  ]++; continue; }; 
+    if (0 == strcmp(s, "strings-short"  )) { program_options[PROGRAM_OPTIONS_INDEX__STRING_SHORT  ]++; continue; }; 
+    if (0 == strcmp(s, "strings-all"    )) { program_options[PROGRAM_OPTIONS_INDEX__STRING_ALL    ]++; continue; }; 
+    if (0 == strcmp(s, "tokens-count"   )) { program_options[PROGRAM_OPTIONS_INDEX__TOKEN_COUNT   ]++; continue; }; 
+    if (0 == strcmp(s, "tokens-stats"   )) { program_options[PROGRAM_OPTIONS_INDEX__TOKEN_STATS   ]++; continue; }; 
+    if (0 == strcmp(s, "tokens"         )) { program_options[PROGRAM_OPTIONS_INDEX__TOKEN_SHORT   ]++; continue; }; 
+    if (0 == strcmp(s, "tokens-short"   )) { program_options[PROGRAM_OPTIONS_INDEX__TOKEN_SHORT   ]++; continue; }; 
+    if (0 == strcmp(s, "tokens-all"     )) { program_options[PROGRAM_OPTIONS_INDEX__TOKEN_ALL     ]++; continue; }; 
+    if (0 == strcmp(s, "funprocs-count" )) { program_options[PROGRAM_OPTIONS_INDEX__FUNPROC_COUNT ]++; continue; }; 
+    if (0 == strcmp(s, "funprocs"       )) { program_options[PROGRAM_OPTIONS_INDEX__FUNPROC_SHORT ]++; continue; }; 
+    if (0 == strcmp(s, "funprocs-short" )) { program_options[PROGRAM_OPTIONS_INDEX__FUNPROC_SHORT ]++; continue; }; 
+    if (0 == strcmp(s, "funprocs-all"   )) { program_options[PROGRAM_OPTIONS_INDEX__FUNPROC_ALL   ]++; continue; }; 
+    if (0 == strcmp(s, "mainprocs-count")) { program_options[PROGRAM_OPTIONS_INDEX__MAINPROC_COUNT]++; continue; }; 
+    if (0 == strcmp(s, "mainprocs"      )) { program_options[PROGRAM_OPTIONS_INDEX__MAINPROC_SHORT]++; continue; }; 
+    if (0 == strcmp(s, "mainprocs-short")) { program_options[PROGRAM_OPTIONS_INDEX__MAINPROC_SHORT]++; continue; }; 
+    if (0 == strcmp(s, "mainprocs-all"  )) { program_options[PROGRAM_OPTIONS_INDEX__MAINPROC_ALL  ]++; continue; }; 
+    if (0 == strcmp(s, "ffiprocs-count" )) { program_options[PROGRAM_OPTIONS_INDEX__FFIPROC_COUNT ]++; continue; }; 
+    if (0 == strcmp(s, "ffiprocs"       )) { program_options[PROGRAM_OPTIONS_INDEX__FFIPROC_SHORT ]++; continue; }; 
+    if (0 == strcmp(s, "ffiprocs-short" )) { program_options[PROGRAM_OPTIONS_INDEX__FFIPROC_SHORT ]++; continue; }; 
+    if (0 == strcmp(s, "ffiprocs-all"   )) { program_options[PROGRAM_OPTIONS_INDEX__FFIPROC_ALL   ]++; continue; }; 
+#if 0 
+    if (0 == strcmp(s, "syntax-trees-count")) { program_options[PROGRAM_OPTIONS_INDEX__SYNTAX_TREES_COUNT]++; continue; }; 
+    if (0 == strcmp(s, "syntax-trees"      )) { program_options[PROGRAM_OPTIONS_INDEX__SYNTAX_TREES_SHORT]++; continue; }; 
+    if (0 == strcmp(s, "syntax-trees-short")) { program_options[PROGRAM_OPTIONS_INDEX__SYNTAX_TREES_SHORT]++; continue; }; 
+    if (0 == strcmp(s, "syntax-trees-all"  )) { program_options[PROGRAM_OPTIONS_INDEX__SYNTAX_TREES_ALL  ]++; continue; }; 
+    if (0 == strcmp(s, "syntax-trees-dotty")) { program_options[PROGRAM_OPTIONS_INDEX__SYNTAX_TREES_DOTTY]++; continue; }; 
+#endif 
+    if (0 == strcmp(s, "bytecode-count")) { program_options[PROGRAM_OPTIONS_INDEX__BYTECODE_COUNT]++; continue; }; 
+    if (0 == strcmp(s, "bytecode"      )) { program_options[PROGRAM_OPTIONS_INDEX__BYTECODE_SHORT]++; continue; }; 
+    if (0 == strcmp(s, "bytecode-short")) { program_options[PROGRAM_OPTIONS_INDEX__BYTECODE_SHORT]++; continue; }; 
+    if (0 == strcmp(s, "bytecode-all"  )) { program_options[PROGRAM_OPTIONS_INDEX__BYTECODE_ALL  ]++; continue; }; 
+    if (0 == strcmp(s, "mem-stats"     )) { program_options[PROGRAM_OPTIONS_INDEX__MEM_STATS     ]++; continue; }; 
+    if (0 == strcmp(s, "input-stats"   )) { program_options[PROGRAM_OPTIONS_INDEX__INPUT_STATS   ]++; continue; }; 
+    program_options__unknown__push(i);
+    continue; 
+  }; 
+  return PROGRAM_EXIT__SUCCESS; 
+}; 
+ 
+static int program_options__analyse(const int argc, const char * argv[]) {
+  if (0 != program_options__unknown__nb) { 
+    for (int i = 0; i < program_options__unknown__nb; i++) {
+      dputs(stderr_d, "Unknown option: "); 
+      dputs(stderr_d, "argv["); 
+      dputn(stderr_d, program_options__unknown[i]); 
+      dputs(stderr_d, "]: "); 
+      dputs(stderr_d, argv[program_options__unknown[i]]); 
+      dputs(stderr_d, "\n"); 
+    }; 
+    return PROGRAM_EXIT__OPTIONS__UNKNOWN; 
+  }; 
+ 
+  if (0 != program_options[PROGRAM_OPTIONS_INDEX__HELP]) {
+    dputs(stderr_d, program_description); 
+    dputs(stderr_d, "Usage: " PROGRAM_NAME " [<options>] [<infile>] [<outfile>] " "\n" ); 
+    dputs(stderr_d, "  " "If no  input filename is given on the command line, then read  from stdin." "\n");  
+    dputs(stderr_d, "  " "If no output filename is given on the command line, then write to   stdout." "\n"); 
+    dputs(stderr_d, "Options:" "\n"); 
+    dputs(stderr_d, "  " "-h,--help,--usage                  " "  \t  " "Display this help" "\n");  
+    dputs(stderr_d, "  " "--copyright,--license              " "  \t  " "Display the program license" "\n");  
+    dputs(stderr_d, "  " "-v,--verbose                       " "  \t  " "Make the program more talkative" "\n");  
+    dputs(stderr_d, "  " "-V,--version                       " "  \t  " "Display the program version" "\n");  
+    dputs(stderr_d, "  " "--chars-count                      " "  \t  " "Print the number of characters read" "\n");  
+    dputs(stderr_d, "  " "--lines-count                      " "  \t  " "Print the number of lines read" "\n");  
+    dputs(stderr_d, "  " "--strings-count                    " "  \t  " "Print the number of computed strings" "\n");  
+    dputs(stderr_d, "  " "--strings-stats                    " "  \t  " "Print stats about computed strings" "\n");  
+    dputs(stderr_d, "  " "--strings,--strings-short          " "  \t  " "Print a short list of the computed strings" "\n");  
+    dputs(stderr_d, "  " "--strings-all                      " "  \t  " "Print all the computed strings" "\n");  
+    dputs(stderr_d, "  " "--tokens-count                     " "  \t  " "Print the number of computed tokens" "\n");  
+    dputs(stderr_d, "  " "--tokens-stats                     " "  \t  " "Print stats about computed tokens" "\n");  
+    dputs(stderr_d, "  " "--tokens,--tokens-short            " "  \t  " "Print a short list of the computed tokens" "\n");  
+    dputs(stderr_d, "  " "--tokens-all                       " "  \t  " "Print all the computed tokens" "\n");  
+    dputs(stderr_d, "  " "--funprocs-count                   " "  \t  " "Print the number of computed functions and procedures " "\n");  
+    dputs(stderr_d, "  " "--funprocs,--funprocs-short        " "  \t  " "Print a short list of the computed functions and procedures " "\n");  
+    dputs(stderr_d, "  " "--funprocs-all                     " "  \t  " "Print all the computed functions and procedures " "\n");  
+    dputs(stderr_d, "  " "--mainprocs-count                  " "  \t  " "Print the number of computed main procedures " "\n");  
+    dputs(stderr_d, "  " "--mainprocs,--mainprocs-short      " "  \t  " "Print a short list of the computed main procedures " "\n");  
+    dputs(stderr_d, "  " "--mainprocs-all                    " "  \t  " "Print all the computed main procedures " "\n");  
+    dputs(stderr_d, "  " "--ffiprocs-count                   " "  \t  " "Print the number of computed main procedures " "\n");  
+    dputs(stderr_d, "  " "--ffiprocs,--ffiprocs-short        " "  \t  " "Print a short list of the computed main procedures " "\n");  
+    dputs(stderr_d, "  " "--ffiprocs-all                     " "  \t  " "Print all the computed main procedures " "\n");  
+#if 0 
+    dputs(stderr_d, "  " "--syntax-trees-count               " "  \t  " "Print the number of computed syntax-trees" "\n");  
+    dputs(stderr_d, "  " "--syntax-trees,--syntax-trees-short" "  \t  " "Print the number of computed syntax-trees" "\n");  
+    dputs(stderr_d, "  " "--syntax-trees-all                 " "  \t  " "Print the number of computed syntax-trees" "\n");  
+    dputs(stderr_d, "  " "--syntax-trees-dotty               " "  \t  " "Print the number of computed syntax-trees" "\n");  
+#endif
+    dputs(stderr_d, "  " "--bytecode-count                   " "  \t  " "Print the number of bytecodes" "\n");  
+    dputs(stderr_d, "  " "--bytecode,--bytecode-short        " "  \t  " "Print a short list of the bytecode" "\n");  
+    dputs(stderr_d, "  " "--bytecode-all                     " "  \t  " "Print all the bytecode" "\n");  
+    dputs(stderr_d, "  " "--mem-stats                        " "  \t  " "Show stats about compiled memory usage" "\n");  
+    dputs(stderr_d, "  " "--input-stats                      " "  \t  " "Show stats about input memory usage" "\n");  
+
+    return PROGRAM_EXIT__OPTIONS__CUT_SHORT; 
+  };
+
+  if (0 != program_options[PROGRAM_OPTIONS_INDEX__VERSION]) {
+    dputs(stderr_d, PROGRAM_NAME " " ); 
+    dputn(stderr_d, PROGRAM_VERSION_MAJOR); 
+    dputs(stderr_d, "."); 
+    dputn(stderr_d, PROGRAM_VERSION_MINOR); 
+    dputs(stderr_d, "."); 
+    dputn(stderr_d, PROGRAM_VERSION_REVISION); 
+    dputs(stderr_d, "\n"); 
+    return PROGRAM_EXIT__OPTIONS__CUT_SHORT; 
+  };
+
+  if (0 != program_options[PROGRAM_OPTIONS_INDEX__COPYRIGHT]) {
+    dputs(stderr_d, program_copyright); 
+    return PROGRAM_EXIT__OPTIONS__CUT_SHORT; 
+  };
+
+  if (0 != program_options[PROGRAM_OPTIONS_INDEX__COPYRIGHT_CSTR]) {
+    const char * p = program_copyright; 
+    dputs(stderr_d, "/* "); 
+    int i = 0; 
+    for (;;) { 
+      if (*p == '\0') {
+	for (int j = i; j < 73; j++) { dputc(stderr_d, ' '); }; 
+	dputs(stderr_d, " */\n"); 
+	break; 
+      }; 
+      if (*p == '\n') {
+	for (int j = i; j < 73; j++) { dputc(stderr_d, ' '); }; 
+	dputs(stderr_d, " */\n/* "); 
+	i = 0; 
+	p++; 
+	continue; 
+      }; 
+      dputc(stderr_d, *p); 
+      i++; 
+      p++; 
+    }; 
+    return PROGRAM_EXIT__OPTIONS__CUT_SHORT; 
+  };
+
+
+  if (2 < program_options__filenames__nb) { 
+    dputs(stderr_d, "Too many filenames given on the command line:" "\n"); 
+    for (int i = 0; i < program_options__filenames__nb; i++) {
+      dputs(stderr_d, "Files: "); 
+      dputs(stderr_d, "argv["); 
+      dputn(stderr_d, program_options__filenames[i]); 
+      dputs(stderr_d, "]: "); 
+      dputs(stderr_d, argv[program_options__filenames[i]]); 
+      dputs(stderr_d, "\n"); 
+    }; 
+    return PROGRAM_EXIT__OPTIONS__TOO_MANY_FILENAMES; 
+  }; 
+
+#if 0 
+  if (0 == program_options__filenames__nb) { 
+    dputs(stderr_d, "No filename on the command line - reading from stdin and writing to stdout." "\n"); 
+  }
+  else {
+    for (int i = 0; i < program_options__filenames__nb; i++) {
+      dputs(stderr_d, "Files: "); 
+      dputs(stderr_d, "argv["); 
+      dputn(stderr_d, program_options__filenames[i]); 
+      dputs(stderr_d, "]: "); 
+      dputs(stderr_d, argv[program_options__filenames[i]]); 
+      dputs(stderr_d, "\n"); 
+    }; 
+    return PROGRAM_EXIT__OPTIONS__UNKNOWN; 
+  }; 
+#endif 
+ 
+
+
+
+  return PROGRAM_EXIT__SUCCESS; 
+}; 
