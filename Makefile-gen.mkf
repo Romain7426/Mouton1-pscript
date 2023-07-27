@@ -94,7 +94,7 @@ CC_FLAGS := -std=c99 -D_THREAD_SAFE -D_REENTRANT -D __DEBUG__ -D DEBUG
 
 
 # -pedantic -pedantic-errors 
-CINC := -I /usr/X11R6/include  -I ./libs/SDL-1.2.15/destroot/include -I ./src/SDL_image -I ./src/SDL_mixer -I /home/romain/projects/libedit-20090923-3.0/destroot/include/ 
+CINC := -I /usr/X11R6/include  -I ./libs/SDL-1.2.15/destroot/include -I ./src/SDL_image -I ./src/SDL_mixer -I ../libedit-20090923-3.0/destroot/include/ 
 CFLAGS_NO :=  -Wno-system-headers -Winline -Wformat-nonliteral -Wwrite-strings -Wmissing-field-initializers -Wsign-compare  -Wformat-zero-length -Wswitch -Wswitch-enum -Wswitch-default -Wnested-externs -Wunknown-pragmas -Wno-undef -Wno-redundant-decls -Wno-unused -Wno-unused-parameter -Wno-unused-function -Wno-switch-default -Wno-format-nonliteral -Wno-unsequenced -Wno-cast-align 
 GCC_FLAGS_FOR_DEBUG := -O0 -Wall -fmessage-length=0 -fdiagnostics-show-location=once -fdiagnostics-show-option -Wnewline-eof -Wfatal-errors -Werror-implicit-function-declaration -fno-exceptions -fstack-check -Werror -W  -Wparentheses -fverbose-asm -fno-omit-frame-pointer -ffreestanding -fno-builtin -fno-builtin-printf -fno-builtin-abs -fno-builtin-strcpy -fno-builtin-strcat -fno-builtin-strlen -fno-builtin-bzero -fno-builtin-memset -fno-builtin-memcpy -fno-builtin-assert -fno-builtin-tolower -fno-builtin-toupper -fno-builtin-log -fno-builtin-alloca -fno-common -fno-exceptions -fno-non-call-exceptions -fno-asynchronous-unwind-tables -fno-inline -fno-inline-functions -fno-inline-functions  -gfull  -feliminate-unused-debug-types  -Wimplicit -Wreturn-type -Wcomment -Wpointer-arith -Wchar-subscripts -Wimplicit-int -Werror-implicit-function-declaration -Wmain -Wmissing-braces -Wmultichar -Wsequence-point -Wreturn-type  -Wstrict-prototypes -Wpacked -Wcast-qual -Wcast-align  $(CFLAGS_NO) $(CINC)  # -Wmissing-prototypes -Wmissing-declarations 
 
@@ -135,7 +135,8 @@ BSD_YACC_FLAGS := -d -t -p yypscript -r -v
 CFLAGS := $(CC_FLAGS) 
 #LIBS   := /home/romain/projects/libedit-20090923-3.0/destroot/lib/libedit.a  -ltermcap -lm /usr/lib/libc.a 
 #LIBS   := /home/romain/projects/libedit-20090923-3.0/destroot/lib/libedit.a  /usr/lib/libtermcap.a /usr/lib/libm.a /usr/lib/libc.a 
-LIBS   := /home/romain/projects/libedit-20090923-3.0/destroot/lib/libedit.a  -ltermcap -lm 
+#LIBS   := /home/romain/projects/libedit-20090923-3.0/destroot/lib/libedit.a  -ltermcap -lm 
+LIBS   := ../libedit-20090923-3.0/destroot/lib/libedit.a  -ltermcap -lm 
 
 #SVN_REVISION := $(shell svn-revision.sh)
 #GIT_REVISION := $(shell git-revision.sh)
@@ -305,7 +306,9 @@ Makefile:
 	echo "	mkdir -p destroot/src/src" >> $@
 #	echo "	cp -fp src/*.l src/*.y src/*.h src/*.c src/*.ci destroot/src/src/" >> $@
 	$(foreach file,$(patsubst src/%,%,$(wildcard src/Makefile src/*.y src/*.l src/*.h src/*.c src/*.ci)), \
-	  echo "	./run --copyright-cstr 2> destroot/src/src/$(file) || true  " >> $@ ; \
+	  echo "#	This command, for some unknown reasons, is slow. But the other one is not...?" >> $@ ; \
+	  echo "#	./run --copyright-cstr 2> destroot/src/src/$(file) || true  " >> $@ ; \
+	  echo "	./run --copyright-cstr 2>&1 | cat > destroot/src/src/$(file) || true  " >> $@ ; \
 	  echo "	cat src/$(file) >> destroot/src/src/$(file) " >> $@ ; \
 	)
 	echo "	mkdir -p destroot/include/pscript " >> $@

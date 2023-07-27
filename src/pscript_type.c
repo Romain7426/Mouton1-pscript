@@ -726,6 +726,7 @@ static int pscript_type__make__user_defined_type__lookup(const pscript_type_env_
 }; 
 
 int pscript_type__make__user_defined_type(pscript_type_env_t * this, const int udf_name, const int subtype) { 
+  const char * udf_name_cstr = pscript_string__get_cstr(this -> string_env, udf_name);
   do { 
     const int env_lookedup_index = pscript_type__name__lookup(this, udf_name); 
     if (env_lookedup_index >= 0) { 
@@ -734,7 +735,7 @@ int pscript_type__make__user_defined_type(pscript_type_env_t * this, const int u
       const int cell_lookedup_typecore = pscript_type__get_core_type(this, cell_lookedup_index); 
       if (cell_lookedup_typecore != PSCRIPT_TYPE__USER) {
 	const char * cell_lookedup_cstr = pscript_type__get_cstr(this, cell_lookedup_index); 
-	pmesserr("The name '%s' is already bound  (as an alias) to the type [ %d ] %s. " "\n", udf_name, cell_lookedup_index, cell_lookedup_cstr); 
+	pmesserr("The name '%s' is already bound  (as an alias) to the type [ %d ] %s. " "\n", udf_name_cstr, cell_lookedup_index, cell_lookedup_cstr); 
 	return -1; 
       }; 
       
@@ -742,12 +743,12 @@ int pscript_type__make__user_defined_type(pscript_type_env_t * this, const int u
       if (cell_lookedup_subtype != subtype) { 
 	const char * cell_lookedup_subtype_cstr = pscript_type__get_cstr(this, cell_lookedup_subtype); 
 	const char * subtype_cstr = pscript_type__get_cstr(this, subtype); 
-	pmesserr("The name '%s' is already defined as the type [ %d ] %s (different from  [ %d ] %s). " "\n", udf_name, cell_lookedup_subtype, cell_lookedup_subtype_cstr, subtype, subtype_cstr); 
+	pmesserr("The name '%s' is already defined as the type [ %d ] %s (different from  [ %d ] %s). " "\n", udf_name_cstr, cell_lookedup_subtype, cell_lookedup_subtype_cstr, subtype, subtype_cstr); 
 	return -1; 
       }; 
       
       const char * subtype_cstr = pscript_type__get_cstr(this, subtype); 
-      pmessage("The name '%s' is already defined as the same type [ %d ] %s -- ignoring that harmless second definition. " "\n", udf_name, subtype, subtype_cstr); 
+      pmessage("The name '%s' is already defined as the same type [ %d ] %s -- ignoring that harmless second definition. " "\n", udf_name_cstr, subtype, subtype_cstr); 
       //return env_lookedup_index; 
       return cell_lookedup_index; 
   }; 
@@ -758,12 +759,12 @@ int pscript_type__make__user_defined_type(pscript_type_env_t * this, const int u
       if (cell_lookedup_subtype != subtype) { 
 	const char * cell_lookedup_subtype_cstr = pscript_type__get_cstr(this, cell_lookedup_subtype); 
 	const char * subtype_cstr = pscript_type__get_cstr(this, subtype); 
-	pmesserr("The name '%s' is already defined as the type [ %d ] %s (different from [ %d ] %s). " "\n", udf_name, cell_lookedup_subtype, cell_lookedup_subtype_cstr, subtype, subtype_cstr); 
+	pmesserr("The name '%s' is already defined as the type [ %d ] %s (different from [ %d ] %s). " "\n", udf_name_cstr, cell_lookedup_subtype, cell_lookedup_subtype_cstr, subtype, subtype_cstr); 
 	return -1; 
       }; 
       
       const char * subtype_cstr = pscript_type__get_cstr(this, subtype); 
-      pmessage("The name '%s' is already defined as the same type [ %d ] %s -- ignoring that harmless second definition. " "\n", udf_name, subtype, subtype_cstr); 
+      pmessage("The name '%s' is already defined as the same type [ %d ] %s -- ignoring that harmless second definition. " "\n", udf_name_cstr, subtype, subtype_cstr); 
       
       return cell_lookedup_index; 
     }; 
@@ -782,7 +783,7 @@ int pscript_type__make__user_defined_type(pscript_type_env_t * this, const int u
 int pscript_type__user_defined_type__get_subtype(pscript_type_env_t * this, const int type_i) {
   if (PSCRIPT_TYPE__USER != this -> cell__array[type_i].type_core) { 
     const char * type_cstr = pscript_type__get_cstr(this, type_i); 
-    pmesserr("%s: The type [ %d ] %s is not an user-defined type. " "\n", type_i, type_cstr); 
+    pmesserr("The type [ %d ] %s is not an user-defined type. " "\n", type_i, type_cstr); 
     return -2; 
   }; 
   return this -> cell__array[type_i].user_defined_type__subtype; 
@@ -791,7 +792,7 @@ int pscript_type__user_defined_type__get_subtype(pscript_type_env_t * this, cons
 int pscript_type__user_defined_type__get_name(pscript_type_env_t * this, const int type_i) {
   if (PSCRIPT_TYPE__USER != this -> cell__array[type_i].type_core) { 
     const char * type_cstr = pscript_type__get_cstr(this, type_i); 
-    pmesserr("%s: The type [ %d ] %s is not an user-defined type. " "\n", type_i, type_cstr); 
+    pmesserr("The type [ %d ] %s is not an user-defined type. " "\n", type_i, type_cstr); 
     return -2; 
   }; 
   return this -> cell__array[type_i].user_defined_type__name; 
