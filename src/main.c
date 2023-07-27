@@ -286,7 +286,7 @@ static int program(void) {
     if (0 < program_options[PROGRAM_OPTIONS_INDEX__CHARS_COUNT]) { 
       dputs_array(stdlog_d, "TOTAL READ CHARS: ", int_string__stack(this -> input_env -> cumulated_read_nb[input_i]), "\n"); 
     }; 
-  
+    
     if (0 < program_options[PROGRAM_OPTIONS_INDEX__LINES_COUNT]) { 
       //dputs_array(stdlog_d, "TOTAL READ LINES: ", int_string__stack(this -> input_env -> cumulated_read_nb[input_i]), "\n"); 
       dputs(stdlog_d, "TOTAL READ LINES: "); 
@@ -294,12 +294,12 @@ static int program(void) {
       //dputn(stdlog_d, this -> token_env -> line_nb); 
       dputs(stdlog_d, "\n"); 
     }; 
-  
+    
     if (0 < program_options[PROGRAM_OPTIONS_INDEX__STRING_COUNT]) { 
       dputs_array(stdlog_d, "TOTAL COMPUTED STRINGS: ",  int_string__stack(pscript_string__get_count(this -> string_env)), "\n"); 
       //return PROGRAM_EXIT__OPTIONS__CUT_SHORT; 
     }; 
-
+    
     if (0 < program_options[PROGRAM_OPTIONS_INDEX__STRING_STATS]) { 
       pscript_string__print_stats(stdlog_d, this -> string_env); 
     }; 
@@ -309,18 +309,18 @@ static int program(void) {
       pscript_string__print_nb_strings(stdlog_d, this -> string_env, 127); 
       //return PROGRAM_EXIT__OPTIONS__CUT_SHORT; 
     }; 
-  
+    
     if (0 < program_options[PROGRAM_OPTIONS_INDEX__STRING_ALL]) { 
       //string_stack__print_all_strings(this -> string_env); 
       pscript_string__print_all_strings(stdlog_d, this -> string_env); 
       //return PROGRAM_EXIT__OPTIONS__CUT_SHORT; 
     }; 
-  
+    
     if (0 < program_options[PROGRAM_OPTIONS_INDEX__TOKEN_COUNT]) { 
       dputs_array(stdlog_d, "TOTAL COMPUTED TOKENS: ",  int_string__stack(pscript_token__get_count(this -> token_env)), "\n"); 
       //return PROGRAM_EXIT__OPTIONS__CUT_SHORT; 
     }; 
-
+    
     if (0 < program_options[PROGRAM_OPTIONS_INDEX__TOKEN_STATS]) { 
       pscript_token__print_stats(stdlog_d, this -> token_env); 
     }; 
