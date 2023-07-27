@@ -1,5 +1,6 @@
 CC
 Makefile
+build.sh
 #.gitignore
 .gdb_history
 a.anime
