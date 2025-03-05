@@ -59,7 +59,7 @@
 #endif
 #endif
  
-#include <editline/readline.h>
+//#include <editline/readline.h>
 
 
 #include "lib__02__header.ci" 

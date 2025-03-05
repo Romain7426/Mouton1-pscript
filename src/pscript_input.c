@@ -160,13 +160,15 @@ static int pscript_input__buffer__fill(pscript_input_env_t * this, const int inp
 
  pscript_input__buffer__fill__state__fileno: {
     int read_nb = -1; 
+#if 1 
+    if (false) { 
+    }
+#else
     if (this -> repl_huh[input_i]) { 
       //dputs(stderr, repl_prompt); }; 
       char * tmp = NULL; 
       tmp = readline(this -> repl_prompt_cstr[input_i]); 
-#if 0 
       dputs_array(stderr, "EDITLINE: tmp: ", tmp, "\n"); 
-#endif 
       if ((NULL != tmp) && (*tmp != '\0')) { add_history(tmp); }; 
       if (NULL == tmp) { 
 	read_nb = 0; 
@@ -176,6 +178,7 @@ static int pscript_input__buffer__fill(pscript_input_env_t * this, const int inp
 	read_nb = strlcpy(this -> buffer[input_i] + this -> buffer_nb[input_i], tmp, available); 
       }; 
     } 
+#endif
     else { 
       read_nb = read(this -> fileno[input_i], this -> buffer[input_i] + this -> buffer_nb[input_i], available); 
     }; 

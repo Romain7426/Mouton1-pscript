@@ -109,6 +109,7 @@ static str_t  input_file_name = -1;
 static str_t output_file_name = -1; 
  
 static int     repl_mode = false; 
+#if 0
 #ifdef JE_USE_GNU_READLINE
 #include <readline/readline.h>
 #include <readline/history.h>
@@ -131,7 +132,7 @@ static int     repl_mode = false;
 //#undef stderr 
 //#undef stdin 
 //#undef stdout  
-
+#endif 
 
  
 
@@ -884,10 +885,12 @@ static int main_program(const int argc, const char * argv[]) {
     } while (false); 
   }; 
   
-  
+
+#if 0  
   if (repl_mode) { 
     using_history(); 
   }; 
+#endif 
   
   int allright; 
   do {
